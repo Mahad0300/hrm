@@ -3361,6 +3361,7 @@ a.action-btn {
 }
 
 .month-item {
+    font-family: 'Outfit', sans-serif;
     border: 1px solid transparent;
     background: #f8fafc;
     padding: 12px 5px;

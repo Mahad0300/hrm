@@ -45,14 +45,8 @@ include 'includes/header.php';
             <label class="admin-form-label font-12">Role</label>
             <select class="form-control" id="filterRole">
                 <option value="">All Roles</option>
-                <option value="Admin">Admin</option>
                 <option value="HR">HR</option>
                 <option value="Employee">Employee</option>
-                <option value="Manager">Manager</option>
-                <option value="Team Lead">Team Lead</option>
-                <option value="Senior Associate">Senior Associate</option>
-                <option value="Junior Associate">Junior Associate</option>
-                <option value="Intern">Intern</option>
             </select>
         </div>
     </div>

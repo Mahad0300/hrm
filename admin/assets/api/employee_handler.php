@@ -73,7 +73,12 @@ switch ($action) {
             $limit = intval($_GET['limit'] ?? 10);
             $offset = ($page - 1) * $limit;
 
-            // If they are searching for Exit employees, we allow e.deleted_at to be NOT NULL
+            // Strip 'EMP-', 'EMP-0', and leading zeros from ID search
+            if (!empty($id_search)) {
+                $id_search = preg_replace('/^EMP-0*/i', '', $id_search);
+                $id_search = ltrim($id_search, '0');
+            }
+
             $where = [];
             if ($status === 'Exit') {
                 $where[] = "e.deleted_at IS NOT NULL";
@@ -82,33 +87,41 @@ switch ($action) {
             }
             $params = [];
 
-            // Apply specific role/status logic
-            if (empty($role) && empty($status) && empty($id_search) && empty($name_search) && empty($dept)) {
+            // 1. ID Filter
+            if (!empty($id_search)) {
+                $where[] = "e.id LIKE ?";
+                $params[] = "%$id_search%";
+            }
+            // 2. Name Filter
+            if (!empty($name_search)) {
+                $where[] = "(e.first_name LIKE ? OR e.last_name LIKE ? OR e.middle_name LIKE ?)";
+                $params[] = "%$name_search%";
+                $params[] = "%$name_search%";
+                $params[] = "%$name_search%";
+            }
+            // 3. Dept Filter
+            if (!empty($dept)) {
+                $where[] = "e.department_id = ?";
+                $params[] = $dept;
+            }
+            // 4. Role Filter
+            if (!empty($role)) {
+                $where[] = "e.role = ?";
+                $params[] = $role;
+            } elseif (empty($id_search) && empty($name_search)) {
+                // Default view (no search): only HR/Employee
                 $where[] = "e.role IN ('Employee', 'HR')";
+            }
+
+            // 5. Status Filter
+            if ($status === 'Exit') {
+                // Already handled e.deleted_at IS NOT NULL above
+            } elseif (!empty($status)) {
+                $where[] = "e.status = ?";
+                $params[] = $status;
+            } elseif (empty($id_search) && empty($name_search)) {
+                // Default view (no search): only Active/On Leave
                 $where[] = "e.status IN ('Active', 'On Leave')";
-            } else {
-                if (!empty($id_search)) {
-                    $where[] = "e.id LIKE ?";
-                    $params[] = "%$id_search%";
-                }
-                if (!empty($name_search)) {
-                    $where[] = "(e.first_name LIKE ? OR e.last_name LIKE ? OR e.middle_name LIKE ?)";
-                    $params[] = "%$name_search%";
-                    $params[] = "%$name_search%";
-                    $params[] = "%$name_search%";
-                }
-                if (!empty($dept)) {
-                    $where[] = "e.department_id = ?";
-                    $params[] = $dept;
-                }
-                if (!empty($role)) {
-                    $where[] = "e.role = ?";
-                    $params[] = $role;
-                }
-                if (!empty($status)) {
-                    $where[] = "e.status = ?";
-                    $params[] = $status;
-                }
             }
 
             $whereSql = implode(" AND ", $where);

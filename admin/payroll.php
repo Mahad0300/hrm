@@ -7,7 +7,7 @@ include 'includes/header.php';
 
 <!-- Page Action Area -->
 <div class="page-action-area">
-    <button class="btn-primary" onclick="openModal('generatePayrollModal')">
+    <button class="btn-primary" onclick="openGenerateModal()">
         <i data-lucide="calculator"></i>
         <span>Run Payroll</span>
     </button>
@@ -15,32 +15,33 @@ include 'includes/header.php';
 
 <!-- Filters Card -->
 <div class="card p-24 mb-24">
-    <div class="filter-grid">
-        <div class="search-box">
-            <i data-lucide="search" size="18"></i>
-            <input type="text" placeholder="Search by employee...">
+    <div class="filter-grid grid-4">
+        <div class="filter-item">
+            <label class="admin-form-label font-12">Search Employee</label>
+            <div class="search-box w-full">
+                <i data-lucide="search" size="16"></i>
+                <input type="text" id="searchPayroll" class="form-control" placeholder="ID or Name...">
+            </div>
         </div>
         <div class="filter-item">
-            <select class="form-control">
-                <option value="">Month (Current)</option>
-                <option>August 2026</option>
-                <option>July 2026</option>
-                <option>June 2026</option>
+            <label class="admin-form-label font-12">Select Month</label>
+            <div class="search-box w-full">
+                <i data-lucide="calendar" size="16"></i>
+                <input type="month" id="filterMonth" class="form-control" value="<?= date('Y-m') ?>">
+            </div>
+        </div>
+        <div class="filter-item">
+            <label class="admin-form-label font-12">Status</label>
+            <select class="form-control" id="filterStatus">
+                <option value="">All Status</option>
+                <option value="Paid">Paid</option>
+                <option value="Pending">Pending</option>
             </select>
         </div>
         <div class="filter-item">
-            <select class="form-control">
-                <option value="">Status (All)</option>
-                <option>Paid</option>
-                <option>Pending</option>
-            </select>
-        </div>
-        <div class="filter-item">
-            <select class="form-control">
-                <option value="">Department (All)</option>
-                <option>Engineering</option>
-                <option>HR</option>
-                <option>Marketing</option>
+            <label class="admin-form-label font-12">Department</label>
+            <select class="form-control" id="filterDept">
+                <option value="">All Departments</option>
             </select>
         </div>
     </div>
@@ -79,276 +80,7 @@ include 'includes/header.php';
                 </tr>
             </thead>
             <tbody id="payrollTableBody">
-                <!-- Row 1 -->
-                <tr>
-                    <td>
-                        <div class="emp-profile">
-                            <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=150"
-                                class="emp-avatar" alt="Avatar">
-                            <div class="emp-info">
-                                <span class="name">Emma Williams</span>
-                                <span class="email">EM-4820</span>
-                            </div>
-                        </div>
-                    </td>
-                    <td>August 2026</td>
-                    <td>$4,500.00</td>
-                    <td>$150.00</td>
-                    <td class="font-bold">$4,550.00</td>
-                    <td><span class="badge badge-success">Paid</span></td>
-                    <td>
-                        <div class="btn-group">
-                            <button class="action-btn action-btn-edit" title="Edit"
-                                onclick="openEditPayrollModal('EM-4820', 'Emma Williams')"><i data-lucide="edit-2"
-                                    size="16"></i></button>
-                            <button class="action-btn action-btn-view" title="View Payslip"><i data-lucide="eye"
-                                    size="16"></i></button>
-                        </div>
-                    </td>
-                </tr>
-                <!-- Row 2 -->
-                <tr>
-                    <td>
-                        <div class="emp-profile">
-                            <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&q=80&w=150"
-                                class="emp-avatar" alt="Avatar">
-                            <div class="emp-info">
-                                <span class="name">Oliver Mitchell</span>
-                                <span class="email">EM-4821</span>
-                            </div>
-                        </div>
-                    </td>
-                    <td>August 2026</td>
-                    <td>$5,200.00</td>
-                    <td>$200.00</td>
-                    <td class="font-bold">$5,500.00</td>
-                    <td><span class="badge badge-warning">Pending</span></td>
-                    <td>
-                        <div class="btn-group">
-                            <button class="action-btn action-btn-edit" title="Edit"
-                                onclick="openEditPayrollModal('EM-4821', 'Oliver Mitchell')"><i data-lucide="edit-2"
-                                    size="16"></i></button>
-                            <button class="action-btn action-btn-view" title="View Payslip"><i data-lucide="eye"
-                                    size="16"></i></button>
-                        </div>
-                    </td>
-                </tr>
-                <!-- Row 1 -->
-                <tr>
-                    <td>
-                        <div class="emp-profile">
-                            <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=150"
-                                class="emp-avatar" alt="Avatar">
-                            <div class="emp-info">
-                                <span class="name">Emma Williams</span>
-                                <span class="email">EM-4820</span>
-                            </div>
-                        </div>
-                    </td>
-                    <td>August 2026</td>
-                    <td>$4,500.00</td>
-                    <td>$150.00</td>
-                    <td class="font-bold">$4,550.00</td>
-                    <td><span class="badge badge-success">Paid</span></td>
-                    <td>
-                        <div class="btn-group">
-                            <button class="action-btn action-btn-edit" title="Edit"
-                                onclick="openEditPayrollModal('EM-4820', 'Emma Williams')"><i data-lucide="edit-2"
-                                    size="16"></i></button>
-                            <button class="action-btn action-btn-view" title="View Payslip"><i data-lucide="eye"
-                                    size="16"></i></button>
-                        </div>
-                    </td>
-                </tr>
-                <!-- Row 2 -->
-                <tr>
-                    <td>
-                        <div class="emp-profile">
-                            <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&q=80&w=150"
-                                class="emp-avatar" alt="Avatar">
-                            <div class="emp-info">
-                                <span class="name">Oliver Mitchell</span>
-                                <span class="email">EM-4821</span>
-                            </div>
-                        </div>
-                    </td>
-                    <td>August 2026</td>
-                    <td>$5,200.00</td>
-                    <td>$200.00</td>
-                    <td class="font-bold">$5,500.00</td>
-                    <td><span class="badge badge-warning">Pending</span></td>
-                    <td>
-                        <div class="btn-group">
-                            <button class="action-btn action-btn-edit" title="Edit"
-                                onclick="openEditPayrollModal('EM-4821', 'Oliver Mitchell')"><i data-lucide="edit-2"
-                                    size="16"></i></button>
-                            <button class="action-btn action-btn-view" title="View Payslip"><i data-lucide="eye"
-                                    size="16"></i></button>
-                        </div>
-                    </td>
-                </tr>
-                <!-- Row 1 -->
-                <tr>
-                    <td>
-                        <div class="emp-profile">
-                            <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=150"
-                                class="emp-avatar" alt="Avatar">
-                            <div class="emp-info">
-                                <span class="name">Emma Williams</span>
-                                <span class="email">EM-4820</span>
-                            </div>
-                        </div>
-                    </td>
-                    <td>August 2026</td>
-                    <td>$4,500.00</td>
-                    <td>$150.00</td>
-                    <td class="font-bold">$4,550.00</td>
-                    <td><span class="badge badge-success">Paid</span></td>
-                    <td>
-                        <div class="btn-group">
-                            <button class="action-btn action-btn-edit" title="Edit"
-                                onclick="openEditPayrollModal('EM-4820', 'Emma Williams')"><i data-lucide="edit-2"
-                                    size="16"></i></button>
-                            <button class="action-btn action-btn-view" title="View Payslip"><i data-lucide="eye"
-                                    size="16"></i></button>
-                        </div>
-                    </td>
-                </tr>
-                <!-- Row 2 -->
-                <tr>
-                    <td>
-                        <div class="emp-profile">
-                            <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&q=80&w=150"
-                                class="emp-avatar" alt="Avatar">
-                            <div class="emp-info">
-                                <span class="name">Oliver Mitchell</span>
-                                <span class="email">EM-4821</span>
-                            </div>
-                        </div>
-                    </td>
-                    <td>August 2026</td>
-                    <td>$5,200.00</td>
-                    <td>$200.00</td>
-                    <td class="font-bold">$5,500.00</td>
-                    <td><span class="badge badge-warning">Pending</span></td>
-                    <td>
-                        <div class="btn-group">
-                            <button class="action-btn action-btn-edit" title="Edit"
-                                onclick="openEditPayrollModal('EM-4821', 'Oliver Mitchell')"><i data-lucide="edit-2"
-                                    size="16"></i></button>
-                            <button class="action-btn action-btn-view" title="View Payslip"><i data-lucide="eye"
-                                    size="16"></i></button>
-                        </div>
-                    </td>
-                </tr>
-                <!-- Row 1 -->
-                <tr>
-                    <td>
-                        <div class="emp-profile">
-                            <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=150"
-                                class="emp-avatar" alt="Avatar">
-                            <div class="emp-info">
-                                <span class="name">Emma Williams</span>
-                                <span class="email">EM-4820</span>
-                            </div>
-                        </div>
-                    </td>
-                    <td>August 2026</td>
-                    <td>$4,500.00</td>
-                    <td>$150.00</td>
-                    <td class="font-bold">$4,550.00</td>
-                    <td><span class="badge badge-success">Paid</span></td>
-                    <td>
-                        <div class="btn-group">
-                            <button class="action-btn action-btn-edit" title="Edit"
-                                onclick="openEditPayrollModal('EM-4820', 'Emma Williams')"><i data-lucide="edit-2"
-                                    size="16"></i></button>
-                            <button class="action-btn action-btn-view" title="View Payslip"><i data-lucide="eye"
-                                    size="16"></i></button>
-                        </div>
-                    </td>
-                </tr>
-                <!-- Row 2 -->
-                <tr>
-                    <td>
-                        <div class="emp-profile">
-                            <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&q=80&w=150"
-                                class="emp-avatar" alt="Avatar">
-                            <div class="emp-info">
-                                <span class="name">Oliver Mitchell</span>
-                                <span class="email">EM-4821</span>
-                            </div>
-                        </div>
-                    </td>
-                    <td>August 2026</td>
-                    <td>$5,200.00</td>
-                    <td>$200.00</td>
-                    <td class="font-bold">$5,500.00</td>
-                    <td><span class="badge badge-warning">Pending</span></td>
-                    <td>
-                        <div class="btn-group">
-                            <button class="action-btn action-btn-edit" title="Edit"
-                                onclick="openEditPayrollModal('EM-4821', 'Oliver Mitchell')"><i data-lucide="edit-2"
-                                    size="16"></i></button>
-                            <button class="action-btn action-btn-view" title="View Payslip"><i data-lucide="eye"
-                                    size="16"></i></button>
-                        </div>
-                    </td>
-                </tr>
-                <!-- Row 1 -->
-                <tr>
-                    <td>
-                        <div class="emp-profile">
-                            <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=150"
-                                class="emp-avatar" alt="Avatar">
-                            <div class="emp-info">
-                                <span class="name">Emma Williams</span>
-                                <span class="email">EM-4820</span>
-                            </div>
-                        </div>
-                    </td>
-                    <td>August 2026</td>
-                    <td>$4,500.00</td>
-                    <td>$150.00</td>
-                    <td class="font-bold">$4,550.00</td>
-                    <td><span class="badge badge-success">Paid</span></td>
-                    <td>
-                        <div class="btn-group">
-                            <button class="action-btn action-btn-edit" title="Edit"
-                                onclick="openEditPayrollModal('EM-4820', 'Emma Williams')"><i data-lucide="edit-2"
-                                    size="16"></i></button>
-                            <button class="action-btn action-btn-view" title="View Payslip"><i data-lucide="eye"
-                                    size="16"></i></button>
-                        </div>
-                    </td>
-                </tr>
-                <!-- Row 2 -->
-                <tr>
-                    <td>
-                        <div class="emp-profile">
-                            <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&q=80&w=150"
-                                class="emp-avatar" alt="Avatar">
-                            <div class="emp-info">
-                                <span class="name">Oliver Mitchell</span>
-                                <span class="email">EM-4821</span>
-                            </div>
-                        </div>
-                    </td>
-                    <td>August 2026</td>
-                    <td>$5,200.00</td>
-                    <td>$200.00</td>
-                    <td class="font-bold">$5,500.00</td>
-                    <td><span class="badge badge-warning">Pending</span></td>
-                    <td>
-                        <div class="btn-group">
-                            <button class="action-btn action-btn-edit" title="Edit"
-                                onclick="openEditPayrollModal('EM-4821', 'Oliver Mitchell')"><i data-lucide="edit-2"
-                                    size="16"></i></button>
-                            <button class="action-btn action-btn-view" title="View Payslip"><i data-lucide="eye"
-                                    size="16"></i></button>
-                        </div>
-                    </td>
-                </tr>
+                <!-- Data will be fetched dynamically via payroll.js -->
             </tbody>
         </table>
     </div>
@@ -368,10 +100,14 @@ include 'includes/header.php';
 <div class="modal-overlay" id="editPayrollModal">
     <div class="modal-content premium wide-md">
         <div class="modal-header">
-            <div>
-                <h3>Edit Payroll Record</h3>
-                <p class="font-12 text-light mt-1" id="editPayrollSubtitle">Updating payroll for Emma Williams (EM-4820)
-                </p>
+            <div class="flex-center gap-12">
+                <div class="type-icon-box primary">
+                    <i data-lucide="pencil" size="20"></i>
+                </div>
+                <div>
+                    <h3 class="font-18 font-700 m-0">Edit Payroll Record</h3>
+                    <p class="font-12 text-light m-0" id="editPayrollSubtitle">Updating payroll for Emma Williams (EM-4820)</p>
+                </div>
             </div>
             <button class="icon-btn js-modal-close"><i data-lucide="x"></i></button>
         </div>
@@ -541,8 +277,8 @@ include 'includes/header.php';
                     <div class="highlight-box bg-primary-light border-primary-light">
                         <div class="flex-between">
                             <div>
-                                <p class="font-600 text-primary-color font-16">Selected Period: August 2026</p>
-                                <p class="font-13 text-light mt-4">Total Employees to process: 482</p>
+                                <p class="font-600 text-primary-color font-16">Selected Period: <span id="selectedMonthText"><?= date('F Y') ?></span></p>
+                                <p class="font-13 text-light mt-4">Total Employees to process: <span id="totalEmployeesToProcess">0</span></p>
                             </div>
                             <i data-lucide="info" class="text-primary-color opacity-50" size="24"></i>
                         </div>
@@ -605,36 +341,7 @@ include 'includes/header.php';
                             </tr>
                         </thead>
                         <tbody id="specificEmployeeList">
-                            <?php
-                            $employees = [
-                                ['Emma Williams', 'EM-4820', 'Senior Developer', 'Engineering', '$4,500.00'],
-                                ['Oliver Mitchell', 'EM-4821', 'UI/UX Designer', 'Marketing', '$5,200.00'],
-                                ['Sophia Wright', 'EM-4822', 'HR Manager', 'Human Resources', '$4,800.00'],
-                                ['James Wilson', 'EM-4823', 'Project Manager', 'Engineering', '$6,000.00'],
-                                ['Isabella Hall', 'EM-4824', 'Finance Lead', 'Finance', '$5,500.00'],
-                                ['Lucas Gray', 'EM-4825', 'Product Designer', 'Marketing', '$4,900.00'],
-                                ['Ava Bennett', 'EM-4826', 'Backend Engineer', 'Engineering', '$4,700.00'],
-                                ['Mason Reed', 'EM-4827', 'Marketing Exec', 'Marketing', '$3,800.00']
-                            ];
-                            foreach ($employees as $e): ?>
-                                <tr>
-                                    <td>
-                                        <label class="custom-checkbox m-0">
-                                            <input type="checkbox" class="emp-checkbox">
-                                            <span class="checkmark"></span>
-                                        </label>
-                                    </td>
-                                    <td>
-                                        <div class="emp-info">
-                                            <span class="name font-600"><?= $e[0] ?></span>
-                                            <span class="email font-12 text-light uppercase"><?= $e[1] ?></span>
-                                        </div>
-                                    </td>
-                                    <td><span class="font-13"><?= $e[2] ?></span></td>
-                                    <td><span class="font-13"><?= $e[3] ?></span></td>
-                                    <td class="text-right"><span class="font-13 font-600 text-primary-color"><?= $e[4] ?></span></td>
-                                </tr>
-                            <?php endforeach; ?>
+                            <!-- JS will populate this with real employees -->
                         </tbody>
                     </table>
                 </div>
@@ -648,7 +355,7 @@ include 'includes/header.php';
                             <select class="form-control bg-white-input">
                                 <option>Direct Deposit</option>
                                 <option>Bank Transfer</option>
-                                <option>Check</option>
+                                <option>Cheque</option>
                             </select>
                         </div>
                         <div class="form-group mb-0">
