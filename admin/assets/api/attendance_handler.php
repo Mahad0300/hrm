@@ -38,7 +38,10 @@ switch ($action) {
 }
 
 function handleFetchDaily($pdo) {
-    $date = $_GET['date'] ?? date('Y-m-d');
+    // Logical Date Logic: If it's before 7 AM, default to yesterday's date
+    // because the night shift of yesterday is still active or just ended.
+    $default_date = date('H') < 7 ? date('Y-m-d', strtotime('-1 day')) : date('Y-m-d');
+    $date = $_GET['date'] ?? $default_date;
     
     // Fetch all active employees and their attendance for the chosen date
     $query = "
@@ -232,7 +235,8 @@ function handleFetchBulkInit($pdo) {
 
 function handleFetchBulkEmployees($pdo) {
     $dept_id = $_GET['dept_id'] ?? '';
-    $date = $_GET['date'] ?? date('Y-m-d');
+    $default_date = date('H') < 7 ? date('Y-m-d', strtotime('-1 day')) : date('Y-m-d');
+    $date = $_GET['date'] ?? $default_date;
     $search = $_GET['search'] ?? '';
 
     $params = [$date, $date];

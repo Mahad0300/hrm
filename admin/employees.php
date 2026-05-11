@@ -20,21 +20,29 @@ include 'includes/header.php';
 
 <!-- Filters Card -->
 <div class="card p-24 mb-24">
-    <div class="filter-grid">
-        <div class="search-box">
-            <i data-lucide="search" size="18"></i>
-            <input type="text" id="searchEmployee" placeholder="Search by name, email or ID...">
+    <div class="filter-grid grid-4">
+        <div class="filter-item">
+            <label class="admin-form-label font-12">Search by ID</label>
+            <div class="search-box w-full">
+                <i data-lucide="hash" size="16"></i>
+                <input type="text" id="filterID" class="form-control" placeholder="e.g. 22">
+            </div>
         </div>
         <div class="filter-item">
+            <label class="admin-form-label font-12">Search by Name</label>
+            <div class="search-box w-full">
+                <i data-lucide="user" size="16"></i>
+                <input type="text" id="filterName" class="form-control" placeholder="Employee name...">
+            </div>
+        </div>
+        <div class="filter-item">
+            <label class="admin-form-label font-12">Department</label>
             <select class="form-control" id="filterDept">
                 <option value="">All Departments</option>
-                <option value="eng">Engineering</option>
-                <option value="design">Design</option>
-                <option value="hr">Human Resources</option>
-                <option value="sales">Sales & Marketing</option>
             </select>
         </div>
         <div class="filter-item">
+            <label class="admin-form-label font-12">Role</label>
             <select class="form-control" id="filterRole">
                 <option value="">All Roles</option>
                 <option value="Admin">Admin</option>
@@ -45,15 +53,6 @@ include 'includes/header.php';
                 <option value="Senior Associate">Senior Associate</option>
                 <option value="Junior Associate">Junior Associate</option>
                 <option value="Intern">Intern</option>
-            </select>
-        </div>
-        <div class="filter-item">
-            <select class="form-control" id="filterStatus">
-                <option value="">All Status</option>
-                <option value="Active">Active</option>
-                <option value="On Leave">On Leave</option>
-                <option value="Terminated">Terminated</option>
-                <option value="Exit">Exit</option>
             </select>
         </div>
     </div>

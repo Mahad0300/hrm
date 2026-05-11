@@ -3,6 +3,8 @@
 $page_title = "Attendance Tracking";
 $page_subtitle = "Monitor daily presence and work hours.";
 include 'includes/header.php';
+// Logical Date: If before 7 AM, default to yesterday
+$logical_date = date('H') < 7 ? date('Y-m-d', strtotime('-1 day')) : date('Y-m-d');
 ?>
 <?php include 'includes/sidebar.php'; ?>
 
@@ -23,7 +25,7 @@ include 'includes/header.php';
             </select>
         </div>
         <div class="filter-item">
-            <input type="date" id="dateFilter" class="form-control" value="<?= date('Y-m-d') ?>">
+            <input type="date" id="dateFilter" class="form-control" value="<?= $logical_date ?>">
         </div>
         <div class="filter-item text-right">
             <button type="button" class="btn btn-primary w-full h-full" onclick="openBulkModal(event)">
@@ -65,7 +67,7 @@ include 'includes/header.php';
                     </div>
                     <div class="form-group mb-0">
                         <label class="admin-form-label font-12">Date</label>
-                        <input type="date" class="form-control" id="bulkDateInput" value="<?= date('Y-m-d') ?>">
+                        <input type="date" class="form-control" id="bulkDateInput" value="<?= $logical_date ?>">
                     </div>
                     <div class="form-group mb-0">
                         <label class="admin-form-label font-12">Bulk Status</label>

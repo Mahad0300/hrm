@@ -64,7 +64,8 @@ switch ($action) {
 
     case 'fetch_directory':
         try {
-            $search = trim($_GET['search'] ?? '');
+            $id_search = trim($_GET['id_search'] ?? '');
+            $name_search = trim($_GET['name_search'] ?? '');
             $dept = $_GET['department'] ?? '';
             $role = $_GET['role'] ?? '';
             $status = $_GET['status'] ?? '';
@@ -81,18 +82,20 @@ switch ($action) {
             }
             $params = [];
 
-            // Apply specific role/status logic requested by USER
-            // Show only Employee/HR roles and Active/On Leave status by default
-            if (empty($role) && empty($status) && empty($search) && empty($dept)) {
+            // Apply specific role/status logic
+            if (empty($role) && empty($status) && empty($id_search) && empty($name_search) && empty($dept)) {
                 $where[] = "e.role IN ('Employee', 'HR')";
                 $where[] = "e.status IN ('Active', 'On Leave')";
             } else {
-                if (!empty($search)) {
-                    $where[] = "(e.first_name LIKE ? OR e.last_name LIKE ? OR e.email LIKE ? OR e.id LIKE ?)";
-                    $params[] = "%$search%";
-                    $params[] = "%$search%";
-                    $params[] = "%$search%";
-                    $params[] = "%$search%";
+                if (!empty($id_search)) {
+                    $where[] = "e.id LIKE ?";
+                    $params[] = "%$id_search%";
+                }
+                if (!empty($name_search)) {
+                    $where[] = "(e.first_name LIKE ? OR e.last_name LIKE ? OR e.middle_name LIKE ?)";
+                    $params[] = "%$name_search%";
+                    $params[] = "%$name_search%";
+                    $params[] = "%$name_search%";
                 }
                 if (!empty($dept)) {
                     $where[] = "e.department_id = ?";

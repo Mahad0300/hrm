@@ -11,7 +11,8 @@ if (!isLoggedIn()) {
 }
 
 $action = $_GET['action'] ?? 'get_overview';
-$today = date('Y-m-d');
+// Logical Date Logic: If before 7 AM, count today as yesterday
+$today = date('H') < 7 ? date('Y-m-d', strtotime('-1 day')) : date('Y-m-d');
 
 try {
     switch ($action) {

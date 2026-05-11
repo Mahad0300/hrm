@@ -91,10 +91,10 @@ document.addEventListener('DOMContentLoaded', () => {
     // Selectors
     const tableBody = document.getElementById('employeeTableBody');
     const perPageSelect = document.getElementById('perPageSelect');
-    const searchInput = document.getElementById('searchEmployee');
+    const filterID = document.getElementById('filterID');
+    const filterName = document.getElementById('filterName');
     const filterDept = document.getElementById('filterDept');
     const filterRole = document.getElementById('filterRole');
-    const filterStatus = document.getElementById('filterStatus');
     const paginationInfo = document.getElementById('paginationInfo');
     const tableSummary = document.getElementById('tableSummary');
     const pageNumbersContainer = document.getElementById('pageNumbers');
@@ -124,13 +124,14 @@ document.addEventListener('DOMContentLoaded', () => {
         lucide.createIcons();
 
         try {
-            const search = searchInput ? searchInput.value : '';
+            const id_search = filterID ? filterID.value : '';
+            const name_search = filterName ? filterName.value : '';
             const dept = filterDept ? filterDept.value : '';
             const role = filterRole ? filterRole.value : '';
-            // Handle Exit-only toggle logic
-            const status = isExitOnly ? 'Exit' : (filterStatus ? filterStatus.value : '');
+            // Default to empty status unless it's Exit toggle
+            const status = isExitOnly ? 'Exit' : '';
 
-            const url = `assets/api/employee_handler.php?action=fetch_directory&page=${currentPage}&limit=${entriesLimit}&search=${encodeURIComponent(search)}&department=${dept}&role=${role}&status=${status}`;
+            const url = `assets/api/employee_handler.php?action=fetch_directory&page=${currentPage}&limit=${entriesLimit}&id_search=${encodeURIComponent(id_search)}&name_search=${encodeURIComponent(name_search)}&department=${dept}&role=${role}&status=${status}`;
             
             const response = await fetch(url);
             const result = await response.json();
@@ -259,17 +260,17 @@ document.addEventListener('DOMContentLoaded', () => {
     };
     if (filterDept) filterDept.onchange = () => { currentPage = 1; fetchEmployees(); };
     if (filterRole) filterRole.onchange = () => { currentPage = 1; fetchEmployees(); };
-    if (filterStatus) filterStatus.onchange = () => { currentPage = 1; fetchEmployees(); };
     
-    if (searchInput) {
-        searchInput.oninput = () => {
-            clearTimeout(searchTimer);
-            searchTimer = setTimeout(() => {
-                currentPage = 1;
-                fetchEmployees();
-            }, 400);
-        };
-    }
+    const handleSearchInput = () => {
+        clearTimeout(searchTimer);
+        searchTimer = setTimeout(() => {
+            currentPage = 1;
+            fetchEmployees();
+        }, 400);
+    };
+
+    if (filterID) filterID.oninput = handleSearchInput;
+    if (filterName) filterName.oninput = handleSearchInput;
 
     if (btnExitEmployees) {
         btnExitEmployees.onclick = () => {
@@ -281,11 +282,9 @@ document.addEventListener('DOMContentLoaded', () => {
             if (isExitOnly) {
                 if (label) label.textContent = "Back to All";
                 if (icon) icon.setAttribute('data-lucide', 'arrow-left');
-                if (filterStatus) filterStatus.disabled = true;
             } else {
                 if (label) label.textContent = "Exit Employees";
                 if (icon) icon.setAttribute('data-lucide', 'log-out');
-                if (filterStatus) filterStatus.disabled = false;
             }
             lucide.createIcons();
             currentPage = 1;
