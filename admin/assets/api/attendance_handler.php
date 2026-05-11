@@ -4,6 +4,7 @@ header('Content-Type: application/json');
 
 require_once dirname(__DIR__, 3) . '/includes/db_connect.php';
 require_once dirname(__DIR__, 3) . '/includes/auth_helper.php';
+require_once dirname(__DIR__, 3) . '/includes/payroll_config.php';
 
 if (!isLoggedIn() || !in_array($_SESSION['user_role'], ['Admin', 'HR'])) {
     echo json_encode(['status' => 'error', 'message' => 'Unauthorized access.']);
@@ -89,8 +90,9 @@ function handleFetchLog($pdo) {
         return;
     }
 
-    $start_date = $month . '-01';
-    $end_date = date('Y-m-t', strtotime($start_date));
+    $range = getPayrollRange($month);
+    $start_date = $range['start'];
+    $end_date = $range['end'];
 
     // Fetch employee info
     $stmt = $pdo->prepare("SELECT e.*, s.name as shift_name, s.start_time, s.end_time FROM employees e LEFT JOIN shifts s ON e.shift_id = s.id WHERE e.id = ?");

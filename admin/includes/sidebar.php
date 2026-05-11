@@ -115,7 +115,7 @@ $current_page = basename($_SERVER['PHP_SELF']);
         </div>
         
         <div class="menu-label">System</div>
-        <div class="menu-item has-submenu <?= in_array($current_page, ['shifts.php', 'department-management.php', 'role-management.php', 'policy-management.php']) ? 'active open' : '' ?>">
+        <div class="menu-item has-submenu <?= in_array($current_page, ['shifts.php', 'department-management.php', 'role-management.php', 'policy-management.php', 'payroll-settings.php']) ? 'active open' : '' ?>">
             <a href="javascript:void(0)" class="menu-link submenu-toggle">
                 <i data-lucide="settings" size="18"></i>
                 <span>Settings</span>
@@ -137,6 +137,10 @@ $current_page = basename($_SERVER['PHP_SELF']);
                 <a href="policy-management.php" class="submenu-link <?= ($current_page == 'policy-management.php') ? 'active' : '' ?>">
                     <i data-lucide="file-text" size="14"></i>
                     <span>Policy Management</span>
+                </a>
+                <a href="payroll-settings.php" class="submenu-link <?= ($current_page == 'payroll-settings.php') ? 'active' : '' ?>">
+                    <i data-lucide="calculator" size="14"></i>
+                    <span>Payroll Cycle</span>
                 </a>
             </div>
         </div>

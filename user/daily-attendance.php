@@ -26,25 +26,15 @@ function formatWorkingHours($in, $out) {
 }
 
 include 'includes/header.php'; 
+require_once '../includes/payroll_config.php';
 ?>
 <?php include 'includes/sidebar.php'; ?>
 
 <?php
-// Fetch logs from DB
-$current_month = date('Y-m');
-if (isset($_GET['month'])) {
-    $current_month = $_GET['month'];
-}
-
-$stmt = $pdo->prepare("
-    SELECT a.*, s.name as shift_name, s.start_time as shift_start, s.end_time as shift_end 
-    FROM attendance a 
-    LEFT JOIN shifts s ON a.shift_id = s.id 
-    WHERE a.employee_id = ? AND a.date LIKE ? 
-    ORDER BY a.date DESC
-");
-$stmt->execute([$_SESSION['user_id'], $current_month . '%']);
-$logs = $stmt->fetchAll();
+$current_month = $_GET['month'] ?? date('Y-m');
+$range = getPayrollRange($current_month);
+// The table and calendar are loaded via JS, so we just need the title and range info for PHP
+$month_display = date('F Y', strtotime($current_month . '-01'));
 
 // Get current check-in status
 $stmt = $pdo->prepare("SELECT * FROM attendance WHERE employee_id = ? AND clock_out IS NULL ORDER BY clock_in DESC LIMIT 1");
@@ -65,7 +55,7 @@ $current_session = $stmt->fetch();
                 </button>
             </div>
             <div class="filter-item">
-                <input type="month" id="monthFilter" class="form-control" value="<?= $current_month ?>" onchange="filterByMonth(this.value)">
+                <input type="month" id="monthFilter" class="form-control" value="<?= $current_month ?>">
             </div>
         </div>
     </div>
@@ -135,7 +125,7 @@ $current_session = $stmt->fetch();
                 <div class="calendar-card">
                     <div class="calendar-header-v2 border-bottom">
                         <div class="flex-between">
-                            <h3 class="font-18 font-700 m-0" id="calendarMonthTitle"><?= date('F Y', strtotime($current_month . '-01')) ?></h3>
+                            <h3 class="font-18 font-700 m-0" id="calendarMonthTitle">Payroll: <?= $month_display ?></h3>
                             <div class="flex-center gap-12">
                                 <div class="flex-center gap-8">
                                     <span class="w-12 h-12 rounded-full status-v2-ontime"></span>

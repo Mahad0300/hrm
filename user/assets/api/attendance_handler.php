@@ -4,6 +4,7 @@ header('Content-Type: application/json');
 
 require_once dirname(__DIR__, 3) . '/includes/db_connect.php';
 require_once dirname(__DIR__, 3) . '/includes/auth_helper.php';
+require_once dirname(__DIR__, 3) . '/includes/payroll_config.php';
 
 if (!isLoggedIn()) {
     echo json_encode(['status' => 'error', 'message' => 'Unauthorized access.']);
@@ -174,8 +175,9 @@ function handleCheckOut($pdo, $user_id) {
 
 function handleFetchLogs($pdo, $user_id) {
     $month = $_GET['month'] ?? date('Y-m');
-    $start_date = $month . '-01';
-    $end_date = date('Y-m-t', strtotime($start_date));
+    $range = getPayrollRange($month);
+    $start_date = $range['start'];
+    $end_date = $range['end'];
 
     $stmt = $pdo->prepare("
         SELECT a.*, s.name as shift_name, s.start_time as shift_start, s.end_time as shift_end 

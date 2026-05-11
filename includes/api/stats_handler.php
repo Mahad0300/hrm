@@ -1,6 +1,7 @@
 <?php
 require_once '../db_connect.php';
 require_once '../auth_helper.php';
+require_once '../payroll_config.php';
 
 header('Content-Type: application/json');
 
@@ -105,10 +106,14 @@ try {
             $stmt->execute([$user_id]);
             $approved_days = $stmt->fetchColumn() ?: 0;
             
-            // 2. My Attendance this month
-            $start_month = date('Y-m-01');
-            $stmt = $pdo->prepare("SELECT COUNT(*) FROM attendance WHERE employee_id = ? AND date >= ? AND status IN ('ON TIME', 'LATE IN', 'HALF DAY')");
-            $stmt->execute([$user_id, $start_month]);
+            // 2. My Attendance this payroll month
+            $current_month = date('Y-m');
+            $range = getPayrollRange($current_month);
+            $start_date = $range['start'];
+            $end_date = $range['end'];
+            
+            $stmt = $pdo->prepare("SELECT COUNT(*) FROM attendance WHERE employee_id = ? AND date BETWEEN ? AND ? AND status IN ('ON TIME', 'LATE IN', 'HALF DAY')");
+            $stmt->execute([$user_id, $start_date, $end_date]);
             $attendance_count = $stmt->fetchColumn();
 
             // 3. My Department Count

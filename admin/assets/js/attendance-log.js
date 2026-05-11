@@ -96,31 +96,43 @@ document.addEventListener('DOMContentLoaded', function () {
             grid.appendChild(h);
         });
 
-        const [year, month] = monthFilter.value.split('-');
-        const firstDay = new Date(year, month - 1, 1).getDay();
-        const daysInMonth = new Date(year, month, 0).getDate();
+        const [year, month] = monthFilter.value.split('-').map(Number);
+        const startDay = window.HRM_CONFIG ? window.HRM_CONFIG.payroll_start_day : 21;
+        const endDay = window.HRM_CONFIG ? window.HRM_CONFIG.payroll_end_day : 20;
 
+        // Payroll Range: startDay of (month-1) to endDay of (month)
+        const startDate = new Date(year, month - 2, startDay);
+        const endDate = new Date(year, month - 1, endDay);
+        
+        const firstDay = startDate.getDay();
+        
         // Month Title
         const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-        document.getElementById('calendarMonthTitle').textContent = `${monthNames[month - 1]} ${year}`;
+        document.getElementById('calendarMonthTitle').textContent = `Payroll: ${monthNames[month - 1]} ${year}`;
 
-        // Empty cells
+        // Empty cells for the first row to align weekdays
         for (let i = 0; i < firstDay; i++) {
             const empty = document.createElement('div');
             empty.className = 'calendar-day-cell-v2 bg-light-soft';
             grid.appendChild(empty);
         }
 
-        // Days
+        // Days in Range
         const logMap = {};
-        allLogs.forEach(l => { logMap[new Date(l.date).getDate()] = l; });
+        allLogs.forEach(l => { 
+            const d = new Date(l.date);
+            const key = d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate();
+            logMap[key] = l; 
+        });
 
-        for (let d = 1; d <= daysInMonth; d++) {
+        let current = new Date(startDate);
+        while (current <= endDate) {
             const cell = document.createElement('div');
             cell.className = 'calendar-day-cell-v2 pointer';
-            const log = logMap[d];
-            const dateStr = `${year}-${month}-${String(d).padStart(2, '0')}`;
-            const dw = new Date(dateStr).getDay();
+            
+            const key = current.getFullYear() + '-' + (current.getMonth() + 1) + '-' + current.getDate();
+            const log = logMap[key];
+            const dw = current.getDay();
             const isWeekend = (dw === 0 || dw === 6);
 
             let status = log ? log.status : (isWeekend ? 'WEEKEND' : '');
@@ -142,34 +154,36 @@ document.addEventListener('DOMContentLoaded', function () {
                 contentHtml = '<span class="time-info-v2">No Record</span>';
             }
 
+            // For display, we might want to show the month too if it changes
+            const dayNum = current.getDate();
+            const monthShort = current.toLocaleDateString('en-GB', { month: 'short' });
+            
             cell.innerHTML = `
-                <span class="day-num-v2">${d}</span>
+                <span class="day-num-v2">${dayNum} <small style="font-size: 10px; opacity: 0.6;">${monthShort}</small></span>
                 <div class="day-content-v2">
                     ${contentHtml}
                 </div>
             `;
 
+            const currentData = log ? {...log} : {
+                date: current.toISOString().split('T')[0],
+                emp_id: empId,
+                shift_name: employeeInfo.shift_name,
+                shift_start: employeeInfo.start_time,
+                shift_end: employeeInfo.end_time,
+                status: isWeekend ? 'WEEKEND' : 'NO RECORD',
+                clock_in: null,
+                clock_out: null,
+                message: '',
+                working_hours: '--'
+            };
+
             cell.onclick = () => {
-                if (log) {
-                    openEditModal(log);
-                } else {
-                    // Create dummy log for modal
-                    openEditModal({
-                        date: dateStr,
-                        emp_id: empId,
-                        shift_name: employeeInfo.shift_name,
-                        shift_start: employeeInfo.start_time,
-                        shift_end: employeeInfo.end_time,
-                        status: isWeekend ? 'WEEKEND' : 'NO RECORD',
-                        clock_in: null,
-                        clock_out: null,
-                        message: '',
-                        working_hours: '--'
-                    });
-                }
+                openEditModal(currentData);
             };
 
             grid.appendChild(cell);
+            current.setDate(current.getDate() + 1);
         }
     }
 

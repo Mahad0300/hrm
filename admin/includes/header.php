@@ -1,5 +1,6 @@
 <?php
 require_once dirname(__DIR__, 2) . '/includes/middleware.php';
+require_once dirname(__DIR__, 2) . '/includes/payroll_config.php';
 protectModule(['Admin']);
 ?>
 <!DOCTYPE html>
@@ -25,6 +26,14 @@ protectModule(['Admin']);
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
     <!-- SweetAlert2 -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <!-- Global HRM Config for JS -->
+    <script>
+        window.HRM_CONFIG = {
+            payroll_start_day: <?= defined('PAYROLL_START_DAY') ? PAYROLL_START_DAY : 21 ?>,
+            payroll_end_day: <?= defined('PAYROLL_END_DAY') ? PAYROLL_END_DAY : 20 ?>
+        };
+    </script>
 </head>
 
 <body>
