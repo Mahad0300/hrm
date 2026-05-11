@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 08, 2026 at 12:39 AM
+-- Generation Time: May 12, 2026 at 01:29 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -91,7 +91,13 @@ INSERT INTO `activity_logs` (`id`, `employee_id`, `action`, `description`, `ip_a
 (48, 1, 'User Login', '[Authentication] User authenticated successfully and accessed the system dashboard.', '::1', '2026-05-07 15:32:55'),
 (49, 22, 'User Login', '[Authentication] User authenticated successfully and accessed the system dashboard.', '::1', '2026-05-07 15:49:08'),
 (50, 1, 'User Login', '[Authentication] User authenticated successfully and accessed the system dashboard.', '::1', '2026-05-07 16:12:30'),
-(51, 1, 'User Login', '[Authentication] User authenticated successfully and accessed the system dashboard.', '::1', '2026-05-07 22:04:52');
+(51, 1, 'User Login', '[Authentication] User authenticated successfully and accessed the system dashboard.', '::1', '2026-05-07 22:04:52'),
+(52, 1, 'User Login', '[Authentication] User authenticated successfully and accessed the system dashboard.', '::1', '2026-05-07 23:13:18'),
+(53, 1, 'User Login', '[Authentication] User authenticated successfully and accessed the system dashboard.', '::1', '2026-05-11 15:23:20'),
+(54, 33, 'User Login', '[Authentication] User authenticated successfully and accessed the system dashboard.', '::1', '2026-05-11 16:11:24'),
+(55, 1, 'Completed Employee Onboarding', '[Employees] Formally completed and finalized the onboarding profile for new team member: Syed Bukhari', '::1', '2026-05-11 16:34:36'),
+(56, 1, 'Completed Employee Onboarding', '[Employees] Formally completed and finalized the onboarding profile for new team member: Syed Bukhari', '::1', '2026-05-11 18:33:17'),
+(57, 22, 'User Login', '[Authentication] User authenticated successfully and accessed the system dashboard.', '::1', '2026-05-11 18:36:23');
 
 -- --------------------------------------------------------
 
@@ -152,9 +158,106 @@ INSERT INTO `attendance` (`id`, `employee_id`, `date`, `shift_id`, `clock_in`, `
 (6, 22, '2026-05-06', 6, '2026-05-06 20:19:46', '2026-05-07 05:00:50', '8h 41m', 'LATE IN', NULL, '2026-05-06 15:19:46', '2026-05-07 00:00:50'),
 (7, 22, '2026-05-07', 6, '2026-05-07 20:05:28', '2026-05-08 04:42:54', '8h 37m', 'ON TIME', 'wqeeweweq', '2026-05-07 15:05:28', '2026-05-07 16:40:11'),
 (11, 22, '2026-05-08', 6, '2026-05-09 00:37:01', '2026-05-09 03:42:04', '3h 05m', 'HALF DAY', 'asdsaadsdasdasd', '2026-05-08 19:37:01', '2026-05-07 16:40:01'),
-(17, 22, '2026-05-11', 7, NULL, NULL, NULL, 'ABSENT', NULL, '2026-05-12 16:20:07', NULL),
+(17, 22, '2026-05-11', 7, '2026-05-11 21:00:00', '2026-05-12 06:00:00', '9h 00m', 'ON TIME', NULL, '2026-05-12 16:20:07', '2026-05-11 20:56:58'),
 (18, 22, '2026-05-12', 7, '2026-05-12 21:20:07', NULL, NULL, 'ON TIME', 'testtttttttt yyut', '2026-05-12 16:20:07', '2026-05-07 16:38:32'),
-(20, 22, '2026-05-13', 7, '2026-05-13 21:00:00', '2026-05-14 05:54:00', '8h 54m', 'ON TIME', '', '2026-05-13 16:29:06', '2026-05-07 16:48:18');
+(20, 22, '2026-05-13', 7, '2026-05-13 21:00:00', '2026-05-14 05:54:00', '8h 54m', 'ON TIME', '', '2026-05-13 16:29:06', '2026-05-07 16:48:18'),
+(25, 33, '2026-05-08', 7, '2026-05-08 21:00:00', '2026-05-09 06:00:00', '9h 00m', 'ON TIME', NULL, '2026-05-08 00:09:29', '2026-05-08 00:11:01'),
+(26, 37, '2026-05-08', 5, '2026-05-08 19:00:00', '2026-05-09 04:00:00', '9h 00m', 'ON TIME', NULL, '2026-05-08 00:09:29', '2026-05-08 00:11:01'),
+(27, 29, '2026-05-08', 6, '2026-05-08 20:00:00', '2026-05-09 05:00:00', '9h 00m', 'ON TIME', NULL, '2026-05-08 00:09:29', '2026-05-08 00:11:01'),
+(28, 25, '2026-05-08', 5, '2026-05-08 19:00:00', '2026-05-09 04:00:00', '9h 00m', 'ON TIME', NULL, '2026-05-08 00:09:29', '2026-05-08 00:11:01'),
+(33, 33, '2026-05-12', 7, NULL, NULL, '—', 'HOLIDAY', NULL, '2026-05-11 16:09:52', NULL),
+(34, 37, '2026-05-12', 5, NULL, NULL, '—', 'HOLIDAY', NULL, '2026-05-11 16:09:52', NULL),
+(35, 29, '2026-05-12', 6, NULL, NULL, '—', 'HOLIDAY', NULL, '2026-05-11 16:09:52', NULL),
+(36, 25, '2026-05-12', 5, NULL, NULL, '—', 'HOLIDAY', NULL, '2026-05-11 16:09:52', NULL),
+(37, 33, '2026-05-11', 7, '2026-05-11 21:00:00', '2026-05-12 06:00:00', '9h 00m', 'ON TIME', NULL, '2026-05-11 16:11:40', '2026-05-11 20:54:05'),
+(38, 22, '2026-01-21', 7, '2026-01-21 20:55:00', '2026-01-22 06:05:00', '9h 10m', 'ON TIME', 'Routine check-in', '2026-05-11 18:29:39', NULL),
+(39, 22, '2026-01-22', 7, '2026-01-22 21:45:00', '2026-01-23 06:00:00', '8h 15m', 'LATE IN', 'Traffic delay', '2026-05-11 18:29:39', NULL),
+(40, 22, '2026-01-23', 7, '2026-01-23 21:00:00', '2026-01-24 00:30:00', '3h 30m', 'HALF DAY', 'Family emergency', '2026-05-11 18:29:39', NULL),
+(41, 22, '2026-01-26', 7, '2026-01-26 20:50:00', '2026-01-27 06:00:00', '9h 10m', 'ON TIME', NULL, '2026-05-11 18:29:39', NULL),
+(42, 22, '2026-01-27', 7, NULL, NULL, NULL, 'ABSENT', 'Sick Leave', '2026-05-11 18:29:39', NULL),
+(43, 22, '2026-01-28', 7, '2026-01-28 21:10:00', '2026-01-29 05:55:00', '8h 45m', 'ON TIME', NULL, '2026-05-11 18:29:39', NULL),
+(44, 22, '2026-01-29', 7, '2026-01-29 22:10:00', '2026-01-30 06:00:00', '7h 50m', 'LATE IN', NULL, '2026-05-11 18:29:39', NULL),
+(45, 22, '2026-01-30', 7, '2026-01-30 20:58:00', '2026-01-31 06:02:00', '9h 04m', 'ON TIME', NULL, '2026-05-11 18:29:39', NULL),
+(46, 22, '2026-02-02', 7, '2026-02-02 20:45:00', '2026-02-03 06:00:00', '9h 15m', 'ON TIME', NULL, '2026-05-11 18:29:39', NULL),
+(47, 22, '2026-02-03', 7, '2026-02-03 21:05:00', '2026-02-04 06:10:00', '9h 05m', 'ON TIME', NULL, '2026-05-11 18:29:39', NULL),
+(48, 22, '2026-02-04', 7, '2026-02-04 22:30:00', '2026-02-05 06:00:00', '7h 30m', 'LATE IN', 'Bike issue', '2026-05-11 18:29:39', NULL),
+(49, 22, '2026-02-05', 7, '2026-02-05 21:00:00', '2026-02-06 00:45:00', '3h 45m', 'HALF DAY', 'Personal work', '2026-05-11 18:29:39', NULL),
+(50, 22, '2026-02-06', 7, '2026-02-06 20:55:00', '2026-02-07 05:50:00', '8h 55m', 'ON TIME', NULL, '2026-05-11 18:29:39', NULL),
+(51, 22, '2026-02-09', 7, '2026-02-09 21:15:00', '2026-02-10 06:00:00', '8h 45m', 'ON TIME', NULL, '2026-05-11 18:29:39', NULL),
+(52, 22, '2026-02-10', 7, NULL, NULL, NULL, 'ABSENT', NULL, '2026-05-11 18:29:39', NULL),
+(53, 22, '2026-02-11', 7, '2026-02-11 20:50:00', '2026-02-12 06:00:00', '9h 10m', 'ON TIME', NULL, '2026-05-11 18:29:39', NULL),
+(54, 22, '2026-02-12', 7, '2026-02-12 21:40:00', '2026-02-13 06:00:00', '8h 20m', 'LATE IN', NULL, '2026-05-11 18:29:39', NULL),
+(55, 22, '2026-02-13', 7, '2026-02-13 21:00:00', '2026-02-14 06:00:00', '9h 00m', 'ON TIME', NULL, '2026-05-11 18:29:39', NULL),
+(56, 22, '2026-02-16', 7, '2026-02-16 20:55:00', '2026-02-17 06:00:00', '9h 05m', 'ON TIME', NULL, '2026-05-11 18:29:39', NULL),
+(57, 22, '2026-02-17', 7, '2026-02-17 21:00:00', '2026-02-18 01:00:00', '4h 00m', 'ON TIME', 'Left early with permission', '2026-05-11 18:29:39', NULL),
+(58, 22, '2026-02-18', 7, '2026-02-18 22:15:00', '2026-02-19 06:00:00', '7h 45m', 'LATE IN', NULL, '2026-05-11 18:29:39', NULL),
+(59, 22, '2026-02-19', 7, '2026-02-19 21:10:00', '2026-02-20 05:55:00', '8h 45m', 'ON TIME', NULL, '2026-05-11 18:29:39', NULL),
+(60, 22, '2026-02-20', 7, '2026-02-20 21:00:00', '2026-02-21 00:15:00', '3h 15m', 'HALF DAY', NULL, '2026-05-11 18:29:39', NULL),
+(61, 22, '2026-02-23', 7, '2026-02-23 20:40:00', '2026-02-24 06:10:00', '9h 30m', 'ON TIME', NULL, '2026-05-11 18:29:39', NULL),
+(62, 22, '2026-02-24', 7, '2026-02-24 21:20:00', '2026-02-25 06:00:00', '8h 40m', 'ON TIME', NULL, '2026-05-11 18:29:39', NULL),
+(63, 22, '2026-02-25', 7, '2026-02-25 21:55:00', '2026-02-26 06:00:00', '8h 05m', 'LATE IN', NULL, '2026-05-11 18:29:39', NULL),
+(64, 22, '2026-02-26', 7, '2026-02-26 21:00:00', '2026-02-27 05:50:00', '8h 50m', 'ON TIME', NULL, '2026-05-11 18:29:39', NULL),
+(65, 22, '2026-02-27', 7, NULL, NULL, NULL, 'ABSENT', NULL, '2026-05-11 18:29:39', NULL),
+(66, 22, '2026-03-02', 7, '2026-03-02 20:55:00', '2026-03-03 06:00:00', '9h 05m', 'ON TIME', NULL, '2026-05-11 18:29:39', NULL),
+(67, 22, '2026-03-03', 7, '2026-03-03 21:10:00', '2026-03-04 06:00:00', '8h 50m', 'ON TIME', NULL, '2026-05-11 18:29:39', NULL),
+(68, 22, '2026-03-04', 7, '2026-03-04 22:20:00', '2026-03-05 06:00:00', '7h 40m', 'LATE IN', NULL, '2026-05-11 18:29:39', NULL),
+(69, 22, '2026-03-05', 7, '2026-03-05 21:00:00', '2026-03-06 00:30:00', '3h 30m', 'HALF DAY', NULL, '2026-05-11 18:29:39', NULL),
+(70, 22, '2026-03-06', 7, '2026-03-06 20:50:00', '2026-03-07 06:10:00', '9h 20m', 'ON TIME', NULL, '2026-05-11 18:29:39', NULL),
+(71, 22, '2026-03-09', 7, '2026-03-09 21:45:00', '2026-03-10 06:00:00', '8h 15m', 'LATE IN', NULL, '2026-05-11 18:29:39', NULL),
+(72, 22, '2026-03-10', 7, '2026-03-10 20:55:00', '2026-03-11 06:05:00', '9h 10m', 'ON TIME', NULL, '2026-05-11 18:29:39', NULL),
+(73, 22, '2026-03-11', 7, '2026-03-11 21:00:00', '2026-03-12 06:00:00', '9h 00m', 'ON TIME', NULL, '2026-05-11 18:29:39', NULL),
+(74, 22, '2026-03-12', 7, NULL, NULL, NULL, 'ABSENT', NULL, '2026-05-11 18:29:39', NULL),
+(75, 22, '2026-03-13', 7, '2026-03-13 21:10:00', '2026-03-14 06:00:00', '8h 50m', 'ON TIME', NULL, '2026-05-11 18:29:39', NULL),
+(76, 22, '2026-03-16', 7, '2026-03-16 20:45:00', '2026-03-17 06:00:00', '9h 15m', 'ON TIME', NULL, '2026-05-11 18:29:39', NULL),
+(77, 22, '2026-03-17', 7, '2026-03-17 21:00:00', '2026-03-18 06:00:00', '9h 00m', 'ON TIME', NULL, '2026-05-11 18:29:39', NULL),
+(78, 22, '2026-03-18', 7, '2026-03-18 22:50:00', '2026-03-19 06:00:00', '7h 10m', 'LATE IN', 'Personal reason', '2026-05-11 18:29:39', NULL),
+(79, 22, '2026-03-19', 7, '2026-03-19 21:15:00', '2026-03-20 06:00:00', '8h 45m', 'ON TIME', NULL, '2026-05-11 18:29:39', NULL),
+(80, 22, '2026-03-20', 7, '2026-03-20 21:00:00', '2026-03-21 00:45:00', '3h 45m', 'HALF DAY', NULL, '2026-05-11 18:29:39', NULL),
+(81, 22, '2026-03-23', 7, '2026-03-23 20:55:00', '2026-03-24 06:00:00', '9h 05m', 'ON TIME', NULL, '2026-05-11 18:29:39', NULL),
+(82, 22, '2026-03-24', 7, '2026-03-24 21:05:00', '2026-03-25 06:10:00', '9h 05m', 'ON TIME', NULL, '2026-05-11 18:29:39', NULL),
+(83, 22, '2026-03-25', 7, '2026-03-25 21:50:00', '2026-03-26 06:00:00', '8h 10m', 'LATE IN', NULL, '2026-05-11 18:29:39', NULL),
+(84, 22, '2026-03-26', 7, '2026-03-26 21:00:00', '2026-03-27 05:55:00', '8h 55m', 'ON TIME', NULL, '2026-05-11 18:29:39', NULL),
+(85, 22, '2026-03-27', 7, NULL, NULL, NULL, 'ABSENT', NULL, '2026-05-11 18:29:39', NULL),
+(86, 22, '2026-03-30', 7, '2026-03-30 20:50:00', '2026-03-31 06:00:00', '9h 10m', 'ON TIME', NULL, '2026-05-11 18:29:39', NULL),
+(87, 22, '2026-03-31', 7, '2026-03-31 21:15:00', '2026-04-01 06:00:00', '8h 45m', 'ON TIME', NULL, '2026-05-11 18:29:39', NULL),
+(88, 22, '2026-04-01', 7, '2026-04-01 22:15:00', '2026-04-02 06:00:00', '7h 45m', 'LATE IN', NULL, '2026-05-11 18:29:39', NULL),
+(89, 22, '2026-04-02', 7, '2026-04-02 21:00:00', '2026-04-03 01:00:00', '4h 00m', 'ON TIME', NULL, '2026-05-11 18:29:39', NULL),
+(90, 22, '2026-04-03', 7, '2026-04-03 20:55:00', '2026-04-04 06:00:00', '9h 05m', 'ON TIME', NULL, '2026-05-11 18:29:39', NULL),
+(91, 22, '2026-04-06', 7, '2026-04-06 20:45:00', '2026-04-07 06:00:00', '9h 15m', 'ON TIME', NULL, '2026-05-11 18:29:39', NULL),
+(92, 22, '2026-04-07', 7, '2026-04-07 21:10:00', '2026-04-08 06:00:00', '8h 50m', 'ON TIME', NULL, '2026-05-11 18:29:39', NULL),
+(93, 22, '2026-04-08', 7, '2026-04-08 22:45:00', '2026-04-09 06:00:00', '7h 15m', 'LATE IN', NULL, '2026-05-11 18:29:39', NULL),
+(94, 22, '2026-04-09', 7, '2026-04-09 21:00:00', '2026-04-10 00:30:00', '3h 30m', 'HALF DAY', NULL, '2026-05-11 18:29:39', NULL),
+(95, 22, '2026-04-10', 7, '2026-04-10 21:00:00', '2026-04-11 06:00:00', '9h 00m', 'ON TIME', NULL, '2026-05-11 18:29:39', NULL),
+(96, 22, '2026-04-13', 7, NULL, NULL, NULL, 'ABSENT', NULL, '2026-05-11 18:29:39', NULL),
+(97, 22, '2026-04-14', 7, '2026-04-14 20:55:00', '2026-04-15 06:05:00', '9h 10m', 'ON TIME', NULL, '2026-05-11 18:29:39', NULL),
+(98, 22, '2026-04-15', 7, '2026-04-15 21:15:00', '2026-04-16 06:00:00', '8h 45m', 'ON TIME', NULL, '2026-05-11 18:29:39', NULL),
+(99, 22, '2026-04-16', 7, '2026-04-16 22:00:00', '2026-04-17 06:00:00', '8h 00m', 'LATE IN', NULL, '2026-05-11 18:29:39', NULL),
+(100, 22, '2026-04-17', 7, '2026-04-17 21:00:00', '2026-04-18 06:00:00', '9h 00m', 'ON TIME', NULL, '2026-05-11 18:29:39', NULL),
+(101, 22, '2026-04-20', 7, '2026-04-20 20:50:00', '2026-04-21 06:00:00', '9h 10m', 'ON TIME', NULL, '2026-05-11 18:29:39', NULL),
+(102, 22, '2026-04-21', 7, '2026-04-21 21:10:00', '2026-04-22 06:00:00', '8h 50m', 'ON TIME', NULL, '2026-05-11 18:29:39', NULL),
+(103, 22, '2026-04-22', 7, '2026-04-22 22:30:00', '2026-04-23 06:00:00', '7h 30m', 'LATE IN', NULL, '2026-05-11 18:29:39', NULL),
+(104, 22, '2026-04-23', 7, '2026-04-23 21:00:00', '2026-04-24 00:15:00', '3h 15m', 'HALF DAY', NULL, '2026-05-11 18:29:39', NULL),
+(105, 22, '2026-04-24', 7, '2026-04-24 21:00:00', '2026-04-25 06:00:00', '9h 00m', 'ON TIME', NULL, '2026-05-11 18:29:39', NULL),
+(106, 22, '2026-04-27', 7, '2026-04-27 20:55:00', '2026-04-28 06:00:00', '9h 05m', 'ON TIME', NULL, '2026-05-11 18:29:39', NULL),
+(107, 22, '2026-04-28', 7, NULL, NULL, NULL, 'ABSENT', NULL, '2026-05-11 18:29:39', NULL),
+(108, 22, '2026-04-29', 7, '2026-04-29 21:15:00', '2026-04-30 06:00:00', '8h 45m', 'ON TIME', NULL, '2026-05-11 18:29:39', NULL),
+(109, 22, '2026-04-30', 7, '2026-04-30 22:10:00', '2026-05-01 06:00:00', '7h 50m', 'LATE IN', NULL, '2026-05-11 18:29:39', NULL),
+(110, 22, '2026-05-01', 7, '2026-05-01 21:00:00', '2026-05-02 06:00:00', '9h 00m', 'ON TIME', NULL, '2026-05-11 18:29:39', NULL),
+(111, 22, '2026-05-04', 7, '2026-05-04 20:45:00', '2026-05-05 06:00:00', '9h 15m', 'ON TIME', NULL, '2026-05-11 18:29:39', NULL),
+(112, 22, '2026-05-05', 7, '2026-05-05 21:05:00', '2026-05-06 06:10:00', '9h 05m', 'ON TIME', NULL, '2026-05-11 18:29:39', NULL),
+(113, 22, '2026-05-14', 7, '2026-05-14 21:00:00', '2026-05-15 06:00:00', '9h 00m', 'ON TIME', 'Final record', '2026-05-11 18:29:39', NULL),
+(114, 28, '2026-05-11', 5, '2026-05-11 19:00:00', '2026-05-12 04:00:00', '9h 00m', 'ON TIME', NULL, '2026-05-11 20:56:58', NULL),
+(115, 34, '2026-05-11', 5, '2026-05-11 19:00:00', '2026-05-12 04:00:00', '9h 00m', 'ON TIME', NULL, '2026-05-11 20:56:58', NULL),
+(116, 31, '2026-05-11', 5, '2026-05-11 19:00:00', '2026-05-12 04:00:00', '9h 00m', 'ON TIME', NULL, '2026-05-11 20:56:58', NULL),
+(117, 32, '2026-05-11', 6, '2026-05-11 20:00:00', '2026-05-12 05:00:00', '9h 00m', 'ON TIME', NULL, '2026-05-11 20:56:58', NULL),
+(118, 37, '2026-05-11', 5, '2026-05-11 19:00:00', '2026-05-12 04:00:00', '9h 00m', 'ON TIME', NULL, '2026-05-11 20:56:58', NULL),
+(119, 35, '2026-05-11', 6, '2026-05-11 20:00:00', '2026-05-12 05:00:00', '9h 00m', 'ON TIME', NULL, '2026-05-11 20:56:58', NULL),
+(120, 29, '2026-05-11', 6, '2026-05-11 20:00:00', '2026-05-12 05:00:00', '9h 00m', 'ON TIME', NULL, '2026-05-11 20:56:58', NULL),
+(121, 26, '2026-05-11', 6, '2026-05-11 20:00:00', '2026-05-12 05:00:00', '9h 00m', 'ON TIME', NULL, '2026-05-11 20:56:58', NULL),
+(122, 25, '2026-05-11', 5, '2026-05-11 19:00:00', '2026-05-12 04:00:00', '9h 00m', 'ON TIME', NULL, '2026-05-11 20:56:58', NULL),
+(123, 27, '2026-05-11', 5, '2026-05-11 19:00:00', '2026-05-12 04:00:00', '9h 00m', 'ON TIME', NULL, '2026-05-11 20:56:58', NULL),
+(124, 36, '2026-05-11', 7, '2026-05-11 21:00:00', '2026-05-12 06:00:00', '9h 00m', 'ON TIME', NULL, '2026-05-11 20:56:58', NULL),
+(125, 30, '2026-05-11', 7, '2026-05-11 21:00:00', '2026-05-12 06:00:00', '9h 00m', 'ON TIME', NULL, '2026-05-11 20:56:58', NULL);
 
 -- --------------------------------------------------------
 
@@ -372,10 +475,20 @@ CREATE TABLE `employees` (
 
 INSERT INTO `employees` (`id`, `first_name`, `middle_name`, `last_name`, `email`, `password`, `role`, `gender`, `dob`, `phone`, `cnic_number`, `address`, `emergency_contact`, `emergency_relation`, `department_id`, `shift_id`, `job_title`, `job_type`, `salary`, `joining_date`, `status`, `id_card_path`, `other_docs`, `resume_path`, `profile_pic`, `created_at`, `updated_at`, `deleted_at`) VALUES
 (1, 'System', '', 'Admin', 'admin@gmail.com', '$2y$12$RKq6kP5En4KGCUYd3.hBIuE1WdPKNb7GFcnlE21gAgoiEA0i0noeS', 'Admin', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '', 0.00, '2026-04-06', 'Active', NULL, NULL, NULL, NULL, '2026-04-06 17:51:22', NULL, NULL),
-(22, 'Syed', 'Mahad', 'Bukhari', 'mahad@gmail.com', '$2y$10$MJSzzQkWueYLdZlP6A3pjOF2FtmO3h8IEpKJ./Gj0Q4dQG6LXX2D2', 'Employee', 'Male', '2002-07-05', '2222-2222227', '1111111111111', 'North Nazimabad', '33333333333', 'Test Emergency contact relation', 8, 7, 'Frontend Developer', 'Permanent', 40000.00, '2026-04-16', 'Active', 'uploads/employees/id_cards/EMP_69dffe42dcfe4.pdf', NULL, 'uploads/employees/resumes/EMP_69dffe42dd1fa.pdf', 'uploads/employees/profiles/user_22_69f3c6c79e71e.png', '2026-04-15 21:08:18', '2026-05-13 00:18:06', NULL),
+(22, 'Syed', 'Mahad', 'Bukhari', 'mahad@gmail.com', '$2y$10$MJSzzQkWueYLdZlP6A3pjOF2FtmO3h8IEpKJ./Gj0Q4dQG6LXX2D2', 'Employee', 'Male', '2002-07-05', '2222-2222227', '1111111111111', 'North Nazimabad', '33333333333', 'Test Emergency contact relation', 8, 7, 'Frontend Developer', 'Permanent', 40000.00, '2026-01-20', 'Active', 'uploads/employees/id_cards/EMP_69dffe42dcfe4.pdf', NULL, 'uploads/employees/resumes/EMP_69dffe42dd1fa.pdf', 'uploads/employees/profiles/user_22_69f3c6c79e71e.png', '2026-04-15 21:08:18', '2026-05-11 18:33:17', NULL),
 (25, 'test', 'test', 'test', 'test@gmail.com', '$2y$10$X4oArjIECxAau3.mp4y99.Pt.y5dt42xOj/ghJb4RbUN9N7WgYsyK', 'Employee', 'Male', '2000-01-02', '2222-2222222', '1111111111111', 'test', '33333333333', 'Test Emergency contact relation', 9, 5, 'test', 'Permanent', 65000.00, '2026-05-04', 'Active', 'uploads/employees/id_cards/EMP_69f3cfb2604a1.pdf', NULL, 'uploads/employees/resumes/EMP_69f3cfb2606a4.pdf', NULL, '2026-04-30 21:54:58', '2026-04-30 21:58:03', NULL),
 (26, 'test', 'test', 'test', 'test1@gmail.com', '$2y$10$SR6ZJqPiUKin/28qO3Kw3OwX3/Xugu2A3v1VfJ0mAX8XYN5l.C1km', 'Employee', 'Male', '2002-05-05', '2222-2222222', '1111111111111', 'north', '33333333333', 'testttt', 10, 6, 'test', 'Probation', 45000.00, '2026-05-05', 'Active', 'uploads/employees/id_cards/EMP_69f3d853ab1b8.pdf', NULL, 'uploads/employees/resumes/EMP_69f3d853ab3b9.pdf', NULL, '2026-04-30 22:31:47', '2026-04-30 22:34:35', NULL),
-(27, 'user', '', 'user', 'test2@gmail.com', '$2y$10$zG/p6Il95cae.1MWZllMyek46hyMsmafgaR8XeIRxay54zzOa68KW', 'Employee', 'Male', '2003-05-07', '3333-3333333', '4444444444444', 'test', '55555555555', 'test', 11, 5, 'Job Title Test', 'Permanent', 90000.00, '2026-05-04', 'Active', 'uploads/employees/id_cards/EMP_69f3da0719fe3.pdf', NULL, 'uploads/employees/resumes/EMP_69f3da071a1c4.pdf', NULL, '2026-04-30 22:39:03', NULL, NULL);
+(27, 'user', '', 'user', 'test2@gmail.com', '$2y$10$zG/p6Il95cae.1MWZllMyek46hyMsmafgaR8XeIRxay54zzOa68KW', 'Employee', 'Male', '2003-05-07', '3333-3333333', '4444444444444', 'test', '55555555555', 'test', 11, 5, 'Job Title Test', 'Permanent', 90000.00, '2026-05-04', 'Active', 'uploads/employees/id_cards/EMP_69f3da0719fe3.pdf', NULL, 'uploads/employees/resumes/EMP_69f3da071a1c4.pdf', NULL, '2026-04-30 22:39:03', NULL, NULL),
+(28, 'Ahmed', 'Ali', 'Khan', 'ahmed@gmail.com', '$2y$10$zG/p6Il95cae.1MWZllMyek46hyMsmafgaR8XeIRxay54zzOa68KW', 'Employee', 'Male', '1995-03-12', '0300-1111111', '42101-1111111-1', 'Gulshan-e-Iqbal, Karachi', '0300-9999999', 'Brother', 8, 5, 'Backend Developer', 'Permanent', 55000.00, '2026-05-01', 'Active', NULL, NULL, NULL, NULL, '2026-05-07 22:46:12', NULL, NULL),
+(29, 'Sara', '', 'Ahmed', 'sara@gmail.com', '$2y$10$zG/p6Il95cae.1MWZllMyek46hyMsmafgaR8XeIRxay54zzOa68KW', 'Employee', 'Female', '1998-06-25', '0300-2222222', '42101-2222222-2', 'DHA Phase 6, Karachi', '0300-8888888', 'Father', 9, 6, 'UI/UX Designer', 'Permanent', 60000.00, '2026-05-02', 'Active', NULL, NULL, NULL, NULL, '2026-05-07 22:46:12', NULL, NULL),
+(30, 'Zain', 'Ul', 'Abidin', 'zain@gmail.com', '$2y$10$zG/p6Il95cae.1MWZllMyek46hyMsmafgaR8XeIRxay54zzOa68KW', 'Employee', 'Male', '1992-11-10', '0300-3333333', '42101-3333333-3', 'North Karachi', '0300-7777777', 'Mother', 10, 7, 'Full Stack Developer', 'Permanent', 85000.00, '2026-05-03', 'Active', NULL, NULL, NULL, NULL, '2026-05-07 22:46:12', NULL, NULL),
+(31, 'Fatima', '', 'Zehra', 'fatima@gmail.com', '$2y$10$zG/p6Il95cae.1MWZllMyek46hyMsmafgaR8XeIRxay54zzOa68KW', 'Employee', 'Female', '1996-08-15', '0300-4444444', '42101-4444444-4', 'Malir Cantt, Karachi', '0300-6666666', 'Husband', 11, 5, 'QA Engineer', 'Probation', 45000.00, '2026-05-04', 'Active', NULL, NULL, NULL, NULL, '2026-05-07 22:46:12', NULL, NULL),
+(32, 'Hamza', 'Bin', 'Tariq', 'hamza@gmail.com', '$2y$10$zG/p6Il95cae.1MWZllMyek46hyMsmafgaR8XeIRxay54zzOa68KW', 'Employee', 'Male', '1994-12-30', '0300-5555555', '42101-5555555-5', 'Federal B Area, Karachi', '0300-5555555', 'Sister', 8, 6, 'SEO Specialist', 'Permanent', 40000.00, '2026-05-05', 'Active', NULL, NULL, NULL, NULL, '2026-05-07 22:46:12', NULL, NULL),
+(33, 'Ayesha', '', 'Siddiqui', 'ayesha@gmail.com', '$2y$12$RKq6kP5En4KGCUYd3.hBIuE1WdPKNb7GFcnlE21gAgoiEA0i0noeS', 'Employee', 'Female', '1997-04-22', '0300-6666666', '42101-6666666-6', 'Clifton, Karachi', '0300-4444444', 'Friend', 9, 7, 'Content Writer', 'Internship', 25000.00, '2026-05-06', 'Active', NULL, NULL, NULL, NULL, '2026-05-07 22:46:12', '2026-05-11 16:10:42', NULL),
+(34, 'Bilal', '', 'Sheikh', 'bilal@gmail.com', '$2y$10$zG/p6Il95cae.1MWZllMyek46hyMsmafgaR8XeIRxay54zzOa68KW', 'Employee', 'Male', '1990-01-18', '0300-7777777', '42101-7777777-7', 'Garden West, Karachi', '0300-3333333', 'Wife', 10, 5, 'Project Manager', 'Permanent', 120000.00, '2026-05-07', 'Active', NULL, NULL, NULL, NULL, '2026-05-07 22:46:12', NULL, NULL),
+(35, 'Nimra', 'Arshad', 'Rao', 'nimra@gmail.com', '$2y$10$zG/p6Il95cae.1MWZllMyek46hyMsmafgaR8XeIRxay54zzOa68KW', 'Employee', 'Female', '1999-09-09', '0300-8888888', '42101-8888888-8', 'PECHS Block 2, Karachi', '0300-2222222', 'Uncle', 11, 6, 'HR Executive', 'Permanent', 50000.00, '2026-05-08', 'Active', NULL, NULL, NULL, NULL, '2026-05-07 22:46:12', NULL, NULL),
+(36, 'Usman', '', 'Ghani', 'usman@gmail.com', '$2y$10$zG/p6Il95cae.1MWZllMyek46hyMsmafgaR8XeIRxay54zzOa68KW', 'Employee', 'Male', '1993-02-14', '0300-9999999', '42101-9999999-9', 'Korangi, Karachi', '0300-1111111', 'Aunt', 8, 7, 'Network Engineer', 'Permanent', 70000.00, '2026-05-09', 'Active', NULL, NULL, NULL, NULL, '2026-05-07 22:46:12', NULL, NULL),
+(37, 'Hina', '', 'Pervez', 'hina@gmail.com', '$2y$10$zG/p6Il95cae.1MWZllMyek46hyMsmafgaR8XeIRxay54zzOa68KW', 'HR', 'Female', '1991-05-20', '0300-0000000', '42101-0000000-0', 'Saddar, Karachi', '0300-0000000', 'Cousin', 9, 5, 'Marketing Head', 'Permanent', 95000.00, '2026-05-10', 'Active', NULL, NULL, NULL, NULL, '2026-05-07 22:46:12', '2026-05-11 21:14:28', NULL);
 
 -- --------------------------------------------------------
 
@@ -667,7 +780,7 @@ CREATE TABLE `payroll` (
   `allowances` decimal(12,2) DEFAULT 0.00,
   `deductions` decimal(12,2) DEFAULT 0.00,
   `net_payable` decimal(12,2) NOT NULL,
-  `payment_method` enum('Direct Deposit','Bank Transfer','Check') DEFAULT 'Bank Transfer',
+  `payment_method` enum('Direct Deposit','Bank Transfer','Cheque') DEFAULT 'Bank Transfer',
   `status` enum('Paid','Pending') DEFAULT 'Pending',
   `paid_date` date DEFAULT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
@@ -725,6 +838,26 @@ INSERT INTO `salary_history` (`id`, `employee_id`, `type`, `previous_salary`, `n
 (12, 22, 'Decrement', 60000.00, 40000.00, 20000.00, '2026-04-15', '2026-04-15 21:26:29'),
 (13, 25, 'Increment', 0.00, 65000.00, 65000.00, '2026-05-01', '2026-04-30 21:58:03'),
 (14, 26, 'Increment', 0.00, 45000.00, 45000.00, '2026-05-01', '2026-04-30 22:34:35');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `settings`
+--
+
+CREATE TABLE `settings` (
+  `id` int(11) NOT NULL,
+  `meta_key` varchar(255) NOT NULL,
+  `meta_value` text DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `settings`
+--
+
+INSERT INTO `settings` (`id`, `meta_key`, `meta_value`) VALUES
+(1, 'payroll_start_day', '23'),
+(2, 'payroll_end_day', '24');
 
 -- --------------------------------------------------------
 
@@ -944,6 +1077,13 @@ ALTER TABLE `salary_history`
   ADD KEY `employee_id` (`employee_id`);
 
 --
+-- Indexes for table `settings`
+--
+ALTER TABLE `settings`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `meta_key` (`meta_key`);
+
+--
 -- Indexes for table `shifts`
 --
 ALTER TABLE `shifts`
@@ -957,7 +1097,7 @@ ALTER TABLE `shifts`
 -- AUTO_INCREMENT for table `activity_logs`
 --
 ALTER TABLE `activity_logs`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=52;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=58;
 
 --
 -- AUTO_INCREMENT for table `announcements`
@@ -969,13 +1109,13 @@ ALTER TABLE `announcements`
 -- AUTO_INCREMENT for table `attendance`
 --
 ALTER TABLE `attendance`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=126;
 
 --
 -- AUTO_INCREMENT for table `banking_info`
 --
 ALTER TABLE `banking_info`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=68;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=70;
 
 --
 -- AUTO_INCREMENT for table `candidates`
@@ -1005,13 +1145,13 @@ ALTER TABLE `departments`
 -- AUTO_INCREMENT for table `education_experience`
 --
 ALTER TABLE `education_experience`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=68;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=70;
 
 --
 -- AUTO_INCREMENT for table `employees`
 --
 ALTER TABLE `employees`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=38;
 
 --
 -- AUTO_INCREMENT for table `events`
@@ -1090,6 +1230,12 @@ ALTER TABLE `policies`
 --
 ALTER TABLE `salary_history`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+
+--
+-- AUTO_INCREMENT for table `settings`
+--
+ALTER TABLE `settings`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `shifts`
