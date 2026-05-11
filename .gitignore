@@ -1,0 +1,12 @@
+# Common ignores
+.DS_Store
+Thumbs.db
+*.log
+*.tmp
+*.bak
+
+# XAMPP specific
+/phpmyadmin/
+
+# Config files (Optional: uncomment if you want to keep local DB credentials private)
+# includes/db_connect.php
