@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 12, 2026 at 01:29 AM
+-- Generation Time: May 13, 2026 at 12:07 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -97,7 +97,10 @@ INSERT INTO `activity_logs` (`id`, `employee_id`, `action`, `description`, `ip_a
 (54, 33, 'User Login', '[Authentication] User authenticated successfully and accessed the system dashboard.', '::1', '2026-05-11 16:11:24'),
 (55, 1, 'Completed Employee Onboarding', '[Employees] Formally completed and finalized the onboarding profile for new team member: Syed Bukhari', '::1', '2026-05-11 16:34:36'),
 (56, 1, 'Completed Employee Onboarding', '[Employees] Formally completed and finalized the onboarding profile for new team member: Syed Bukhari', '::1', '2026-05-11 18:33:17'),
-(57, 22, 'User Login', '[Authentication] User authenticated successfully and accessed the system dashboard.', '::1', '2026-05-11 18:36:23');
+(57, 22, 'User Login', '[Authentication] User authenticated successfully and accessed the system dashboard.', '::1', '2026-05-11 18:36:23'),
+(58, 1, 'User Login', '[Authentication] User authenticated successfully and accessed the system dashboard.', '::1', '2026-05-12 15:43:08'),
+(59, 1, 'Completed Employee Onboarding', '[Employees] Formally completed and finalized the onboarding profile for new team member: Ahmed Khan', '::1', '2026-05-12 17:26:55'),
+(60, 1, 'Completed Employee Onboarding', '[Employees] Formally completed and finalized the onboarding profile for new team member: Ahmed Khan', '::1', '2026-05-12 17:27:11');
 
 -- --------------------------------------------------------
 
@@ -284,7 +287,8 @@ INSERT INTO `banking_info` (`id`, `employee_id`, `bank_name`, `account_type`, `a
 (52, 22, 'Bank Alfalah', 'IBN', 'Syed Mahad Bukhari', '444444444444', 'Hydri', NULL),
 (62, 25, 'Bank Islami', 'IBN', 'test', 'test', 'test', NULL),
 (64, 26, 'Habib Metro', 'IBN', 'test', 'test', 'test', NULL),
-(66, 27, 'Soneri', 'IBN', 'test', '787897989879898778', 'test', NULL);
+(66, 27, 'Soneri', 'IBN', 'test', '787897989879898778', 'test', NULL),
+(70, 28, '', 'IBN', 'Ahmed Ali Khan', '789465123789', 'Gulshan Iqbal', NULL);
 
 -- --------------------------------------------------------
 
@@ -430,7 +434,8 @@ INSERT INTO `education_experience` (`id`, `employee_id`, `qualification`, `degre
 (52, 22, 'Intermediate', 'Certificate', 'College', 'Development', 'Test Last employer', 'Test Last designation', NULL, NULL),
 (62, 25, 'test', 'test', 'test', 'test', 'test', 'test', NULL, NULL),
 (64, 26, 'test', 'test', 'test', 'test', 'test', 'test', NULL, NULL),
-(66, 27, 'test', 'test', 'test', 'test', 'test', 'test', NULL, NULL);
+(66, 27, 'test', 'test', 'test', 'test', 'test', 'test', NULL, NULL),
+(70, 28, 'Intermediate', 'Test', 'test', 'test', 'test', 'test', NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -479,7 +484,7 @@ INSERT INTO `employees` (`id`, `first_name`, `middle_name`, `last_name`, `email`
 (25, 'test', 'test', 'test', 'test@gmail.com', '$2y$10$X4oArjIECxAau3.mp4y99.Pt.y5dt42xOj/ghJb4RbUN9N7WgYsyK', 'Employee', 'Male', '2000-01-02', '2222-2222222', '1111111111111', 'test', '33333333333', 'Test Emergency contact relation', 9, 5, 'test', 'Permanent', 65000.00, '2026-05-04', 'Active', 'uploads/employees/id_cards/EMP_69f3cfb2604a1.pdf', NULL, 'uploads/employees/resumes/EMP_69f3cfb2606a4.pdf', NULL, '2026-04-30 21:54:58', '2026-04-30 21:58:03', NULL),
 (26, 'test', 'test', 'test', 'test1@gmail.com', '$2y$10$SR6ZJqPiUKin/28qO3Kw3OwX3/Xugu2A3v1VfJ0mAX8XYN5l.C1km', 'Employee', 'Male', '2002-05-05', '2222-2222222', '1111111111111', 'north', '33333333333', 'testttt', 10, 6, 'test', 'Probation', 45000.00, '2026-05-05', 'Active', 'uploads/employees/id_cards/EMP_69f3d853ab1b8.pdf', NULL, 'uploads/employees/resumes/EMP_69f3d853ab3b9.pdf', NULL, '2026-04-30 22:31:47', '2026-04-30 22:34:35', NULL),
 (27, 'user', '', 'user', 'test2@gmail.com', '$2y$10$zG/p6Il95cae.1MWZllMyek46hyMsmafgaR8XeIRxay54zzOa68KW', 'Employee', 'Male', '2003-05-07', '3333-3333333', '4444444444444', 'test', '55555555555', 'test', 11, 5, 'Job Title Test', 'Permanent', 90000.00, '2026-05-04', 'Active', 'uploads/employees/id_cards/EMP_69f3da0719fe3.pdf', NULL, 'uploads/employees/resumes/EMP_69f3da071a1c4.pdf', NULL, '2026-04-30 22:39:03', NULL, NULL),
-(28, 'Ahmed', 'Ali', 'Khan', 'ahmed@gmail.com', '$2y$10$zG/p6Il95cae.1MWZllMyek46hyMsmafgaR8XeIRxay54zzOa68KW', 'Employee', 'Male', '1995-03-12', '0300-1111111', '42101-1111111-1', 'Gulshan-e-Iqbal, Karachi', '0300-9999999', 'Brother', 8, 5, 'Backend Developer', 'Permanent', 55000.00, '2026-05-01', 'Active', NULL, NULL, NULL, NULL, '2026-05-07 22:46:12', NULL, NULL),
+(28, 'Ahmed', 'Ali', 'Khan', 'ahmed@gmail.com', '$2y$10$zG/p6Il95cae.1MWZllMyek46hyMsmafgaR8XeIRxay54zzOa68KW', 'Employee', 'Male', '1995-03-12', '0300-1111111', '42101-1111111-1', 'Gulshan-e-Iqbal, Karachi', '0300-9999999', 'Brother', 8, 5, 'Backend Developer', 'Permanent', 30000.00, '2026-05-01', 'Active', NULL, NULL, NULL, NULL, '2026-05-07 22:46:12', '2026-05-12 17:26:55', NULL),
 (29, 'Sara', '', 'Ahmed', 'sara@gmail.com', '$2y$10$zG/p6Il95cae.1MWZllMyek46hyMsmafgaR8XeIRxay54zzOa68KW', 'Employee', 'Female', '1998-06-25', '0300-2222222', '42101-2222222-2', 'DHA Phase 6, Karachi', '0300-8888888', 'Father', 9, 6, 'UI/UX Designer', 'Permanent', 60000.00, '2026-05-02', 'Active', NULL, NULL, NULL, NULL, '2026-05-07 22:46:12', NULL, NULL),
 (30, 'Zain', 'Ul', 'Abidin', 'zain@gmail.com', '$2y$10$zG/p6Il95cae.1MWZllMyek46hyMsmafgaR8XeIRxay54zzOa68KW', 'Employee', 'Male', '1992-11-10', '0300-3333333', '42101-3333333-3', 'North Karachi', '0300-7777777', 'Mother', 10, 7, 'Full Stack Developer', 'Permanent', 85000.00, '2026-05-03', 'Active', NULL, NULL, NULL, NULL, '2026-05-07 22:46:12', NULL, NULL),
 (31, 'Fatima', '', 'Zehra', 'fatima@gmail.com', '$2y$10$zG/p6Il95cae.1MWZllMyek46hyMsmafgaR8XeIRxay54zzOa68KW', 'Employee', 'Female', '1996-08-15', '0300-4444444', '42101-4444444-4', 'Malir Cantt, Karachi', '0300-6666666', 'Husband', 11, 5, 'QA Engineer', 'Probation', 45000.00, '2026-05-04', 'Active', NULL, NULL, NULL, NULL, '2026-05-07 22:46:12', NULL, NULL),
@@ -780,12 +785,31 @@ CREATE TABLE `payroll` (
   `allowances` decimal(12,2) DEFAULT 0.00,
   `deductions` decimal(12,2) DEFAULT 0.00,
   `net_payable` decimal(12,2) NOT NULL,
-  `payment_method` enum('Direct Deposit','Bank Transfer','Cheque') DEFAULT 'Bank Transfer',
+  `payment_method` varchar(50) DEFAULT 'Bank Transfer',
   `status` enum('Paid','Pending') DEFAULT 'Pending',
   `paid_date` date DEFAULT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
-  `updated_at` timestamp NULL DEFAULT NULL ON UPDATE current_timestamp()
+  `updated_at` timestamp NULL DEFAULT NULL ON UPDATE current_timestamp(),
+  `house_rent` decimal(12,2) DEFAULT 0.00,
+  `utility` decimal(12,2) DEFAULT 0.00,
+  `fuel` decimal(12,2) DEFAULT 0.00,
+  `mobile` decimal(12,2) DEFAULT 0.00,
+  `medical` decimal(12,2) DEFAULT 0.00,
+  `leaves_count` int(11) DEFAULT 0,
+  `lates_count` int(11) DEFAULT 0,
+  `halfdays_count` int(11) DEFAULT 0,
+  `loan_deduction` decimal(12,2) DEFAULT 0.00,
+  `provident_fund` decimal(12,2) DEFAULT 0.00,
+  `professional_tax` decimal(12,2) DEFAULT 0.00
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `payroll`
+--
+
+INSERT INTO `payroll` (`id`, `employee_id`, `month_year`, `basic_salary`, `allowances`, `deductions`, `net_payable`, `payment_method`, `status`, `paid_date`, `created_at`, `updated_at`, `house_rent`, `utility`, `fuel`, `mobile`, `medical`, `leaves_count`, `lates_count`, `halfdays_count`, `loan_deduction`, `provident_fund`, `professional_tax`) VALUES
+(7, 22, '2026-05', 20000.00, 0.00, 2666.67, 37333.33, 'Bank Transfer', 'Paid', NULL, '2026-05-12 22:03:33', NULL, 8000.00, 4000.00, 2000.00, 2000.00, 4000.00, 1, 2, 2, 0.00, 0.00, 0.00),
+(8, 22, '2026-04', 20000.00, 0.00, 5333.33, 34666.67, 'Bank Transfer', 'Paid', NULL, '2026-05-12 22:04:56', NULL, 8000.00, 4000.00, 2000.00, 2000.00, 4000.00, 2, 5, 2, 0.00, 0.00, 0.00);
 
 -- --------------------------------------------------------
 
@@ -837,7 +861,8 @@ INSERT INTO `salary_history` (`id`, `employee_id`, `type`, `previous_salary`, `n
 (11, 22, 'Increment', 50000.00, 60000.00, 10000.00, '2026-04-15', '2026-04-15 21:21:05'),
 (12, 22, 'Decrement', 60000.00, 40000.00, 20000.00, '2026-04-15', '2026-04-15 21:26:29'),
 (13, 25, 'Increment', 0.00, 65000.00, 65000.00, '2026-05-01', '2026-04-30 21:58:03'),
-(14, 26, 'Increment', 0.00, 45000.00, 45000.00, '2026-05-01', '2026-04-30 22:34:35');
+(14, 26, 'Increment', 0.00, 45000.00, 45000.00, '2026-05-01', '2026-04-30 22:34:35'),
+(15, 28, 'Decrement', 55000.00, 30000.00, 25000.00, '2026-05-12', '2026-05-12 17:26:55');
 
 -- --------------------------------------------------------
 
@@ -1097,7 +1122,7 @@ ALTER TABLE `shifts`
 -- AUTO_INCREMENT for table `activity_logs`
 --
 ALTER TABLE `activity_logs`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=58;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=61;
 
 --
 -- AUTO_INCREMENT for table `announcements`
@@ -1115,7 +1140,7 @@ ALTER TABLE `attendance`
 -- AUTO_INCREMENT for table `banking_info`
 --
 ALTER TABLE `banking_info`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=70;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=72;
 
 --
 -- AUTO_INCREMENT for table `candidates`
@@ -1145,7 +1170,7 @@ ALTER TABLE `departments`
 -- AUTO_INCREMENT for table `education_experience`
 --
 ALTER TABLE `education_experience`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=70;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=72;
 
 --
 -- AUTO_INCREMENT for table `employees`
@@ -1217,7 +1242,7 @@ ALTER TABLE `notification_recipients`
 -- AUTO_INCREMENT for table `payroll`
 --
 ALTER TABLE `payroll`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `policies`
@@ -1229,7 +1254,7 @@ ALTER TABLE `policies`
 -- AUTO_INCREMENT for table `salary_history`
 --
 ALTER TABLE `salary_history`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- AUTO_INCREMENT for table `settings`

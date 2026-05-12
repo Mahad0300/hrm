@@ -3783,7 +3783,7 @@ a.stat-card.stat-card--link:focus-visible {
 .form-grid-2 {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 20px;
+    gap: 15px;
 }
 
 .form-grid-3 {
@@ -4856,13 +4856,13 @@ a.stat-card.stat-card--link:focus-visible {
 }
 
 .info-label {
-    font-size: 13.5px;
+    font-size: 13px;
     color: var(--text-light);
     font-weight: 500;
 }
 
 .info-value {
-    font-size: 14px;
+    font-size: 13px;
     font-weight: 700;
     color: var(--text-dark);
 }

@@ -17,6 +17,107 @@ document.addEventListener('DOMContentLoaded', function() {
     let entriesLimit = 10;
     let searchTimer;
 
+    // Handle Edit Payroll Form Submission
+    const editPayrollForm = document.getElementById('editPayrollForm');
+    if (editPayrollForm) {
+        editPayrollForm.addEventListener('submit', async function (e) {
+            e.preventDefault();
+            const formData = new FormData(this);
+            formData.append('action', 'save_payroll');
+
+            try {
+                const response = await fetch('assets/api/payroll_handler.php', {
+                    method: 'POST',
+                    body: formData
+                });
+                const result = await response.json();
+                if (result.status === 'success') {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Success!',
+                        text: 'Payroll record updated successfully!',
+                        showConfirmButton: false,
+                        timer: 1500
+                    });
+                    closeModal('editPayrollModal');
+                    fetchPayroll(); // Refresh table
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: result.message
+                    });
+                }
+            } catch (err) {
+                console.error(err);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'An error occurred while saving.'
+                });
+            }
+        });
+    }
+
+    // Handle Bulk Payroll Generation Form
+    const payrollForm = document.getElementById('payrollForm');
+    if (payrollForm) {
+        payrollForm.addEventListener('submit', async function (e) {
+            e.preventDefault();
+            
+            const activeTab = document.querySelector('.modal-tabs .tab-btn.active');
+            const isSpecific = activeTab && activeTab.getAttribute('onclick').includes('specific');
+            const month = this.querySelector('input[type="month"]').value;
+            
+            let selectedIds = [];
+            if (isSpecific) {
+                const checked = document.querySelectorAll('#specificEmployeeList .emp-checkbox:checked');
+                selectedIds = Array.from(checked).map(cb => cb.value);
+            } else {
+                const all = document.querySelectorAll('#specificEmployeeList .emp-checkbox');
+                selectedIds = Array.from(all).map(cb => cb.value);
+            }
+
+            if (selectedIds.length === 0) {
+                Swal.fire({ icon: 'warning', title: 'Selection Error', text: 'Please select at least one employee.' });
+                return;
+            }
+
+            Swal.fire({
+                title: 'Generating Payroll...',
+                text: 'Please wait while we process the disbursements.',
+                allowOutsideClick: false,
+                didOpen: () => { Swal.showLoading(); }
+            });
+
+            try {
+                const response = await fetch('assets/api/payroll_handler.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: `action=generate_bulk_payroll&ids=${JSON.stringify(selectedIds)}&month=${month}`
+                });
+                const result = await response.json();
+
+                if (result.status === 'success') {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Disbursement Successful!',
+                        text: `${result.count} payroll records have been processed.`,
+                        timer: 2000,
+                        showConfirmButton: false
+                    });
+                    closeModal('generatePayrollModal');
+                    fetchPayroll(); // Refresh the main table
+                } else {
+                    Swal.fire({ icon: 'error', title: 'Error', text: result.message });
+                }
+            } catch (err) {
+                console.error(err);
+                Swal.fire({ icon: 'error', title: 'Oops...', text: 'Failed to process disbursement.' });
+            }
+        });
+    }
+
     async function fetchPayroll() {
         if (!tableBody) return;
 
@@ -40,6 +141,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 updatePagination(result.total, result.page, result.limit);
             } else {
                 tableBody.innerHTML = `<tr><td colspan="7" class="text-center py-30 text-danger">${result.message}</td></tr>`;
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Fetch Error',
+                    text: result.message
+                });
             }
         } catch (error) {
             console.error('Fetch Payroll Error:', error);
@@ -83,8 +189,8 @@ document.addEventListener('DOMContentLoaded', function() {
                     <td><span class="badge ${statusBadge}">${p.status}</span></td>
                     <td>
                         <div class="btn-group">
-                            <button class="action-btn action-btn-edit" title="Edit" onclick="openEditPayrollModal('EMP-0${p.employee_id}', '${p.first_name} ${p.last_name}')"><i data-lucide="edit-2" size="16"></i></button>
-                            <button class="action-btn action-btn-view" title="View Payslip"><i data-lucide="eye" size="16"></i></button>
+                            <button class="action-btn action-btn-edit" title="Edit" onclick="openEditPayrollModal(${p.employee_id}, '${fullName}', '${monthVal}')"><i data-lucide="edit-2" size="16"></i></button>
+                            <button class="action-btn action-btn-view" title="View Payslip" onclick="viewPayslip(${p.employee_id}, '${monthVal}')"><i data-lucide="eye" size="16"></i></button>
                         </div>
                     </td>
                 </tr>
@@ -153,7 +259,21 @@ document.addEventListener('DOMContentLoaded', function() {
     // Initial Calls
     loadDeptData();
     fetchPayroll();
-    loadEligibleEmployees();
+    fetchEligibleEmployees();
+
+    // Generate Modal Filter Listeners
+    const genSearchId = document.getElementById('genSearchId');
+    const genSearchName = document.getElementById('genSearchName');
+    const genDept = document.getElementById('genDept');
+    
+    const triggerGenSearch = () => {
+        clearTimeout(generateSearchTimer);
+        generateSearchTimer = setTimeout(fetchEligibleEmployees, 500);
+    };
+
+    if (genSearchId) genSearchId.addEventListener('input', triggerGenSearch);
+    if (genSearchName) genSearchName.addEventListener('input', triggerGenSearch);
+    if (genDept) genDept.addEventListener('change', fetchEligibleEmployees);
 
     // Month Picker Logic for Edit Modal
     const yearDisplay = document.getElementById('currentYearDisplay');
@@ -240,8 +360,6 @@ window.switchGenerateTab = function(tabId) {
 
     // Update Footer Selection Text
     updateSelectedCount();
-
-    console.log('Switched to tab:', tabId);
 };
 
 // Selection Logic for Modal
@@ -282,31 +400,7 @@ document.addEventListener('change', function(e) {
     }
 });
 
-async function loadEligibleEmployees() {
-    const list = document.getElementById('specificEmployeeList');
-    if (!list) return;
-
-    console.log('Fetching eligible employees...');
-    try {
-        const response = await fetch('assets/api/payroll_handler.php?action=fetch_eligible_employees');
-        const result = await response.json();
-        console.log('Eligible employees result:', result);
-        
-        if (result.status === 'success') {
-            renderEligibleEmployees(result.data);
-            // Update summary count in modal
-            const totalCount = document.getElementById('totalEmployeesToProcess');
-            if (totalCount) totalCount.textContent = result.data.length;
-            
-            // Immediately update the footer count
-            updateSelectedCount();
-        } else {
-            console.error('API Error:', result.message);
-        }
-    } catch (error) {
-        console.error('Error loading eligible employees:', error);
-    }
-}
+// Redundant function removed (Merged into fetchEligibleEmployees)
 
 function renderEligibleEmployees(employees) {
     const list = document.getElementById('specificEmployeeList');
@@ -342,15 +436,186 @@ function renderEligibleEmployees(employees) {
 }
 
 // Edit Modal (Global for row clicks)
-window.openEditPayrollModal = function(empId, empName) {
+window.openEditPayrollModal = async function(empId, empName, month) {
     const modal = document.getElementById('editPayrollModal');
     const subtitle = document.getElementById('editPayrollSubtitle');
-    if (modal && subtitle) {
-        subtitle.textContent = `Updating payroll for ${empName} (${empId})`;
-        modal.classList.add('active');
-        lucide.createIcons();
+    const form = document.getElementById('editPayrollForm');
+    
+    if (!modal) return;
+
+    // Show loading or clear previous
+    subtitle.textContent = `Loading payroll details for ${empName}...`;
+    modal.classList.add('active');
+
+    try {
+        const response = await fetch(`assets/api/payroll_handler.php?action=get_payroll_details&employee_id=${empId}&month=${month}`);
+        const result = await response.json();
+
+        if (result.status === 'success') {
+            const data = result.data;
+            subtitle.textContent = `Updating payroll for ${empName} (EMP-0${empId})`;
+            
+            // Populate Hidden Fields
+            form.querySelector('#editEmpId').value = empId;
+            form.querySelector('#editMonth').value = month;
+
+            // Populate form fields
+            form.querySelector('[name="leaves"]').value = Math.round(data.leaves_count || 0);
+            form.querySelector('[name="late"]').value = Math.round(data.lates_count || 0);
+            form.querySelector('[name="halfday"]').value = data.halfdays_count || 0;
+            form.querySelector('[name="loan"]').value = Math.round(data.loan_deduction || 0);
+            form.querySelector('[name="pfund"]').value = Math.round(data.provident_fund || 0);
+            form.querySelector('[name="ptax"]').value = Math.round(data.professional_tax || 0);
+            
+            // Update Month Picker Hidden Input
+            document.getElementById('monthInput').value = month;
+            const [year, m] = month.split('-');
+            document.getElementById('currentYearDisplay').textContent = year;
+            
+            // Highlight month in picker
+            const monthIdx = parseInt(m) - 1;
+            document.querySelectorAll('.month-item').forEach(item => {
+                item.classList.toggle('active', parseInt(item.getAttribute('data-month')) === monthIdx);
+            });
+
+            // Update Salary Info Panel
+            updateSalaryInfoPanel(data, result.employee);
+
+            // Add Live Calculation Event Listeners
+            addLiveCalculationListeners(result.employee.salary);
+        } else {
+            alert(result.message);
+        }
+    } catch (error) {
+        console.error('Error opening edit modal:', error);
     }
+    
+    lucide.createIcons();
 };
+
+window.viewPayslip = function(empId, month) {
+    window.open(`payslip-print.php?id=${empId}&month=${month}`, '_blank');
+};
+
+function updateSalaryInfoPanel(data, employee) {
+    const panel = document.querySelector('.salary-info-panel');
+    if (!panel) return;
+
+    const currencyFormat = (val) => {
+        return 'PKR ' + Math.round(val).toLocaleString('en-US');
+    };
+    
+    // Calculate total earnings
+    const totalEarnings = parseFloat(data.basic_salary) + parseFloat(data.house_rent) + 
+                          parseFloat(data.utility) + parseFloat(data.fuel) + 
+                          parseFloat(data.mobile) + parseFloat(data.medical);
+
+    panel.innerHTML = `
+        <h4 class="font-14 font-600 mb-20 text-dark flex-center gap-8 justify-start">
+            <i data-lucide="info" size="18"></i> Salary Info (30 Days Base)
+        </h4>
+
+        <div class="space-y-4">
+            <div class="info-group">
+                <span class="info-label">Basic Salary (50%)</span>
+                <span class="info-value">${currencyFormat(data.basic_salary)}</span>
+            </div>
+            <div class="info-group">
+                <span class="info-label">House Rent (20%)</span>
+                <span class="info-value">${currencyFormat(data.house_rent)}</span>
+            </div>
+            <div class="info-group">
+                <span class="info-label">Utility Allowance (10%)</span>
+                <span class="info-value">${currencyFormat(data.utility)}</span>
+            </div>
+            <div class="info-group">
+                <span class="info-label">Medical Allowance (10%)</span>
+                <span class="info-value">${currencyFormat(data.medical)}</span>
+            </div>
+            <div class="info-group">
+                <span class="info-label">Fuel Allowance (5%)</span>
+                <span class="info-value">${currencyFormat(data.fuel)}</span>
+            </div>
+            <div class="info-group">
+                <span class="info-label">Mobile Allowance (5%)</span>
+                <span class="info-value">${currencyFormat(data.mobile)}</span>
+            </div>
+
+            <div class="my-16 border-b-light"></div>
+
+            <div class="info-group">
+                <span class="info-label">Attendance Deduction</span>
+                <span class="info-value text-danger" id="summary-attendance-deduction">-${currencyFormat(data.deductions)}</span>
+            </div>
+            <div class="info-group">
+                <span class="info-label">Loan Deduction</span>
+                <span class="info-value text-danger" id="summary-loan-deduction">-${currencyFormat(data.loan_deduction || 0)}</span>
+            </div>
+            <div class="info-group">
+                <span class="info-label">Provident Fund</span>
+                <span class="info-value text-danger" id="summary-pfund-deduction">-${currencyFormat(data.provident_fund || 0)}</span>
+            </div>
+            <div class="info-group">
+                <span class="info-label">Professional Tax</span>
+                <span class="info-value text-danger" id="summary-ptax-deduction">-${currencyFormat(data.professional_tax || 0)}</span>
+            </div>
+
+            <div class="mt-20"></div>
+
+            <div class="info-group highlight">
+                <span class="info-label font-600">Gross Earnings</span>
+                <span class="info-value font-700 text-primary">${currencyFormat(totalEarnings)}</span>
+            </div>
+
+            <div class="info-group highlight mt-8">
+                <span class="info-label font-600">Net Payable</span>
+                <span class="info-value font-700 text-success" id="summary-net-payable">${currencyFormat(data.net_payable)}</span>
+            </div>
+        </div>
+    `;
+    lucide.createIcons();
+}
+
+function addLiveCalculationListeners(grossSalary) {
+    const form = document.getElementById('editPayrollForm');
+    const inputs = form.querySelectorAll('input[type="number"]');
+    
+    inputs.forEach(input => {
+        input.addEventListener('input', () => {
+            calculateLive(grossSalary);
+        });
+    });
+}
+
+function calculateLive(grossSalary) {
+    const form = document.getElementById('editPayrollForm');
+    const leaves = parseFloat(form.querySelector('[name="leaves"]').value) || 0;
+    const lates = parseFloat(form.querySelector('[name="late"]').value) || 0;
+    const halfdays = parseFloat(form.querySelector('[name="halfday"]').value) || 0;
+    const loan = parseFloat(form.querySelector('[name="loan"]').value) || 0;
+    const pfund = parseFloat(form.querySelector('[name="pfund"]').value) || 0;
+    const ptax = parseFloat(form.querySelector('[name="ptax"]').value) || 0;
+
+    const oneDaySalary = grossSalary / 30;
+    const lateDeductionDays = Math.floor(lates / 3);
+    const attendanceDeduction = (leaves + lateDeductionDays + (halfdays * 0.5)) * oneDaySalary;
+    
+    const totalDeductions = attendanceDeduction + loan + pfund + ptax;
+    const netPayable = grossSalary - totalDeductions;
+
+    const currencyFormat = (val) => {
+        return 'PKR ' + Math.round(val).toLocaleString('en-US');
+    };
+
+    // Update Summary Labels
+    document.getElementById('summary-attendance-deduction').textContent = `-${currencyFormat(attendanceDeduction)}`;
+    document.getElementById('summary-loan-deduction').textContent = `-${currencyFormat(loan)}`;
+    document.getElementById('summary-pfund-deduction').textContent = `-${currencyFormat(pfund)}`;
+    document.getElementById('summary-ptax-deduction').textContent = `-${currencyFormat(ptax)}`;
+    document.getElementById('summary-net-payable').textContent = currencyFormat(netPayable);
+}
+
+let generateSearchTimer;
 
 // Open Generate Modal and refresh count
 window.openGenerateModal = function() {
@@ -359,10 +624,98 @@ window.openGenerateModal = function() {
         modal.classList.add('active');
         // Reset to first tab
         switchGenerateTab('all');
-        updateSelectedCount();
+        
+        // Refresh Employee List
+        fetchEligibleEmployees();
+        
         lucide.createIcons();
     }
 };
+
+async function fetchEligibleEmployees() {
+    const list = document.getElementById('specificEmployeeList');
+    if (!list) return;
+
+    const searchId = document.getElementById('genSearchId')?.value || '';
+    const searchName = document.getElementById('genSearchName')?.value || '';
+    const dept = document.getElementById('genDept')?.value || '';
+
+    list.innerHTML = `<tr><td colspan="5" class="text-center py-20"><i data-lucide="loader-2" class="spin text-primary" size="20"></i></td></tr>`;
+    lucide.createIcons();
+
+    try {
+        const url = `assets/api/payroll_handler.php?action=fetch_eligible_employees&searchId=${encodeURIComponent(searchId)}&searchName=${encodeURIComponent(searchName)}&department=${dept}`;
+        const response = await fetch(url);
+        const result = await response.json();
+
+        if (result.status === 'success') {
+            renderEligibleEmployees(result.data);
+        } else {
+            list.innerHTML = `<tr><td colspan="5" class="text-center py-20 text-danger">${result.message}</td></tr>`;
+        }
+    } catch (error) {
+        console.error(error);
+        list.innerHTML = `<tr><td colspan="5" class="text-center py-20 text-danger">Error loading employees</td></tr>`;
+    }
+}
+
+function renderEligibleEmployees(employees) {
+    const list = document.getElementById('specificEmployeeList');
+    list.innerHTML = '';
+
+    const totalProcess = document.getElementById('totalEmployeesToProcess');
+    if (totalProcess) {
+        totalProcess.textContent = employees.length;
+    }
+
+    employees.forEach(emp => {
+        const fullName = `${emp.first_name} ${emp.middle_name ? emp.middle_name + ' ' : ''}${emp.last_name}`;
+        const row = document.createElement('tr');
+        row.innerHTML = `
+            <td>
+                <input type="checkbox" class="emp-checkbox custom-checkbox" value="${emp.id}" onchange="updateSelectedCount()">
+            </td>
+            <td>
+                <div class="employee-info-min">
+                    <span class="font-14 font-600 block">${fullName}</span>
+                    <span class="font-11 text-light block">EMP-0${emp.id}</span>
+                </div>
+            </td>
+            <td><span class="font-13 text-main"">${emp.job_title}</span></td>
+            <td><span class="font-13 text-main">${emp.dept_name || 'N/A'}</span></td>
+            <td><span class="font-14 font-600">PKR ${Math.round(emp.salary).toLocaleString()}</span></td>
+        `;
+        list.appendChild(row);
+    });
+
+    // Handle Select All
+    const selectAll = document.getElementById('selectAllEmployees');
+    if (selectAll) {
+        selectAll.checked = false;
+        selectAll.onchange = function() {
+            const checkboxes = list.querySelectorAll('.emp-checkbox');
+            checkboxes.forEach(cb => cb.checked = selectAll.checked);
+            updateSelectedCount();
+        };
+    }
+
+    updateSelectedCount();
+}
+
+function updateSelectedCount() {
+    const countText = document.getElementById('selectedCountText');
+    if (!countText) return;
+
+    const specificTabActive = document.getElementById('tab-specific')?.classList.contains('active');
+    
+    if (specificTabActive) {
+        const checkboxes = document.querySelectorAll('.emp-checkbox:checked');
+        countText.textContent = `${checkboxes.length} employees selected`;
+    } else {
+        const allCheckboxes = document.querySelectorAll('.emp-checkbox');
+        countText.textContent = `All ${allCheckboxes.length} employees selected`;
+    }
+}
 
 // Close logic for modals
 document.querySelectorAll('.js-modal-close').forEach(btn => {

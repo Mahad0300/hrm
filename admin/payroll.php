@@ -2,6 +2,10 @@
 $page_title = "Payroll Management";
 $page_subtitle = "Manage employee salaries and deductions.";
 include 'includes/header.php';
+
+// Fetch departments for filters
+$deptStmt = $pdo->query("SELECT id, name FROM departments ORDER BY name ASC");
+$departments = $deptStmt->fetchAll();
 ?>
 <?php include 'includes/sidebar.php'; ?>
 
@@ -98,7 +102,7 @@ include 'includes/header.php';
 
 <!-- Edit Payroll Modal -->
 <div class="modal-overlay" id="editPayrollModal">
-    <div class="modal-content premium wide-md">
+    <div class="modal-content premium wide-lg">
         <div class="modal-header">
             <div class="flex-center gap-12">
                 <div class="type-icon-box primary">
@@ -113,8 +117,10 @@ include 'includes/header.php';
         </div>
 
         <form id="editPayrollForm">
+            <input type="hidden" name="employee_id" id="editEmpId">
+            <input type="hidden" name="month" id="editMonth">
             <div class="modal-body p-30">
-                <div class="grid-2-1 gap-24">
+                <div class="grid-2-1 gap-8">
                     <!-- Left Column: Editable Fields -->
                     <div class="form-section">
                         <div class="form-grid-2">
@@ -169,6 +175,18 @@ include 'includes/header.php';
                             <div class="form-group">
                                 <label class="admin-form-label">Loan Deduction</label>
                                 <input type="number" class="form-control bg-white-input" name="loan" value="0"
+                                    placeholder="0.00">
+                            </div>
+
+                            <div class="form-group">
+                                <label class="admin-form-label">Provident Fund</label>
+                                <input type="number" class="form-control bg-white-input" name="pfund" value="0"
+                                    placeholder="0.00">
+                            </div>
+
+                            <div class="form-group">
+                                <label class="admin-form-label">Professional Tax</label>
+                                <input type="number" class="form-control bg-white-input" name="ptax" value="0"
                                     placeholder="0.00">
                             </div>
                         </div>
@@ -291,33 +309,26 @@ include 'includes/header.php';
                 <div class="p-24 bg-light-soft border-bottom">
                     <div class="grid-3 gap-16">
                         <div class="form-group mb-0">
-                            <label class="admin-form-label font-12">Search Employee</label>
+                            <label class="admin-form-label font-12">Search by ID</label>
+                            <div class="modal-search" style="margin-bottom: 0;">
+                                <i data-lucide="hash" class="input-icon" size="16"></i>
+                                <input type="text" id="genSearchId" class="form-control bg-white-input" placeholder="e.g. 033">
+                            </div>
+                        </div>
+                        <div class="form-group mb-0">
+                            <label class="admin-form-label font-12">Search by Name</label>
                             <div class="modal-search" style="margin-bottom: 0;">
                                 <i data-lucide="search" class="input-icon" size="16"></i>
-                                <input type="text" class="form-control bg-white-input" placeholder="Search by name or ID..."
-                                    onkeyup="filterSpecificEmployees()">
+                                <input type="text" id="genSearchName" class="form-control bg-white-input" placeholder="e.g. Ahmed">
                             </div>
                         </div>
                         <div class="form-group mb-0">
                             <label class="admin-form-label font-12">Department</label>
-                            <select class="form-control bg-white-input" id="filterDept"
-                                onchange="filterSpecificEmployees()">
+                            <select class="form-control bg-white-input" id="genDept">
                                 <option value="">All Departments</option>
-                                <option value="Engineering">Engineering</option>
-                                <option value="Marketing">Marketing</option>
-                                <option value="Human Resources">Human Resources</option>
-                                <option value="Finance">Finance</option>
-                            </select>
-                        </div>
-                        <div class="form-group mb-0">
-                            <label class="admin-form-label font-12">Designation</label>
-                            <select class="form-control bg-white-input" id="filterDesig"
-                                onchange="filterSpecificEmployees()">
-                                <option value="">All Designations</option>
-                                <option value="Senior Developer">Senior Developer</option>
-                                <option value="UI/UX Designer">UI/UX Designer</option>
-                                <option value="HR Manager">HR Manager</option>
-                                <option value="Finance Lead">Finance Lead</option>
+                                <?php foreach ($departments as $dept): ?>
+                                    <option value="<?= $dept['id'] ?>"><?= $dept['name'] ?></option>
+                                <?php endforeach; ?>
                             </select>
                         </div>
                     </div>
@@ -328,16 +339,12 @@ include 'includes/header.php';
                         <thead>
                             <tr>
                                 <th width="40">
-                                    <label class="custom-checkbox m-0">
-                                        <input type="checkbox" id="selectAllEmployees" class="emp-checkbox"
-                                            onclick="toggleAllSpecific(this.checked)">
-                                        <span class="checkmark"></span>
-                                    </label>
+                                    <input type="checkbox" id="selectAllEmployees" class="custom-checkbox">
                                 </th>
                                 <th style="width: 30%;">EMPLOYEE DETAILS</th>
                                 <th style="width: 25%;">DESIGNATION</th>
                                 <th style="width: 25%;">DEPARTMENT</th>
-                                <th style="width: 20%;" class="text-right">BASIC SALARY</th>
+                                <th style="width: 20%;">BASIC SALARY</th>
                             </tr>
                         </thead>
                         <tbody id="specificEmployeeList">
@@ -382,5 +389,7 @@ include 'includes/header.php';
     </div>
 </div>
 
+<!-- SweetAlert2 -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="assets/js/payroll.js"></script>
 <?php include 'includes/footer.php'; ?>
