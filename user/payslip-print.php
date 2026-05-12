@@ -2,16 +2,13 @@
 require_once '../includes/db_connect.php';
 require_once '../includes/auth_helper.php';
 
-if (!isLoggedIn() || !in_array($_SESSION['user_role'], ['Admin', 'HR'])) {
+if (!isLoggedIn() || $_SESSION['user_role'] !== 'Employee') {
     die("Unauthorized access.");
 }
 
-$employee_id = $_GET['id'] ?? '';
+// Ensure the user can only view their own payslip
+$employee_id = $_SESSION['user_id'];
 $month = $_GET['month'] ?? date('Y-m');
-
-if (empty($employee_id)) {
-    die("Employee ID is required.");
-}
 
 // Fetch Payroll Cycle Settings
 $setStmt = $pdo->query("SELECT meta_key, meta_value FROM settings WHERE meta_key IN ('payroll_start_day', 'payroll_end_day')");
@@ -37,56 +34,14 @@ $daysInCycle = $interval->days + 1;
 $sql = "SELECT e.*, d.name as dept_name, p.*
         FROM employees e
         LEFT JOIN departments d ON e.department_id = d.id
-        LEFT JOIN payroll p ON e.id = p.employee_id AND p.month_year = ?
-        WHERE e.id = ?";
+        JOIN payroll p ON e.id = p.employee_id AND p.month_year = ?
+        WHERE e.id = ? AND p.status = 'Paid'";
 $stmt = $pdo->prepare($sql);
 $stmt->execute([$month, $employee_id]);
 $data = $stmt->fetch();
 
 if (!$data) {
-    die("Record not found.");
-}
-
-// If payroll record doesn't exist in DB, we calculate on the fly for the preview
-if (!$data['month_year']) {
-    $gross_salary = (float)$data['salary'];
-    
-    // Fetch attendance for deductions within the cycle
-    $attStmt = $pdo->prepare("SELECT status, COUNT(*) as count FROM attendance WHERE employee_id = ? AND date BETWEEN ? AND ? GROUP BY status");
-    $attStmt->execute([$employee_id, $startDate, $endDate]);
-    $attendance = $attStmt->fetchAll(PDO::FETCH_KEY_PAIR);
-
-    $absents = (int)($attendance['ABSENT'] ?? 0);
-    $lates = (int)($attendance['LATE IN'] ?? 0);
-    $halfdays = (int)($attendance['HALF DAY'] ?? 0);
-
-    $oneDaySalary = $gross_salary / 30;
-    
-    $earnings = [
-        'basic' => $gross_salary * 0.50,
-        'house_rent' => $gross_salary * 0.20,
-        'utility' => $gross_salary * 0.10,
-        'fuel' => $gross_salary * 0.05,
-        'mobile' => $gross_salary * 0.05,
-        'medical' => $gross_salary * 0.10
-    ];
-
-    $lateDeductionDays = floor($lates / 3);
-    $totalDeductionDays = $absents + $lateDeductionDays + ($halfdays * 0.5);
-    $attendanceDeduction = $totalDeductionDays * $oneDaySalary;
-
-    $data['basic_salary'] = $earnings['basic'];
-    $data['house_rent'] = $earnings['house_rent'];
-    $data['utility'] = $earnings['utility'];
-    $data['fuel'] = $earnings['fuel'];
-    $data['mobile'] = $earnings['mobile'];
-    $data['medical'] = $earnings['medical'];
-    $data['deductions'] = $attendanceDeduction;
-    $data['net_payable'] = $gross_salary - $attendanceDeduction;
-    $data['month_year'] = $month;
-    $data['leaves_count'] = $absents;
-    $data['lates_count'] = $lates;
-    $data['halfdays_count'] = $halfdays;
+    die("Payslip not found or not yet paid.");
 }
 
 $fullName = $data['first_name'] . ($data['middle_name'] ? ' ' . $data['middle_name'] : '') . ' ' . $data['last_name'];
@@ -98,7 +53,7 @@ $total_deductions = (float)$data['deductions'] + (float)($data['loan_deduction']
 $dateObj = DateTime::createFromFormat('Y-m', $data['month_year']);
 $formattedMonth = $dateObj->format('F Y');
 
-// Calculate worked days (Days in cycle - absents - halfday*0.5)
+// Calculate worked days
 $workedDays = $daysInCycle - (float)$data['leaves_count'] - ((float)$data['halfdays_count'] * 0.5) - floor((float)$data['lates_count'] / 3);
 
 ?>
@@ -141,7 +96,7 @@ $workedDays = $daysInCycle - (float)$data['leaves_count'] - ((float)$data['halfd
             }
             body { 
                 margin: 0; 
-                padding: 1.5cm; /* Manual margin for content */
+                padding: 1.5cm;
             }
             .no-print { display: none !important; }
             .payslip-container { 

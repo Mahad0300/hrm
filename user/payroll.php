@@ -8,22 +8,19 @@ $payroll_user_id = 'EM-4820';
 $payroll_user_role = 'Developer';
 $payroll_user_avatar = 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&q=80&w=150';
 
-/**
- * Demo: logged-in employee only — pay period, attendance summary, amounts, payslip.
- * status pending = payslip disabled until processed.
- */
-$payroll_records = [
-    ['month' => 'March 2026', 'basic' => '$6,000.00', 'leave' => 2, 'late' => 1, 'half_day' => 0, 'deductions' => '$195.00', 'net' => '$5,805.00', 'status' => 'pending'],
-    ['month' => 'February 2026', 'basic' => '$6,000.00', 'leave' => 1, 'late' => 0, 'half_day' => 1, 'deductions' => '$188.00', 'net' => '$5,812.00', 'status' => 'paid'],
-    ['month' => 'January 2026', 'basic' => '$6,000.00', 'leave' => 0, 'late' => 2, 'half_day' => 0, 'deductions' => '$190.00', 'net' => '$5,810.00', 'status' => 'paid'],
-    ['month' => 'December 2025', 'basic' => '$5,800.00', 'leave' => 1, 'late' => 0, 'half_day' => 0, 'deductions' => '$175.00', 'net' => '$5,625.00', 'status' => 'paid'],
-    ['month' => 'November 2025', 'basic' => '$5,800.00', 'leave' => 3, 'late' => 1, 'half_day' => 0, 'deductions' => '$172.00', 'net' => '$5,628.00', 'status' => 'paid'],
-    ['month' => 'October 2025', 'basic' => '$5,800.00', 'leave' => 0, 'late' => 0, 'half_day' => 2, 'deductions' => '$180.00', 'net' => '$5,620.00', 'status' => 'paid'],
-    ['month' => 'September 2025', 'basic' => '$5,800.00', 'leave' => 1, 'late' => 3, 'half_day' => 0, 'deductions' => '$168.00', 'net' => '$5,632.00', 'status' => 'paid'],
-    ['month' => 'August 2025', 'basic' => '$5,600.00', 'leave' => 0, 'late' => 1, 'half_day' => 0, 'deductions' => '$165.00', 'net' => '$5,435.00', 'status' => 'paid'],
-    ['month' => 'July 2025', 'basic' => '$5,600.00', 'leave' => 2, 'late' => 0, 'half_day' => 1, 'deductions' => '$160.00', 'net' => '$5,440.00', 'status' => 'paid'],
-    ['month' => 'June 2025', 'basic' => '$5,600.00', 'leave' => 0, 'late' => 0, 'half_day' => 0, 'deductions' => '$158.00', 'net' => '$5,442.00', 'status' => 'paid'],
-];
+$user_id = $_SESSION['user_id'] ?? 0;
+
+// Fetch Employee Name for URL
+$empStmt = $pdo->prepare("SELECT first_name, middle_name, last_name FROM employees WHERE id = ?");
+$empStmt->execute([$user_id]);
+$empData = $empStmt->fetch();
+$fullName = trim(($empData['first_name'] ?? '') . ' ' . ($empData['middle_name'] ?? '') . ' ' . ($empData['last_name'] ?? ''));
+$urlName = urlencode(str_replace(' ', '-', $fullName));
+
+// Fetch ONLY 'Paid' payroll records for the logged-in employee
+$stmt = $pdo->prepare("SELECT * FROM payroll WHERE employee_id = ? AND status = 'Paid' ORDER BY month_year DESC");
+$stmt->execute([$user_id]);
+$payroll_records = $stmt->fetchAll();
 
 $payroll_row_count = count($payroll_records);
 ?>
@@ -63,27 +60,33 @@ $payroll_row_count = count($payroll_records);
                 </tr>
             </thead>
             <tbody id="payrollTableBody">
-                <?php foreach ($payroll_records as $row):
-                    $payslipDisabled = ($row['status'] ?? '') === 'pending';
+                <?php if ($payroll_row_count > 0): ?>
+                    <?php foreach ($payroll_records as $row):
+                        $dateObj = DateTime::createFromFormat('Y-m', $row['month_year']);
+                        $formattedMonth = $dateObj ? $dateObj->format('F Y') : $row['month_year'];
                     ?>
-                <tr data-payment-status="<?= htmlspecialchars($row['status'], ENT_QUOTES, 'UTF-8') ?>">
-                    <td><?= htmlspecialchars($row['month'], ENT_QUOTES, 'UTF-8') ?></td>
-                    <td><?= htmlspecialchars($row['basic'], ENT_QUOTES, 'UTF-8') ?></td>
-                    <td><?= (int) $row['leave'] ?></td>
-                    <td><?= (int) $row['late'] ?></td>
-                    <td><?= (int) $row['half_day'] ?></td>
-                    <td><?= htmlspecialchars($row['deductions'], ENT_QUOTES, 'UTF-8') ?></td>
-                    <td class="font-bold text-primary-color"><?= htmlspecialchars($row['net'], ENT_QUOTES, 'UTF-8') ?></td>
-                    <td class="text-center">
-                        <div class="btn-group justify-center">
-                            <button type="button"
-                                class="action-btn action-btn-view"
-                                title="<?= $payslipDisabled ? 'Payslip available after payment' : 'View payslip' ?>"
-                                <?= $payslipDisabled ? 'disabled' : '' ?>><i data-lucide="eye" size="16"></i></button>
-                        </div>
-                    </td>
-                </tr>
-                <?php endforeach; ?>
+                    <tr>
+                        <td><?= htmlspecialchars($formattedMonth, ENT_QUOTES, 'UTF-8') ?></td>
+                        <td>PKR <?= number_format($row['basic_salary']) ?></td>
+                        <td><?= (int) $row['leaves_count'] ?></td>
+                        <td><?= (int) $row['lates_count'] ?></td>
+                        <td><?= (int) $row['halfdays_count'] ?></td>
+                        <td>PKR <?= number_format($row['deductions']) ?></td>
+                        <td class="font-bold">PKR <?= number_format($row['net_payable']) ?></td>
+                        <td class="text-center">
+                            <div class="btn-group justify-center">
+                                <button type="button" onclick="window.open('payslip-print.php?month=<?= htmlspecialchars($row['month_year']) ?>&name=<?= $urlName ?>', '_blank')" class="action-btn action-btn-view" title="View payslip">
+                                    <i data-lucide="eye" size="16"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    <?php endforeach; ?>
+                <?php else: ?>
+                    <tr>
+                        <td colspan="8" class="text-center py-20 text-light">No payroll records found.</td>
+                    </tr>
+                <?php endif; ?>
             </tbody>
         </table>
     </div>

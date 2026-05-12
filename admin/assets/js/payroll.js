@@ -189,8 +189,8 @@ document.addEventListener('DOMContentLoaded', function() {
                     <td><span class="badge ${statusBadge}">${p.status}</span></td>
                     <td>
                         <div class="btn-group">
-                            <button class="action-btn action-btn-edit" title="Edit" onclick="openEditPayrollModal(${p.employee_id}, '${fullName}', '${monthVal}')"><i data-lucide="edit-2" size="16"></i></button>
-                            <button class="action-btn action-btn-view" title="View Payslip" onclick="viewPayslip(${p.employee_id}, '${monthVal}')"><i data-lucide="eye" size="16"></i></button>
+                            <button class="action-btn action-btn-edit" title="Edit" onclick="openEditPayrollModal(${p.employee_id}, '${fullName.replace(/'/g, "\\'")}', '${monthVal}')"><i data-lucide="edit-2" size="16"></i></button>
+                            <button class="action-btn action-btn-view" title="View Payslip" onclick="viewPayslip(${p.employee_id}, '${monthVal}', '${fullName.replace(/'/g, "\\'")}')"><i data-lucide="eye" size="16"></i></button>
                         </div>
                     </td>
                 </tr>
@@ -493,8 +493,9 @@ window.openEditPayrollModal = async function(empId, empName, month) {
     lucide.createIcons();
 };
 
-window.viewPayslip = function(empId, month) {
-    window.open(`payslip-print.php?id=${empId}&month=${month}`, '_blank');
+window.viewPayslip = function(empId, month, empName) {
+    const urlName = encodeURIComponent(empName.replace(/ /g, '-'));
+    window.open(`payslip-print.php?id=${empId}&month=${month}&name=${urlName}`, '_blank');
 };
 
 function updateSalaryInfoPanel(data, employee) {
