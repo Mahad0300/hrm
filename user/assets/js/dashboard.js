@@ -6,6 +6,7 @@ document.addEventListener('DOMContentLoaded', function() {
     fetchPersonalStats();
     fetchLatestAnnouncements();
     fetchRecentNotifications();
+    startLiveClock();
     
     // Refresh every 5 minutes
     setInterval(() => {
@@ -311,4 +312,23 @@ function formatFullDate(dateString) {
     const d = new Date(dateString);
     const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
     return `${d.getDate()} ${months[d.getMonth()]}, ${d.getFullYear()}`;
+}
+
+function startLiveClock() {
+    const clockEl = document.getElementById('dashLiveClock');
+    if (!clockEl) return;
+
+    const updateClock = () => {
+        const now = new Date();
+        const timeStr = now.toLocaleTimeString('en-US', {
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit',
+            hour12: true
+        });
+        clockEl.textContent = timeStr;
+    };
+
+    updateClock();
+    setInterval(updateClock, 1000);
 }

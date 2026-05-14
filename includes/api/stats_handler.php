@@ -262,28 +262,36 @@ try {
             $start = new DateTime($range['start']);
             $end = new DateTime($range['end']);
             $today_dt = new DateTime(date('Y-m-d'));
-            if ($end > $today_dt) $end = $today_dt; // Only check up to today
+            // Only check for Absents up to yesterday. Today will be counted only if there's a record (Present/Late etc.)
+            $check_until = clone $today_dt;
+            $check_until->modify('-1 day');
+            if ($end > $check_until) $end = $check_until;
 
             $mix_counts = ['ON TIME' => 0, 'LATE IN' => 0, 'HALF DAY' => 0, 'ABSENT' => 0];
             
-            // Fetch all records for the range first to avoid many queries
+            // Fetch all records up to Today
             $stmt = $pdo->prepare("SELECT date, status FROM attendance WHERE employee_id = ? AND date BETWEEN ? AND ?");
-            $stmt->execute([$user_id, $range['start'], $end->format('Y-m-d')]);
+            $stmt->execute([$user_id, $range['start'], $today_dt->format('Y-m-d')]);
             $records = $stmt->fetchAll(PDO::FETCH_KEY_PAIR);
 
             $interval = new DateInterval('P1D');
-            $period = new DatePeriod($start, $interval, $end->modify('+1 day'));
+            // Loop from start to today
+            $end_of_loop = clone $today_dt;
+            $period = new DatePeriod($start, $interval, $end_of_loop->modify('+1 day'));
 
             foreach ($period as $dt) {
                 $d_str = $dt->format('Y-m-d');
-                $day_of_week = $dt->format('N'); // 1 (Mon) to 7 (Sun)
+                $day_of_week = $dt->format('N');
                 
-                if ($day_of_week <= 5) { // Monday to Friday
+                if ($day_of_week <= 5) { // Mon to Fri
                     if (isset($records[$d_str])) {
                         $status = $records[$d_str];
                         if (isset($mix_counts[$status])) $mix_counts[$status]++;
                     } else {
-                        $mix_counts['ABSENT']++;
+                        // Only mark as ABSENT if the date is strictly in the past
+                        if ($d_str < $today_dt->format('Y-m-d')) {
+                            $mix_counts['ABSENT']++;
+                        }
                     }
                 }
             }

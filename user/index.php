@@ -7,6 +7,17 @@ include 'includes/header.php';
 ?>
 <?php include 'includes/sidebar.php'; ?>
 
+<header class="dashboard-greeting mb-25">
+    <div class="greeting-content">
+        <h2 class="font-700 mb-5">Welcome back, <span class="text-primary"><?php echo $_SESSION['user_name'] ?? 'User'; ?></span></h2>
+        <p class="text-light font-14">Here is your personal HR overview for today.</p>
+    </div>
+    <div class="greeting-meta text-right">
+        <div class="live-clock font-600 text-dark" id="dashLiveClock">00:00:00 AM</div>
+        <div class="dash-date font-13 text-light mt-5" id="dashDate"><?php echo date('d M, Y'); ?></div>
+    </div>
+</header>
+
 <section class="udash-stat-grid">
     <a href="daily-attendance.php" class="card-link">
         <article class="card stat-card">
