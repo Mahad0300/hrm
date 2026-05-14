@@ -180,10 +180,49 @@ document.addEventListener('DOMContentLoaded', function() {
         saveAnnouncement('edit');
     };
 
+    function todayIso() {
+        const now = new Date();
+        now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+        return now.toISOString().slice(0, 10);
+    }
+
+    function syncAnnouncementDateLimits(prefix) {
+        const startEl = document.getElementById(`${prefix}ann_start`);
+        const endEl = document.getElementById(`${prefix}ann_end`);
+        if (!startEl || !endEl) return;
+
+        startEl.min = todayIso();
+        endEl.min = startEl.value || todayIso();
+
+        if (endEl.value && endEl.value < endEl.min) {
+            endEl.value = endEl.min;
+        }
+    }
+
+    ['add_', 'edit_'].forEach(prefix => {
+        const startEl = document.getElementById(`${prefix}ann_start`);
+        if (startEl) {
+            syncAnnouncementDateLimits(prefix);
+            startEl.addEventListener('change', () => syncAnnouncementDateLimits(prefix));
+        }
+    });
+
     function saveAnnouncement(mode) {
         const prefix = mode === 'edit' ? 'edit_' : 'add_';
         const typePrefix = mode === 'edit' ? 'edit_' : '';
         const richEditor = document.querySelector(mode === 'edit' ? '#edit_ann_rich_desc' : '#announcementForm .rich-text-editor');
+        const startDate = document.getElementById(`${prefix}ann_start`).value;
+        const endDate = document.getElementById(`${prefix}ann_end`).value;
+
+        if (startDate < todayIso()) {
+            Swal.fire('Warning', 'Start date cannot be a past date.', 'warning');
+            return;
+        }
+
+        if (endDate < startDate) {
+            Swal.fire('Warning', 'End date cannot be before start date.', 'warning');
+            return;
+        }
 
         const formData = new FormData();
         formData.append('action', 'save');
@@ -192,8 +231,8 @@ document.addEventListener('DOMContentLoaded', function() {
         formData.append('type', document.getElementById(`${typePrefix}selectedAnnType`).value);
         formData.append('target_depts', document.getElementById(`${typePrefix}selectedAnnDepts`).value);
         formData.append('content', richEditor.innerHTML);
-        formData.append('start_date', document.getElementById(`${prefix}ann_start`).value);
-        formData.append('end_date', document.getElementById(`${prefix}ann_end`).value);
+        formData.append('start_date', startDate);
+        formData.append('end_date', endDate);
 
         fetch('assets/api/announcement_handler.php', { method: 'POST', body: formData })
             .then(res => res.json())
@@ -221,6 +260,7 @@ document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('edit_ann_rich_desc').innerHTML = ann.content;
         document.getElementById('edit_ann_start').value = ann.start_date;
         document.getElementById('edit_ann_end').value = ann.end_date;
+        syncAnnouncementDateLimits('edit_');
 
         // Activate Type card
         editTypeCards.forEach(c => {

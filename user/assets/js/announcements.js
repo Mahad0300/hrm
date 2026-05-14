@@ -5,6 +5,7 @@ document.addEventListener('DOMContentLoaded', function() {
     if (!container) return;
 
     fetchAnnouncements();
+    setInterval(fetchAnnouncements, 5000);
 
     async function fetchAnnouncements() {
         try {
@@ -79,14 +80,14 @@ document.addEventListener('DOMContentLoaded', function() {
         if (window.lucide) lucide.createIcons();
     }
 
-    function showEmptyState(msg = 'No current updates for your department.') {
+    function showEmptyState(msg = 'No current announcements are available right now.') {
         container.innerHTML = `
-            <div class="empty-state-wrapper py-60">
-                <div class="empty-state-icon mb-20">
-                    <i data-lucide="megaphone-off" size="48" class="text-light"></i>
+            <div class="empty-state-container">
+                <div class="empty-state-icon">
+                    <i data-lucide="megaphone" size="32"></i>
                 </div>
-                <h3 class="font-18 font-600 text-dark mb-8">All Caught Up!</h3>
-                <p class="text-light font-14">${msg}</p>
+                <h4 class="empty-state-title">No Announcements Found</h4>
+                <p class="empty-state-desc">${msg}</p>
             </div>
         `;
         if (window.lucide) lucide.createIcons();

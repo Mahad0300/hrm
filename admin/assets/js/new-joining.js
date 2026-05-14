@@ -179,6 +179,24 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
+function formatJoiningCardDate(value) {
+    if (!value) return '—';
+
+    const datePart = String(value).split(' ')[0];
+    const parts = datePart.split('-').map(Number);
+    const date = parts.length === 3 && parts.every(Boolean)
+        ? new Date(parts[0], parts[1] - 1, parts[2])
+        : new Date(value);
+
+    if (Number.isNaN(date.getTime())) return value;
+
+    return date.toLocaleDateString('en-US', {
+        month: 'long',
+        day: 'numeric',
+        year: 'numeric'
+    });
+}
+
 async function fetchPendingOnboarding() {
     const container = document.getElementById('pendingOnboardingContainer');
     if (!container) return;
@@ -189,7 +207,7 @@ async function fetchPendingOnboarding() {
 
         if (result.status === 'success' && result.data.length > 0) {
             container.innerHTML = result.data.map(emp => `
-                <div class="announcement-card it-dept">
+                <div class="announcement-card it-dept new-joining-card">
                     <div class="card-shape shape-1"></div>
                     <div class="card-shape shape-2"></div>
                     <div class="announcement-content">
@@ -200,28 +218,28 @@ async function fetchPendingOnboarding() {
                         <h3 class="mb-2">${emp.first_name} ${emp.middle_name ? emp.middle_name + ' ' : ''}${emp.last_name}</h3>
                         <p class="font-12 text-primary font-600 mb-15">${emp.job_title || 'Employee Onboarding'}</p>
                         
-                        <div class="candidate-info-rows">
-                            <div class="flex-center gap-10 mb-6 font-13 text-light">
-                                <i data-lucide="mail" size="14"></i>
+                        <div class="candidate-info-rows new-joining-info">
+                            <div class="new-joining-info__row">
+                                <i data-lucide="mail-check" class="new-joining-info__icon"></i>
                                 <span>${emp.email}</span>
                             </div>
-                            <div class="flex-center gap-10 mb-0 font-13 text-light">
-                                <i data-lucide="phone" size="14"></i>
+                            <div class="new-joining-info__row">
+                                <i data-lucide="phone-call" class="new-joining-info__icon"></i>
                                 <span>${emp.phone || 'No phone provided'}</span>
                             </div>
                         </div>
                     </div>
                     <div class="announcement-footer">
-                        <div class="flex-center gap-10">
-                            <i data-lucide="calendar" size="14" class="text-light"></i>
-                            <span class="font-13 font-500 text-dark">${new Date(emp.created_at).toLocaleDateString()}</span>
+                        <div class="new-joining-date">
+                            <i data-lucide="calendar-days" class="new-joining-info__icon"></i>
+                            <span>${formatJoiningCardDate(emp.created_at)}</span>
                         </div>
-                        <div class="flex-center gap-10">
+                        <div class="new-joining-actions">
                             <button class="action-btn action-btn-view" onclick="openHiringModal(${emp.id})" title="Finalize Hire">
-                                <i data-lucide="eye" size="14"></i>
+                                <i data-lucide="user-check"></i>
                             </button>
-                            <button class="action-btn danger" type="button" title="Reject candidate">
-                                <i data-lucide="trash-2" size="14"></i>
+                            <button class="action-btn action-btn-delete" type="button" title="Reject candidate">
+                                <i data-lucide="trash-2"></i>
                             </button>
                         </div>
                     </div>

@@ -52,7 +52,7 @@ function handleFetchDaily($pdo) {
         FROM employees e
         LEFT JOIN shifts s ON e.shift_id = s.id
         LEFT JOIN attendance a ON e.id = a.employee_id AND a.date = ?
-        WHERE e.role NOT IN ('Admin', 'HR') AND (e.joining_date IS NULL OR e.joining_date <= ?)
+        WHERE e.role NOT IN ('Admin', 'HR') AND e.deleted_at IS NULL AND e.status = 'Active' AND (e.joining_date IS NULL OR e.joining_date <= ?)
         ORDER BY e.id ASC
     ";
     
@@ -256,7 +256,7 @@ function handleFetchBulkEmployees($pdo) {
 
     $query = "
         SELECT 
-            e.id as emp_id, e.first_name, e.last_name, 
+            e.id as emp_id, e.first_name, e.middle_name, e.last_name, 
             d.name as department_name,
             s.name as shift_name, s.start_time, s.end_time,
             a.status as today_status
@@ -273,7 +273,8 @@ function handleFetchBulkEmployees($pdo) {
     $results = $stmt->fetchAll();
 
     foreach($results as &$r) {
-        $r['full_name'] = trim($r['first_name'] . ' ' . $r['last_name']);
+        $middle = !empty($r['middle_name']) ? ' ' . $r['middle_name'] : '';
+        $r['full_name'] = trim($r['first_name'] . $middle . ' ' . $r['last_name']);
     }
 
     echo json_encode(['status' => 'success', 'data' => $results]);
@@ -344,6 +345,6 @@ function handleProcessBulkAttendance($pdo) {
         echo json_encode(['status' => 'success', 'message' => 'Bulk attendance processed successfully.']);
     } catch (Exception $e) {
         $pdo->rollBack();
-        echo json_encode(['status' => 'error', 'message' => 'Error: ' . $e->getMessage()]);
+        echo json_encode(['status' => 'error', 'message' => 'A server error occurred. Please try again.']);
     }
 }

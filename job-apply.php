@@ -1,10 +1,50 @@
-    <!DOCTYPE html>
+<?php
+$jobTitleForMeta = '';
+
+function jobApplySlug($title) {
+    $slug = strtolower((string) $title);
+    $slug = preg_replace('/[^a-z0-9]+/', '-', $slug);
+    return trim($slug, '-');
+}
+
+try {
+    $jobId = $_GET['jobId'] ?? ($_GET['jobid'] ?? '');
+    $jobSlug = jobApplySlug(trim($_GET['job'] ?? ''));
+
+    if ($jobId !== '' || $jobSlug !== '') {
+        require_once __DIR__ . '/includes/db_connect.php';
+
+        if ($jobId !== '') {
+            $stmt = $pdo->prepare("SELECT title FROM jobs WHERE id = ? AND deleted_at IS NULL LIMIT 1");
+            $stmt->execute([$jobId]);
+            $jobTitleForMeta = (string) ($stmt->fetchColumn() ?: '');
+        } elseif ($jobSlug !== '') {
+            $stmt = $pdo->query("SELECT title FROM jobs WHERE deleted_at IS NULL ORDER BY created_at DESC");
+            foreach ($stmt->fetchAll() as $jobRow) {
+                if (jobApplySlug($jobRow['title']) === $jobSlug) {
+                    $jobTitleForMeta = (string) $jobRow['title'];
+                    break;
+                }
+            }
+        }
+    }
+} catch (Throwable $e) {
+    $jobTitleForMeta = '';
+}
+
+$pageTitle = $jobTitleForMeta !== '' ? $jobTitleForMeta . ' | Job Application' : 'Job Application';
+$safePageTitle = htmlspecialchars($pageTitle, ENT_QUOTES, 'UTF-8');
+?>
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Job Application</title>
+    <title><?= $safePageTitle ?></title>
+    <meta name="title" content="<?= $safePageTitle ?>">
+    <meta property="og:title" content="<?= $safePageTitle ?>">
+    <meta name="twitter:title" content="<?= $safePageTitle ?>">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -498,7 +538,15 @@
             if (params.get('submitted') === '1') {
                 var b = document.getElementById('applySuccessBanner');
                 if (b) b.classList.add('is-visible');
-                try { history.replaceState({}, '', window.location.pathname + (params.get('jobId') ? ('?jobId=' + encodeURIComponent(params.get('jobId'))) : '')); } catch (e) { }
+                try {
+                    var cleanQuery = '';
+                    if (params.get('job')) {
+                        cleanQuery = '?job=' + encodeURIComponent(params.get('job'));
+                    } else if (params.get('jobId') || params.get('jobid')) {
+                        cleanQuery = '?jobId=' + encodeURIComponent(params.get('jobId') || params.get('jobid'));
+                    }
+                    history.replaceState({}, '', window.location.pathname + cleanQuery);
+                } catch (e) { }
             }
         })();
 </script>

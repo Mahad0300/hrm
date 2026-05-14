@@ -1,6 +1,7 @@
 <?php
 require_once '../../../includes/db_connect.php';
 require_once '../../../includes/auth_helper.php';
+require_once '../../../includes/api/notification_handler.php';
 
 header('Content-Type: application/json');
 
@@ -12,6 +13,21 @@ if (!isLoggedIn()) {
 }
 
 $user_id = $_SESSION['user_id'] ?? 1; // Fallback to 1 if not set
+
+function notifyEmployeesAboutPolicy($title, $sender_id) {
+    global $pdo;
+
+    $stmt = $pdo->prepare("SELECT id FROM employees WHERE role = 'Employee' AND status = 'Active' AND deleted_at IS NULL AND id != ?");
+    $stmt->execute([$sender_id]);
+    $recipients = $stmt->fetchAll(PDO::FETCH_COLUMN);
+
+    if (empty($recipients)) {
+        return;
+    }
+
+    $message = "New company policy available: $title. Please review it in Company Policies.";
+    addNotification($recipients, "New Company Policy", $message, "policies.php", "System", $sender_id);
+}
 
 try {
     switch ($action) {
@@ -34,14 +50,28 @@ try {
             }
 
             if ($id) {
+                $old_status_stmt = $pdo->prepare("SELECT status FROM policies WHERE id = ?");
+                $old_status_stmt->execute([$id]);
+                $old_status = $old_status_stmt->fetchColumn();
+
                 // Update
                 $stmt = $pdo->prepare("UPDATE policies SET title = ?, status = ?, effective_date = ?, content = ? WHERE id = ?");
                 $stmt->execute([$title, $status, $effective_date, $content, $id]);
+
+                if ($old_status !== false && $old_status !== 'Active' && $status === 'Active') {
+                    notifyEmployeesAboutPolicy($title, $user_id);
+                }
+
                 echo json_encode(['status' => 'success', 'message' => 'Policy updated successfully.']);
             } else {
                 // Add New
                 $stmt = $pdo->prepare("INSERT INTO policies (title, status, effective_date, content, created_by) VALUES (?, ?, ?, ?, ?)");
                 $stmt->execute([$title, $status, $effective_date, $content, $user_id]);
+
+                if ($status === 'Active') {
+                    notifyEmployeesAboutPolicy($title, $user_id);
+                }
+
                 echo json_encode(['status' => 'success', 'message' => 'Policy added successfully.']);
             }
             break;
@@ -62,5 +92,5 @@ try {
             break;
     }
 } catch (PDOException $e) {
-    echo json_encode(['status' => 'error', 'message' => 'Database error: ' . $e->getMessage()]);
+    echo json_encode(['status' => 'error', 'message' => 'A server error occurred. Please try again.']);
 }

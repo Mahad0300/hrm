@@ -31,7 +31,7 @@ switch ($action) {
             $departments = $stmt->fetchAll();
             echo json_encode(['status' => 'success', 'data' => $departments]);
         } catch (PDOException $e) {
-            echo json_encode(['status' => 'error', 'message' => $e->getMessage()]);
+            echo json_encode(['status' => 'error', 'message' => 'A server error occurred. Please try again.']);
         }
         break;
 
@@ -55,7 +55,7 @@ switch ($action) {
                 $stmt->execute([$name, $managerValue, $headValue]);
                 echo json_encode(['status' => 'success', 'message' => 'Department created successfully.']);
             } catch (PDOException $e) {
-                echo json_encode(['status' => 'error', 'message' => $e->getMessage()]);
+                echo json_encode(['status' => 'error', 'message' => 'A server error occurred. Please try again.']);
             }
         }
         break;
@@ -81,7 +81,7 @@ switch ($action) {
                 $stmt->execute([$name, $managerValue, $headValue, $id]);
                 echo json_encode(['status' => 'success', 'message' => 'Department updated successfully.']);
             } catch (PDOException $e) {
-                echo json_encode(['status' => 'error', 'message' => $e->getMessage()]);
+                echo json_encode(['status' => 'error', 'message' => 'A server error occurred. Please try again.']);
             }
         }
         break;
@@ -100,7 +100,7 @@ switch ($action) {
                 $stmt->execute([$id]);
                 echo json_encode(['status' => 'success', 'message' => 'Department deleted successfully.']);
             } catch (PDOException $e) {
-                echo json_encode(['status' => 'error', 'message' => $e->getMessage()]);
+                echo json_encode(['status' => 'error', 'message' => 'A server error occurred. Please try again.']);
             }
         }
         break;

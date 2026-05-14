@@ -85,6 +85,6 @@ try {
         ]);
     }
 } catch (PDOException $e) {
-    echo json_encode(['status' => 'error', 'message' => 'Query Error: ' . $e->getMessage()]);
+    echo json_encode(['status' => 'error', 'message' => 'A server error occurred. Please try again.']);
 }
 ?>

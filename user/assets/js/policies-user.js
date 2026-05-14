@@ -36,6 +36,17 @@
         return escapeHtml(String(s)).replace(/"/g, '&quot;');
     }
 
+    function formatPolicyDate(value) {
+        if (!value) return '—';
+        const date = new Date(String(value) + 'T00:00:00');
+        if (Number.isNaN(date.getTime())) return value;
+        return date.toLocaleDateString('en-US', {
+            month: 'long',
+            day: 'numeric',
+            year: 'numeric'
+        });
+    }
+
     function statusClass(st) {
         if (st === 'Active') return 'policy-status--active';
         if (st === 'Draft') return 'policy-status--draft';
@@ -48,15 +59,24 @@
         if (!root) return;
 
         if (allPolicies.length === 0) {
-            root.innerHTML = '';
-            if (emptyHint) emptyHint.style.display = 'block';
+            root.innerHTML = `
+                <div class="empty-state-container">
+                    <div class="empty-state-icon">
+                        <i data-lucide="shield" size="32"></i>
+                    </div>
+                    <h4 class="empty-state-title">No Policies Found</h4>
+                    <p class="empty-state-desc">No active company policies are available right now.</p>
+                </div>
+            `;
+            if (emptyHint) emptyHint.style.display = 'none';
+            if (typeof lucide !== 'undefined') lucide.createIcons();
             return;
         }
         
         if (emptyHint) emptyHint.style.display = 'none';
 
         root.innerHTML = allPolicies.map(p => {
-            const ed = p.effective_date ? escapeHtml(p.effective_date) : '—';
+            const ed = escapeHtml(formatPolicyDate(p.effective_date));
             
             let updatedHtml = '';
             if (p.updated_at && p.updated_at !== '0000-00-00 00:00:00') {
@@ -121,7 +141,7 @@
         if (missing) missing.style.display = 'none';
         root.style.display = 'block';
 
-        const ed = p.effective_date ? escapeHtml(p.effective_date) : '—';
+        const ed = escapeHtml(formatPolicyDate(p.effective_date));
 
         let updatedHtml = '';
         if (p.updated_at && p.updated_at !== '0000-00-00 00:00:00') {

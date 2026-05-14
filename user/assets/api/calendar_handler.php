@@ -21,12 +21,12 @@ try {
             $userDeptStmt->execute([$user_id]);
             $userDept = $userDeptStmt->fetchColumn() ?: '';
 
-            // 2. Fetch events matching "All" or the user's specific department
+            // 2. Fetch events matching all departments or any selected department
             $stmt = $pdo->prepare("
                 SELECT e.*, CONCAT(emp.first_name, ' ', emp.last_name) as author_name 
                 FROM events e 
                 LEFT JOIN employees emp ON e.created_by = emp.id 
-                WHERE e.target_dept = 'everyone' OR e.target_dept = ?
+                WHERE LOWER(e.target_dept) IN ('everyone', 'all') OR FIND_IN_SET(?, REPLACE(e.target_dept, ', ', ',')) > 0
                 ORDER BY e.event_date DESC
             ");
             $stmt->execute([$userDept]);
@@ -38,6 +38,6 @@ try {
             break;
     }
 } catch (PDOException $e) {
-    echo json_encode(['status' => 'error', 'message' => $e->getMessage()]);
+    echo json_encode(['status' => 'error', 'message' => 'A server error occurred. Please try again.']);
 }
 ?>

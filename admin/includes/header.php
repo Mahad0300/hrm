@@ -1,7 +1,7 @@
 <?php
 require_once dirname(__DIR__, 2) . '/includes/middleware.php';
 require_once dirname(__DIR__, 2) . '/includes/payroll_config.php';
-protectModule(['Admin']);
+protectModule(['Admin', 'HR']);
 ?>
 <!DOCTYPE html>
 <html lang="en">

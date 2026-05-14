@@ -43,6 +43,6 @@ function handleSavePayrollCycle($pdo) {
         echo json_encode(['status' => 'success', 'message' => 'Payroll cycle settings updated successfully.']);
     } catch (Exception $e) {
         $pdo->rollBack();
-        echo json_encode(['status' => 'error', 'message' => 'Error: ' . $e->getMessage()]);
+        echo json_encode(['status' => 'error', 'message' => 'A server error occurred. Please try again.']);
     }
 }

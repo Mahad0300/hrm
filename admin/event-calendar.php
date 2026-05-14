@@ -112,22 +112,22 @@ include 'includes/header.php';
                         placeholder="e.g. Quarterly Review" required>
                 </div>
 
-                <div class="form-grid-2">
-                    <div class="form-group mb-20">
-                        <label class="admin-form-label">Category *</label>
-                        <select class="form-control bg-white-input" id="eventCategory" required>
-                            <option value="Meeting">Meeting</option>
-                            <option value="Holiday">Holiday</option>
-                            <option value="Celebration">Celebration</option>
-                        </select>
+                <div class="form-group mb-20">
+                    <label class="admin-form-label">Category *</label>
+                    <select class="form-control bg-white-input" id="eventCategory" required>
+                        <option value="Meeting">Meeting</option>
+                        <option value="Holiday">Holiday</option>
+                        <option value="Celebration">Celebration</option>
+                    </select>
+                </div>
+
+                <div class="form-group mb-20">
+                    <label class="admin-form-label">Department *</label>
+                    <div class="event-dept-pills category-selection-grid" id="eventDeptSelection">
+                        <div class="category-pill active" data-dept="everyone">All Departments</div>
+                        <!-- Filled by JS -->
                     </div>
-                    <div class="form-group mb-20">
-                        <label class="admin-form-label">Department *</label>
-                        <select class="form-control bg-white-input" id="eventDept" required>
-                            <option value="All">All Departments</option>
-                            <!-- Filled by JS -->
-                        </select>
-                    </div>
+                    <input type="hidden" id="eventDept" value="everyone">
                 </div>
 
                 <div class="form-grid-2">

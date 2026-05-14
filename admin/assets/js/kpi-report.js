@@ -122,11 +122,11 @@ function renderHistory(history) {
                             <i data-lucide="star" class="text-warning fill-warning" size="12"></i>
                             <span class="font-11 font-700">${parseFloat(item.overall_rating).toFixed(1)} / 5.0</span>
                         </div>
-                        <div class="flex-center gap-8">
-                            <button class="icon-btn-sm text-primary hover-scale" onclick="event.stopPropagation(); openEditReview(${item.id})">
-                                <i data-lucide="pencil" size="14"></i>
+                        <div class="kpi-history-actions">
+                            <button class="action-btn action-btn-edit" title="Edit Review" onclick="event.stopPropagation(); openEditReview(${item.id})">
+                                <i data-lucide="edit-2" size="14"></i>
                             </button>
-                            <button class="icon-btn-sm text-danger hover-scale" onclick="event.stopPropagation(); deleteReview(${item.id})">
+                            <button class="action-btn action-btn-delete" title="Delete Review" onclick="event.stopPropagation(); deleteReview(${item.id})">
                                 <i data-lucide="trash-2" size="14"></i>
                             </button>
                         </div>
@@ -263,17 +263,17 @@ window.openViewDetail = function (id) {
                         const gClass = gPercent >= 80 ? 'success' : gPercent >= 60 ? 'primary' : gPercent >= 40 ? 'warning' : 'danger';
 
                         const html = `
-                            <div class="p-20 border rounded-16 bg-white">
-                                <div class="flex-between items-center mb-12">
-                                    <span class="font-12 font-800 text-dark uppercase ls-05">${g.goal_name}</span>
-                                    <span class="badge badge-${gClass}-light font-12 font-800">${gPercent}%</span>
+                            <div class="review-detail-goal">
+                                <div class="review-detail-goal__head">
+                                    <span class="review-detail-goal__title">${g.goal_name}</span>
+                                    <span class="badge badge-${gClass}-light review-detail-goal__score">${gPercent}%</span>
                                 </div>
                                 <div class="progress-bar-container h-6 mb-12">
                                     <div class="progress-bar ${gClass}" style="width: ${gPercent}%;"></div>
                                 </div>
                                 ${g.reviewer_comment ? `
-                                <div class="mt-12 pt-12 border-t border-dashed">
-                                    <p class="font-12 text-secondary italic line-height-1-5">"${g.reviewer_comment}"</p>
+                                <div class="review-detail-goal__comment">
+                                    <p>"${g.reviewer_comment}"</p>
                                 </div>` : ''}
                             </div>`;
                         container.insertAdjacentHTML('beforeend', html);

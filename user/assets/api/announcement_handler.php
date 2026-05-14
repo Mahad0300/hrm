@@ -46,7 +46,7 @@ try {
                     NULL as created_by, created_at, 'event' as source
                 FROM events
                 WHERE show_in_announcement = 1
-                  AND (target_dept = 'everyone' OR FIND_IN_SET(?, target_dept) > 0)
+                  AND (LOWER(target_dept) IN ('everyone', 'all') OR FIND_IN_SET(?, REPLACE(target_dept, ', ', ',')) > 0)
                   AND event_date >= ?
             ) t
             LEFT JOIN employees e ON t.created_by = e.id
@@ -73,6 +73,6 @@ try {
     echo json_encode(['status' => 'success', 'data' => $results]);
 
 } catch (PDOException $e) {
-    echo json_encode(['status' => 'error', 'message' => 'Database error: ' . $e->getMessage()]);
+    echo json_encode(['status' => 'error', 'message' => 'A server error occurred. Please try again.']);
 }
 ?>

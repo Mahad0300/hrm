@@ -43,10 +43,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     // [LOG ACTIVITY]
                     logActivity($user['id'], "User Login", "Authentication", "User authenticated successfully and accessed the system dashboard.");
                     
-                    // Handle Remember Me
-                    if (isset($_POST['remember_me'])) {
-                        setcookie('remember_me', $user['id'], time() + (30 * 24 * 60 * 60), '/');
-                    }
+                    // Remember Me: Cookie removed for security (stored plain user ID).
+                    // TODO: Implement secure token-based remember me if needed in future.
 
                     // Redirect based on role
                     redirectByRole($user['role']);

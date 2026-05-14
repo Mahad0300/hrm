@@ -156,6 +156,14 @@
     background: #f1f5f9;
 }
 
+.calendar-day--past {
+    cursor: not-allowed;
+}
+
+.calendar-day--past:hover {
+    background: #fff;
+}
+
 .calendar-day.today {
     background: #eff6ff;
 }
@@ -590,6 +598,25 @@
     grid-template-columns: 1fr 1fr;
     gap: 16px;
     margin-bottom: 16px;
+}
+
+.event-dept-pills {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    align-items: center;
+    gap: 10px !important;
+    margin: 0 !important;
+}
+
+.event-dept-pills .category-pill {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 38px;
+    padding: 9px 16px;
+    margin: 0;
+    white-space: nowrap;
+    line-height: 1;
 }
 
 .form-group-premium {

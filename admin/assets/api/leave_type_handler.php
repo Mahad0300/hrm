@@ -39,6 +39,6 @@ try {
     echo json_encode(['status' => 'success', 'message' => 'Leave quotas updated successfully.']);
 } catch (PDOException $e) {
     $pdo->rollBack();
-    echo json_encode(['status' => 'error', 'message' => 'Database error: ' . $e->getMessage()]);
+    echo json_encode(['status' => 'error', 'message' => 'A server error occurred. Please try again.']);
 }
 ?>

@@ -4,6 +4,21 @@ document.addEventListener('DOMContentLoaded', function() {
     const API_HANDLER = isPublic ? 'admin/assets/api/job_handler.php' : 'assets/api/job_handler.php';
     let jobs = [];
 
+    function escapeHtml(value) {
+        return String(value ?? '')
+            .replace(/&/g, '&amp;')
+            .replace(/"/g, '&quot;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;');
+    }
+
+    function createJobSlug(title) {
+        return String(title || '')
+            .toLowerCase()
+            .replace(/[^a-z0-9]+/g, '-')
+            .replace(/^-+|-+$/g, '');
+    }
+
     // --- Loading Jobs from DB ---
     async function loadJobs() {
         try {
@@ -113,7 +128,10 @@ document.addEventListener('DOMContentLoaded', function() {
             formData.append('location', document.getElementById('jobLocation').value);
             formData.append('description', document.getElementById('jobDesc').value);
             formData.append('type', 'Full-time');
-            formData.append('status', 'Active');
+            
+            const statusEl = document.getElementById('jobStatus');
+            formData.append('status', statusEl ? statusEl.value : 'Active');
+            
             formData.append('questions', JSON.stringify(questions));
 
             try {
@@ -185,6 +203,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
             jobTableBody.innerHTML = currentJobs.map(job => {
                 const posted = job.posted_date ? new Date(job.posted_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : '—';
+                const safeJobId = escapeHtml(job.id);
+                const safeJobTitle = escapeHtml(job.title || '');
                 return `
                 <tr>
                     <td>
@@ -192,15 +212,28 @@ document.addEventListener('DOMContentLoaded', function() {
                         <div class="font-11 text-light mt-1">${job.type}</div>
                     </td>
                     <td class="font-14">${job.department_name || '—'}</td>
-                    <td class="font-14 allow-wrap">${job.location}</td>
+                    <td class="font-14">
+                        <div style="max-width: 200px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="${job.location}">
+                            ${job.location}
+                        </div>
+                    </td>
                     <td class="font-14">${posted}</td>
                     <td class="font-14">${job.applicant_count} Applicants</td>
-                    <td><span class="badge ${job.status === 'Active' ? 'badge-success' : job.status === 'Draft' ? 'badge-info' : 'badge-warning'}">${job.status}</span></td>
+                    <td><span class="badge ${job.status === 'Active' ? 'badge-success' : job.status === 'Close' ? 'badge-danger' : 'badge-warning'}">${job.status}</span></td>
                     <td class="text-right px-30">
                         <div class="flex-center gap-8 justify-end">
                             <button class="action-btn" title="View Details" onclick="viewJobDetails('${job.id}')"><i data-lucide="eye" size="14"></i></button>
                             <a href="edit-job.php?id=${job.id}" class="action-btn" title="Edit Job"><i data-lucide="edit-2" size="14"></i></a>
-                            <button class="action-btn" title="Copy Apply Link" onclick="copyJobLink('${job.id}')"><i data-lucide="link" size="14"></i></button>
+                            <button class="action-btn" title="${job.status === 'Active' ? 'Close Job' : 'Activate Job'}" onclick="toggleJobStatus('${job.id}', '${job.status === 'Active' ? 'Close' : 'Active'}')">
+                                <i data-lucide="${job.status === 'Active' ? 'lock' : 'unlock'}" size="14"></i>
+                            </button>
+                            <button class="action-btn" title="${job.status === 'Close' ? 'Job Closed' : 'Copy Apply Link'}" 
+                                data-job-id="${safeJobId}"
+                                data-job-title="${safeJobTitle}"
+                                onclick="${job.status === 'Close' ? 'return false' : 'copyJobLink(this.dataset.jobId, this.dataset.jobTitle)'}" 
+                                ${job.status === 'Close' ? 'disabled style="opacity: 0.5; cursor: not-allowed;"' : ''}>
+                                <i data-lucide="link" size="14"></i>
+                            </button>
                         </div>
                     </td>
                 </tr>
@@ -227,9 +260,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 const posted = job.posted_date ? new Date(job.posted_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : '—';
 
                 document.getElementById('detailJobTitle').textContent = job.title;
-                const statusClass = job.status === 'Active' ? 'job-detail-pill--success' : job.status === 'Draft' ? 'job-detail-pill--info' : 'job-detail-pill--neutral';
+                const statusClass = job.status === 'Active' ? 'job-detail-pill--success' : job.status === 'Close' ? 'job-detail-pill--danger' : 'job-detail-pill--neutral';
                 document.getElementById('detailJobAppCount').innerHTML = `
-                    <span class="job-detail-pill"><i data-lucide="users" size="14"></i> ${job.applicant_count || 0} Applicants</span>
+                    <span class="font-11 text-light font-600 uppercase ls-05 mr-12">${job.applicant_count || 0} Applicants</span>
                     <span class="job-detail-pill ${statusClass}">${job.status}</span>`;
                 
                 document.getElementById('detailDept').textContent = job.department_name || '—';
@@ -271,7 +304,21 @@ document.addEventListener('DOMContentLoaded', function() {
                 detailQuestionsList.innerHTML = questionsHtml;
 
                 // Footer Actions
-                document.getElementById('detailCopyLinkBtn').onclick = () => copyJobLink(job.id);
+                const copyBtn = document.getElementById('detailCopyLinkBtn');
+                if (job.status === 'Close') {
+                    copyBtn.disabled = true;
+                    copyBtn.style.opacity = '0.5';
+                    copyBtn.style.cursor = 'not-allowed';
+                    copyBtn.title = 'Job Closed';
+                    copyBtn.onclick = (e) => { e.preventDefault(); return false; };
+                } else {
+                    copyBtn.disabled = false;
+                    copyBtn.style.opacity = '1';
+                    copyBtn.style.cursor = 'pointer';
+                    copyBtn.title = 'Copy Apply Link';
+                    copyBtn.onclick = () => copyJobLink(job.id, job.title);
+                }
+                
                 document.getElementById('detailEditBtn').onclick = () => { window.location.href = `edit-job.php?id=${job.id}`; };
 
                 openModal('jobDetailModal');
@@ -341,9 +388,46 @@ document.addEventListener('DOMContentLoaded', function() {
         loadJobs();
     }
 
-    window.copyJobLink = function(id) {
+    window.toggleJobStatus = async function(id, newStatus) {
+        const confirmText = newStatus === 'Close' ? 'Are you sure you want to close this job?' : 'Are you sure you want to reactivate this job?';
+        const result = await Swal.fire({
+            title: 'Confirm Status Change',
+            text: confirmText,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Yes, change it!',
+            cancelButtonText: 'Cancel'
+        });
+
+        if (result.isConfirmed) {
+            try {
+                const formData = new FormData();
+                formData.append('action', 'toggle_job_status');
+                formData.append('id', id);
+                formData.append('status', newStatus);
+
+                const response = await fetch(API_HANDLER, {
+                    method: 'POST',
+                    body: formData
+                });
+                const res = await response.json();
+                if (res.status === 'success') {
+                    showToast(res.message);
+                    loadJobs();
+                } else {
+                    Swal.fire('Error', res.message, 'error');
+                }
+            } catch (err) {
+                console.error('Error toggling status:', err);
+                Swal.fire('Error', 'Connection failed.', 'error');
+            }
+        }
+    };
+
+    window.copyJobLink = function(id, title) {
         const baseUrl = window.location.origin + window.location.pathname.replace('admin/job-list.php', 'job-apply.php');
-        const link = `${baseUrl}?jobId=${id}`;
+        const slug = createJobSlug(title);
+        const link = slug ? `${baseUrl}?job=${encodeURIComponent(slug)}` : `${baseUrl}?jobId=${encodeURIComponent(id)}`;
         navigator.clipboard.writeText(link).then(() => {
             if (typeof showToast === 'function') {
                 showToast('Job application link copied to clipboard!');
@@ -571,6 +655,14 @@ document.addEventListener('DOMContentLoaded', function() {
             setText('applyJobLocation', loc);
             setText('applyJobType', type);
             setText('applyJobDesc', desc);
+
+            // Close status check
+            if (job.status === 'Close') {
+                var form = document.getElementById('jobApplyForm');
+                if (form) form.style.display = 'none';
+                var intro = document.querySelector('.ja-intro');
+                if (intro) intro.innerHTML = '<div class="alert alert-danger" style="background: #fee2e2; border: 1px solid #ef4444; color: #b91c1c; padding: 16px; border-radius: 10px; font-weight: 600; text-align: center;">This job position is currently closed and no longer accepting applications.</div>';
+            }
         }
 
         function renderPublicDynamicQuestions(job) {
@@ -632,18 +724,30 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         var params = new URLSearchParams(window.location.search);
-        var jobId = params.get('jobId');
+        var jobId = params.get('jobId') || params.get('jobid');
+        var jobSlug = createJobSlug(params.get('job') || '');
         var currentJob = null;
 
         async function loadPublicJob() {
-            if (!jobId) return;
+            if (!jobId && !jobSlug) return;
             try {
-                const response = await fetch(`${API_HANDLER}?action=fetch_job_detail&id=${jobId}`);
+                var detailUrl = `${API_HANDLER}?action=fetch_job_detail`;
+                if (jobId) {
+                    detailUrl += `&id=${encodeURIComponent(jobId)}`;
+                } else {
+                    detailUrl += `&slug=${encodeURIComponent(jobSlug)}`;
+                }
+                const response = await fetch(detailUrl);
                 const result = await response.json();
                 if (result.status === 'success') {
                     currentJob = result.data;
+                    jobId = currentJob.id || jobId;
+                    jobSlug = createJobSlug(currentJob.title || jobSlug);
                     populatePublicJobPosting(currentJob, jobId);
                     renderPublicDynamicQuestions(currentJob);
+                    if (currentJob.title) {
+                        document.title = `${currentJob.title} | Job Application`;
+                    }
                     if (typeof lucide !== 'undefined') lucide.createIcons();
                 }
             } catch (err) {
@@ -763,7 +867,12 @@ document.addEventListener('DOMContentLoaded', function() {
 
                 if (result.status === 'success') {
                     var next = 'job-apply.php?submitted=1';
-                    if (jobId) next += '&jobId=' + encodeURIComponent(jobId);
+                    var nextSlug = jobSlug || (currentJob ? createJobSlug(currentJob.title) : '');
+                    if (nextSlug) {
+                        next += '&job=' + encodeURIComponent(nextSlug);
+                    } else if (jobId) {
+                        next += '&jobId=' + encodeURIComponent(jobId);
+                    }
                     window.location.href = next;
                 } else {
                     alert('Error submitting application: ' + result.message);

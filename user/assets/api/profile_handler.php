@@ -21,7 +21,14 @@ $action = $_GET['action'] ?? $_POST['action'] ?? '';
 function uploadFile($file, $targetDir) {
     if (!$file || $file['error'] !== UPLOAD_ERR_OK) return null;
     
-    $ext = pathinfo($file['name'], PATHINFO_EXTENSION);
+    // Security: Validate file extension
+    $allowed_exts = ['pdf', 'jpg', 'jpeg', 'png', 'webp', 'doc', 'docx'];
+    $ext = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
+    if (!in_array($ext, $allowed_exts)) return null;
+    
+    // Security: Validate file size (max 10MB)
+    if ($file['size'] > 10 * 1024 * 1024) return null;
+    
     $newName = 'user_' . $_SESSION['user_id'] . '_' . uniqid() . '.' . $ext;
     $targetPath = '../../../' . $targetDir . $newName;
     
@@ -79,7 +86,7 @@ switch ($action) {
                 echo json_encode(['status' => 'error', 'message' => 'Profile not found.']);
             }
         } catch (PDOException $e) {
-            echo json_encode(['status' => 'error', 'message' => $e->getMessage()]);
+            echo json_encode(['status' => 'error', 'message' => 'A server error occurred. Please try again.']);
         }
         break;
 
@@ -232,7 +239,7 @@ switch ($action) {
 
             } catch (Exception $e) {
                 if ($pdo->inTransaction()) $pdo->rollBack();
-                echo json_encode(['status' => 'error', 'message' => $e->getMessage()]);
+                echo json_encode(['status' => 'error', 'message' => 'A server error occurred. Please try again.']);
             }
         }
         break;

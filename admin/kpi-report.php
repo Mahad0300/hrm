@@ -51,52 +51,6 @@ include 'includes/header.php';
                     </div>
                 </div>
             </div>
-
-            <!-- Performance Trend Chart -->
-            <div class="card p-30">
-                <div class="flex-between mb-24">
-                    <h4 class="font-14 font-600 text-dark uppercase ls-05">Monthly Progress Trend</h4>
-                    <select class="form-control w-150 py-4 px-8 font-12" id="trendPeriod">
-                        <option value="6">Last 6 Months</option>
-                        <option value="12">Last 12 Months</option>
-                    </select>
-                </div>
-
-                <div class="trend-chart-wrapper h-220 mt-20 pr-10">
-                    <div class="chart-y-axis">
-                        <span>5.0</span>
-                        <span>4.0</span>
-                        <span>3.0</span>
-                        <span>2.0</span>
-                        <span>1.0</span>
-                        <span>0</span>
-                    </div>
-                    <div class="chart-main">
-                        <div class="chart-grid-lines">
-                            <div class="grid-line"></div>
-                            <div class="grid-line"></div>
-                            <div class="grid-line"></div>
-                            <div class="grid-line"></div>
-                            <div class="grid-line"></div>
-                        </div>
-                        <svg viewBox="0 0 500 200" class="performance-svg" id="trendSvg" preserveAspectRatio="none">
-                            <defs>
-                                <linearGradient id="chartGradient" x1="0%" y1="0%" x2="0%" y2="100%">
-                                    <stop offset="0%" style="stop-color:rgba(108, 76, 241, 0.2); stop-opacity:1" />
-                                    <stop offset="100%" style="stop-color:rgba(108, 76, 241, 0); stop-opacity:1" />
-                                </linearGradient>
-                            </defs>
-                            <path id="chartArea" d="" fill="url(#chartGradient)"></path>
-                            <path id="chartLine" d="" fill="none" stroke="var(--primary-color)" stroke-width="3"
-                                stroke-linecap="round" stroke-linejoin="round"></path>
-                            <g id="chartDots"></g>
-                        </svg>
-                        <div class="chart-x-axis mt-12" id="chartMonths">
-                            <!-- Months load here -->
-                        </div>
-                    </div>
-                </div>
-            </div>
         </div>
 
         <!-- Right: Feedback History -->
@@ -206,61 +160,59 @@ include 'includes/header.php';
 
 <!-- View Detail Modal (Read-only) -->
 <div class="modal-overlay" id="viewReviewDetailModal">
-    <div class="modal-content premium wide-md house-shadow">
-        <div class="modal-header bb-none">
+    <div class="modal-content premium wide-md house-shadow review-detail-modal">
+        <div class="modal-header bb-none review-detail-modal__header">
             <div>
                 <h3>Review Detail</h3>
-                <p class="font-12 text-light mt-1">Full breakdown of performance feedback for <span
-                        id="viewDetailEmpName" class="font-600 text-dark">...</span></p>
+                <p>Full breakdown of performance feedback for <span
+                        id="viewDetailEmpName">...</span></p>
             </div>
             <button class="icon-btn js-modal-close" onclick="closeModal('viewReviewDetailModal')"><i
                     data-lucide="x"></i></button>
         </div>
-        <div class="modal-body p-40 custom-scrollbar max-h-70vh">
-            <div class="flex-between items-center mb-20 p-24 bg-light rounded-20 border-soft">
-                <div class="flex-center items-center gap-16">
-                    <div class="icon-box-lg">
+        <div class="modal-body review-detail-modal__body custom-scrollbar">
+            <div class="review-detail-summary">
+                <div class="review-detail-summary__item">
+                    <div class="review-detail-summary__icon">
                         <i data-lucide="calendar" class="text-primary-color" size="24"></i>
                     </div>
                     <div>
-                        <span class="font-10 text-light uppercase ls-2 block mb-4">Review Period</span>
-                        <h4 class="font-20 font-900 text-dark uppercase line-height-1" id="viewDetailPeriod">MONTHLY
+                        <span class="review-detail-label">Review Period</span>
+                        <h4 class="review-detail-period" id="viewDetailPeriod">MONTHLY
                         </h4>
                     </div>
                 </div>
-                <div class="text-right">
-                    <span class="font-10 text-light uppercase ls-2 block mb-8">Performance Score</span>
-                    <div class="rating-tag p-10 px-24 bg-white border shadow-sm flex items-center">
+                <div class="review-detail-score-block">
+                    <span class="review-detail-label">Performance Score</span>
+                    <div class="rating-tag review-detail-rating">
                         <i data-lucide="star" class="text-warning fill-warning" size="18"></i>
-                        <span class="font-20 font-900 ml-8 text-dark lh-1" id="viewDetailRating">4.0 / 5.0</span>
+                        <span id="viewDetailRating">4.0 / 5.0</span>
                     </div>
                 </div>
             </div>
 
-            <div class="mb-40">
-                <div class="flex-between mb-12">
+            <div class="review-detail-section">
+                <div class="review-detail-section__head">
                     <label class="admin-form-label mb-0">General Feedback / Comments</label>
                 </div>
-                <div class="p-24 bg-white border-soft rounded-16 font-14 italic text-secondary line-height-1-6 min-h-80 shadow-xs"
+                <div class="review-detail-feedback"
                     id="viewDetailFeedback">
                     ...
                 </div>
             </div>
 
-            <div class="mb-16">
-                <div class="flex-between">
-                    <h4 class="font-12 font-900 text-dark uppercase ls-1">Goal-Specific Breakdown</h4>
-                    <span class="text-light font-11 italic small">detailed scores & context</span>
-                </div>
+            <div class="review-detail-section__head review-detail-section__head--goals">
+                <h4>Goal-Specific Breakdown</h4>
+                <span>detailed scores & context</span>
             </div>
 
-            <div id="viewDetailKpiContainer" class="grid-1 gap-24">
+            <div id="viewDetailKpiContainer" class="review-detail-goals">
                 <!-- Goals injected here -->
             </div>
         </div>
-        <div class="modal-footer p-20 px-40 border-t flex-between bg-light rounded-b-24">
-            <button class="btn-danger-light px-24 font-600" id="viewDetailDeleteBtn">Delete</button>
-            <button class="btn-primary px-32 font-700" id="viewDetailEditBtn">Edit Record</button>
+        <div class="modal-footer review-detail-modal__footer">
+            <button class="btn-danger-light" id="viewDetailDeleteBtn">Delete</button>
+            <button class="btn-primary" id="viewDetailEditBtn">Edit Record</button>
         </div>
     </div>
 </div>

@@ -20,7 +20,7 @@ switch ($action) {
             $shifts = $stmt->fetchAll();
             echo json_encode(['status' => 'success', 'data' => $shifts]);
         } catch (PDOException $e) {
-            echo json_encode(['status' => 'error', 'message' => $e->getMessage()]);
+            echo json_encode(['status' => 'error', 'message' => 'A server error occurred. Please try again.']);
         }
         break;
 
@@ -42,7 +42,7 @@ switch ($action) {
                 $stmt->execute([$name, $start, $end, $grace, $halfday]);
                 echo json_encode(['status' => 'success', 'message' => 'Shift created successfully.']);
             } catch (PDOException $e) {
-                echo json_encode(['status' => 'error', 'message' => $e->getMessage()]);
+                echo json_encode(['status' => 'error', 'message' => 'A server error occurred. Please try again.']);
             }
         }
         break;
@@ -66,7 +66,7 @@ switch ($action) {
                 $stmt->execute([$name, $start, $end, $grace, $halfday, $id]);
                 echo json_encode(['status' => 'success', 'message' => 'Shift updated successfully.']);
             } catch (PDOException $e) {
-                echo json_encode(['status' => 'error', 'message' => $e->getMessage()]);
+                echo json_encode(['status' => 'error', 'message' => 'A server error occurred. Please try again.']);
             }
         }
         break;
@@ -85,7 +85,7 @@ switch ($action) {
                 $stmt->execute([$id]);
                 echo json_encode(['status' => 'success', 'message' => 'Shift deleted successfully.']);
             } catch (PDOException $e) {
-                echo json_encode(['status' => 'error', 'message' => $e->getMessage()]);
+                echo json_encode(['status' => 'error', 'message' => 'A server error occurred. Please try again.']);
             }
         }
         break;

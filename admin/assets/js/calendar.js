@@ -32,6 +32,15 @@ document.addEventListener('DOMContentLoaded', function() {
         return {'MEETING': '🤝', 'CELEBRATION': '🎉', 'HOLIDAY': '📅'}[t] || '📢';
     }
 
+    function formatDeptLabel(value) {
+        if (!value) return 'All Departments';
+        const normalized = String(value).trim();
+        if (normalized.toLowerCase() === 'everyone' || normalized.toLowerCase() === 'all') {
+            return 'All Departments';
+        }
+        return normalized.split(',').map(v => v.trim()).filter(Boolean).join(', ');
+    }
+
     function formatEventDate(dateStr) {
         // Parse manually to avoid timezone shifts with new Date(dateStr)
         const [year, month, day] = dateStr.split('-').map(Number);
@@ -53,6 +62,12 @@ document.addEventListener('DOMContentLoaded', function() {
         const ampm = h >= 12 ? 'PM' : 'AM';
         h = h % 12 || 12;
         return `${h}:${m} ${ampm}`;
+    }
+
+    function todayIso() {
+        const now = new Date();
+        now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+        return now.toISOString().slice(0, 10);
     }
 
     function timeAgo(date) {
@@ -79,17 +94,77 @@ document.addEventListener('DOMContentLoaded', function() {
         fetch('assets/api/calendar_handler.php?action=fetch_depts')
             .then(res => res.json())
             .then(res => {
-                const deptSelect = document.getElementById('eventDept');
-                if (res.status === 'success' && deptSelect) {
-                    deptSelect.innerHTML = '<option value="everyone">All Departments</option>';
+                const deptContainer = document.getElementById('eventDeptSelection');
+                if (res.status === 'success' && deptContainer) {
+                    const allPill = deptContainer.querySelector('[data-dept="everyone"]');
+                    deptContainer.innerHTML = '';
+                    if (allPill) {
+                        deptContainer.appendChild(allPill);
+                    }
                     res.data.forEach(dept => {
-                        const opt = document.createElement('option');
-                        opt.value = dept.name;
-                        opt.textContent = dept.name;
-                        deptSelect.appendChild(opt);
+                        const pill = document.createElement('div');
+                        pill.className = 'category-pill';
+                        pill.dataset.dept = dept.name;
+                        pill.textContent = dept.name;
+                        deptContainer.appendChild(pill);
                     });
+                    bindEventDeptPills();
+                    setEventDeptSelection(document.getElementById('eventDept')?.value || 'everyone');
                 }
             }).catch(e => console.error('Dept Fetch Error:', e));
+    }
+
+    function bindEventDeptPills() {
+        const deptContainer = document.getElementById('eventDeptSelection');
+        if (!deptContainer) return;
+
+        deptContainer.querySelectorAll('.category-pill').forEach(pill => {
+            pill.onclick = () => toggleEventDeptPill(pill);
+        });
+    }
+
+    function toggleEventDeptPill(pill) {
+        const deptContainer = document.getElementById('eventDeptSelection');
+        const hiddenInput = document.getElementById('eventDept');
+        if (!deptContainer || !hiddenInput) return;
+
+        if (pill.dataset.dept === 'everyone') {
+            deptContainer.querySelectorAll('.category-pill').forEach(p => p.classList.remove('active'));
+            pill.classList.add('active');
+            hiddenInput.value = 'everyone';
+            return;
+        }
+
+        const everyonePill = deptContainer.querySelector('[data-dept="everyone"]');
+        if (everyonePill) everyonePill.classList.remove('active');
+        pill.classList.toggle('active');
+
+        const selected = Array.from(deptContainer.querySelectorAll('.category-pill.active'))
+            .map(p => p.dataset.dept)
+            .filter(Boolean);
+
+        if (selected.length === 0) {
+            if (everyonePill) everyonePill.classList.add('active');
+            hiddenInput.value = 'everyone';
+        } else {
+            hiddenInput.value = selected.join(',');
+        }
+    }
+
+    function setEventDeptSelection(value) {
+        const deptContainer = document.getElementById('eventDeptSelection');
+        const hiddenInput = document.getElementById('eventDept');
+        if (!deptContainer || !hiddenInput) return;
+
+        const normalizedValue = !value || String(value).toLowerCase() === 'all' ? 'everyone' : String(value);
+        const selected = normalizedValue.split(',').map(v => v.trim()).filter(Boolean);
+        const isEveryone = selected.some(v => v.toLowerCase() === 'everyone' || v.toLowerCase() === 'all');
+
+        deptContainer.querySelectorAll('.category-pill').forEach(pill => {
+            pill.classList.toggle('active', isEveryone ? pill.dataset.dept === 'everyone' : selected.includes(pill.dataset.dept));
+        });
+
+        hiddenInput.value = isEveryone ? 'everyone' : (selected.length ? selected.join(',') : 'everyone');
     }
 
     function fetchEvents() {
@@ -122,7 +197,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
         const daysInPrevMonth = new Date(currentYear, currentMonth, 0).getDate();
         
-        const todayStr = new Date().toLocaleDateString('en-CA'); // YYYY-MM-DD
+        const todayStr = todayIso();
 
         // Prev Month Days
         for (let i = firstDay; i > 0; i--) {
@@ -173,7 +248,12 @@ document.addEventListener('DOMContentLoaded', function() {
                 eventList.appendChild(moreTag);
             }
             
-            dayDiv.onclick = () => openEventModal(dateStr);
+            if (dateStr >= todayStr) {
+                dayDiv.onclick = () => openEventModal(dateStr);
+            } else {
+                dayDiv.classList.add('calendar-day--past');
+                dayDiv.title = 'Past dates cannot be used for new events';
+            }
             calendarGrid.appendChild(dayDiv);
         }
         
@@ -296,14 +376,15 @@ document.addEventListener('DOMContentLoaded', function() {
         form.reset();
         
         const dateInput = document.getElementById('eventDate');
-        const today = new Date().toLocaleDateString('en-CA');
+        const today = todayIso();
         if (dateInput) {
             dateInput.setAttribute('min', today);
         }
 
         document.getElementById('eventId').value = '';
         document.getElementById('modalTitle').textContent = 'Create New Event';
-        document.getElementById('eventDate').value = date || today;
+        document.getElementById('eventDate').value = date && date >= today ? date : today;
+        setEventDeptSelection('everyone');
         openModal('eventModal');
     };
 
@@ -354,7 +435,7 @@ document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('detailCategory').textContent = event.category;
         document.getElementById('detailCategory').className = `badge badge-${event.category.toLowerCase()}`;
         document.getElementById('detailDesc').textContent = event.description || 'No description provided.';
-        document.getElementById('detailDept').textContent = event.target_dept;
+        document.getElementById('detailDept').textContent = formatDeptLabel(event.target_dept);
         document.getElementById('detailDateTime').textContent = `${formatEventDate(event.event_date)} at ${formatTime12h(event.event_time)}`;
         document.getElementById('detailCreatedBy').textContent = event.author_name || 'System Admin';
         document.getElementById('detailUpdatedAt').textContent = timeAgo(event.updated_at || event.created_at);
@@ -404,7 +485,7 @@ document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('eventId').value = event.id;
         document.getElementById('eventTitle').value = event.title;
         document.getElementById('eventCategory').value = event.category;
-        document.getElementById('eventDept').value = event.target_dept;
+        setEventDeptSelection(event.target_dept);
         document.getElementById('eventDate').value = event.event_date;
         document.getElementById('eventTime').value = event.event_time;
         document.getElementById('eventDesc').value = event.description;

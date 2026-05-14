@@ -6,6 +6,26 @@ include 'includes/header.php';
 ?>
 <?php include 'includes/sidebar.php'; ?>
 
+<style>
+    /* Fix for departments with no head to maintain tree alignment */
+    .no-head-staff-group {
+        padding-top: 20px;
+        position: relative;
+    }
+    .no-head-staff-group::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 50%;
+        width: 1px;
+        height: 20px;
+        background: #e2e8f0;
+    }
+    .tree .vertical-stack {
+        margin-top: 0 !important;
+    }
+</style>
+
 <div class="hierarchy-page-wrapper">
     <!-- Overlay Controls -->
     <div class="hierarchy-controls">
@@ -66,23 +86,80 @@ include 'includes/header.php';
                         }
 
                         // 3. Render Groups
-                        foreach ($groupedManagers as $m_id => $data) {
-                            if ($m_id !== 'none') {
-                                // Level 1: Unique Department Manager (Purple)
-                                $dept_str = implode(' | ', array_unique($data['dept_list']));
-                                ?>
-                                <li>
-                                    <div class="hier-node cio" onclick="toggleNode(this)">
-                                        <div class="hier-info">
-                                            <h4><?php echo htmlspecialchars($data['fullname']); ?></h4>
-                                            <p>Manager | <?php echo htmlspecialchars($dept_str); ?></p>
-                                        </div>
-                                        <div class="hier-toggle"><i data-lucide="chevron-down"></i></div>
-                                    </div>
+                                foreach ($groupedManagers as $m_id => $data) {
+                                    if ($m_id !== 'none') {
+                                        // Level 1: Unique Department Manager (Purple)
+                                        $dept_str = implode(' | ', array_unique($data['dept_list']));
+                                        ?>
+                                        <li>
+                                            <div class="hier-node cio" onclick="toggleNode(this)">
+                                                <div class="hier-info">
+                                                    <h4><?php echo htmlspecialchars($data['fullname']); ?></h4>
+                                                    <p>Manager | <?php echo htmlspecialchars($dept_str); ?></p>
+                                                </div>
+                                                <div class="hier-toggle"><i data-lucide="chevron-down"></i></div>
+                                            </div>
 
-                                    <ul>
-                                        <?php foreach ($data['departments'] as $dept) {
-                                            // Level 2: Department Head (Green) under this specific manager
+                                            <ul>
+                                                <?php foreach ($data['departments'] as $dept) {
+                                                    // Level 2: Department Head (Green) under this specific manager
+                                                    if ($dept['head_id']) { ?>
+                                                        <li>
+                                                            <div class="hier-node manager" onclick="toggleNode(this)">
+                                                                <div class="hier-info">
+                                                                    <h4><?php echo htmlspecialchars($dept['head_fullname']); ?></h4>
+                                                                    <p>Head | <?php echo htmlspecialchars($dept['name']); ?></p>
+                                                                </div>
+                                                                <div class="hier-toggle"><i data-lucide="chevron-down"></i></div>
+                                                            </div>
+
+                                                            <?php
+                                                            // Level 3: Staff (White - Vertical Stack)
+                                                            $staffStmt = $pdo->prepare("SELECT CONCAT_WS(' ', first_name, NULLIF(middle_name, ''), last_name) as fullname, job_title FROM employees WHERE department_id = ? AND id NOT IN (?, ?) AND deleted_at IS NULL");
+                                                            $staffStmt->execute([$dept['id'], $dept['manager_id'], $dept['head_id']]);
+                                                            $staff = $staffStmt->fetchAll();
+
+                                                            if (!empty($staff)) {
+                                                                echo '<ul class="vertical-stack">';
+                                                                foreach ($staff as $s) {
+                                                                    echo '<li><div class="hier-node staff"><div class="hier-info">';
+                                                                    echo '<h4>' . htmlspecialchars($s['fullname']) . '</h4>';
+                                                                    echo '<p>Employee | ' . htmlspecialchars($dept['name']) . '</p>';
+                                                                    echo '</div></div></li>';
+                                                                }
+                                                                echo '</ul>';
+                                                            }
+                                                            ?>
+                                                        </li>
+                                                    <?php } else {
+                                                        // Level 2: Show Staff directly if no Head (under Manager)
+                                                        // Use a wrapper li to maintain tree spacing
+                                                        $staffStmt = $pdo->prepare("SELECT CONCAT_WS(' ', first_name, NULLIF(middle_name, ''), last_name) as fullname, job_title FROM employees WHERE department_id = ? AND id != ? AND deleted_at IS NULL");
+                                                        $staffStmt->execute([$dept['id'], $dept['manager_id']]);
+                                                        $staff = $staffStmt->fetchAll();
+
+                                                        if (!empty($staff)) {
+                                                            echo '<li class="no-head-staff-group">';
+                                                            echo '<ul class="vertical-stack">';
+                                                            foreach ($staff as $s) {
+                                                                echo '<li><div class="hier-node staff"><div class="hier-info">';
+                                                                echo '<h4>' . htmlspecialchars($s['fullname']) . '</h4>';
+                                                                echo '<p>Employee | ' . htmlspecialchars($dept['name']) . '</p>';
+                                                                echo '</div></div></li>';
+                                                            }
+                                                            echo '</ul></li>';
+                                                        }
+                                                    }
+                                                } ?>
+                                            </ul>
+                                        </li>
+                                        <?php
+                                    } else {
+                                        // Handle Orphan Departments (No Manager assigned)
+                                        foreach ($data['departments'] as $dept) {
+                                            // Exclude 'Manager' department from orphan list (since they are already the managers)
+                                            if ($dept['name'] === 'Manager') continue;
+                                            
                                             if ($dept['head_id']) { ?>
                                                 <li>
                                                     <div class="hier-node manager" onclick="toggleNode(this)">
@@ -92,11 +169,10 @@ include 'includes/header.php';
                                                         </div>
                                                         <div class="hier-toggle"><i data-lucide="chevron-down"></i></div>
                                                     </div>
-
                                                     <?php
                                                     // Level 3: Staff (White - Vertical Stack)
                                                     $staffStmt = $pdo->prepare("SELECT CONCAT_WS(' ', first_name, NULLIF(middle_name, ''), last_name) as fullname, job_title FROM employees WHERE department_id = ? AND id NOT IN (?, ?) AND deleted_at IS NULL");
-                                                    $staffStmt->execute([$dept['id'], $dept['manager_id'], $dept['head_id']]);
+                                                    $staffStmt->execute([$dept['id'], null, $dept['head_id']]);
                                                     $staff = $staffStmt->fetchAll();
 
                                                     if (!empty($staff)) {
@@ -112,48 +188,26 @@ include 'includes/header.php';
                                                     ?>
                                                 </li>
                                             <?php } else {
-                                                // Case: Managed department but has no Head yet -> Show Staff directly?
-                                                // For Enterprise consistency, we stick to the 3-level rule or list staff.
-                                            }
-                                        } ?>
-                                    </ul>
-                                </li>
-                                <?php
-                            } else {
-                                // Handle Orphan Departments (No Manager assigned)
-                                foreach ($data['departments'] as $dept) {
-                                    if ($dept['head_id']) { ?>
-                                        <li>
-                                            <div class="hier-node manager" onclick="toggleNode(this)">
-                                                <div class="hier-info">
-                                                    <h4><?php echo htmlspecialchars($dept['head_fullname']); ?></h4>
-                                                    <p>Head | <?php echo htmlspecialchars($dept['name']); ?></p>
-                                                </div>
-                                                <div class="hier-toggle"><i data-lucide="chevron-down"></i></div>
-                                            </div>
-                                            <?php
-                                            // Level 3: Staff (White - Vertical Stack)
-                                            $staffStmt = $pdo->prepare("SELECT CONCAT_WS(' ', first_name, NULLIF(middle_name, ''), last_name) as fullname, job_title FROM employees WHERE department_id = ? AND id NOT IN (?, ?) AND deleted_at IS NULL");
-                                            $staffStmt->execute([$dept['id'], null, $dept['head_id']]);
-                                            $staff = $staffStmt->fetchAll();
+                                                // Level 1: Show Staff directly for Orphan Department with no Head
+                                                $staffStmt = $pdo->prepare("SELECT CONCAT_WS(' ', first_name, NULLIF(middle_name, ''), last_name) as fullname, job_title FROM employees WHERE department_id = ? AND deleted_at IS NULL");
+                                                $staffStmt->execute([$dept['id']]);
+                                                $staff = $staffStmt->fetchAll();
 
-                                            if (!empty($staff)) {
-                                                echo '<ul class="vertical-stack">';
-                                                foreach ($staff as $s) {
-                                                    echo '<li><div class="hier-node staff"><div class="hier-info">';
-                                                    echo '<h4>' . htmlspecialchars($s['fullname']) . '</h4>';
-                                                    echo '<p>Employee | ' . htmlspecialchars($dept['name']) . '</p>';
-                                                    echo '</div></div></li>';
+                                                if (!empty($staff)) {
+                                                    echo '<li><ul class="vertical-stack">';
+                                                    foreach ($staff as $s) {
+                                                        echo '<li><div class="hier-node staff"><div class="hier-info">';
+                                                        echo '<h4>' . htmlspecialchars($s['fullname']) . '</h4>';
+                                                        echo '<p>Employee | ' . htmlspecialchars($dept['name']) . '</p>';
+                                                        echo '</div></div></li>';
+                                                    }
+                                                    echo '</ul></li>';
                                                 }
-                                                echo '</ul>';
                                             }
-                                            ?>
-                                        </li>
-                                    <?php }
+                                        }
+                                    }
                                 }
-                            }
-                        }
-                        ?>
+?>
                     </ul>
                 </li>
             </ul>

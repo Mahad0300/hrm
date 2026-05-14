@@ -178,7 +178,7 @@ document.addEventListener('DOMContentLoaded', function() {
                             <img src="${p.profile_pic ? '../' + p.profile_pic : '../images/profile-image/default-avatar.svg'}" class="emp-avatar" alt="Avatar" onerror="this.src='../images/profile-image/default-avatar.svg'">
                             <div class="emp-info">
                                 <span class="name">${fullName}</span>
-                                <span class="email">EMP-0${p.employee_id}</span>
+                                <span class="email">EMP-${String(p.employee_id).padStart(3, '0')}</span>
                             </div>
                         </div>
                     </td>
@@ -399,41 +399,6 @@ document.addEventListener('change', function(e) {
         }
     }
 });
-
-// Redundant function removed (Merged into fetchEligibleEmployees)
-
-function renderEligibleEmployees(employees) {
-    const list = document.getElementById('specificEmployeeList');
-    if (!list) return;
-
-    if (!employees || employees.length === 0) {
-        list.innerHTML = '<tr><td colspan="5" class="text-center py-20">No eligible employees found.</td></tr>';
-        return;
-    }
-
-    list.innerHTML = employees.map(e => {
-        const fullName = `${e.first_name} ${e.middle_name ? e.middle_name + ' ' : ''}${e.last_name}`;
-        return `
-            <tr>
-                <td>
-                    <label class="custom-checkbox m-0">
-                        <input type="checkbox" class="emp-checkbox" value="${e.id}">
-                        <span class="checkmark"></span>
-                    </label>
-                </td>
-                <td>
-                    <div class="emp-info">
-                        <span class="name font-600">${fullName}</span>
-                        <span class="email font-12 text-light uppercase">EMP-0${e.id}</span>
-                    </div>
-                </td>
-                <td><span class="font-13">${e.job_title || 'Employee'}</span></td>
-                <td><span class="font-13">${e.dept_name || 'Unassigned'}</span></td>
-                <td class="text-right"><span class="font-13 font-600 text-primary-color">${parseFloat(e.salary || 0).toLocaleString('en-US', { style: 'currency', currency: 'PKR' })}</span></td>
-            </tr>
-        `;
-    }).join('');
-}
 
 // Edit Modal (Global for row clicks)
 window.openEditPayrollModal = async function(empId, empName, month) {
@@ -679,10 +644,10 @@ function renderEligibleEmployees(employees) {
             <td>
                 <div class="employee-info-min">
                     <span class="font-14 font-600 block">${fullName}</span>
-                    <span class="font-11 text-light block">EMP-0${emp.id}</span>
+                    <span class="font-11 text-light block">EMP-${String(emp.id).padStart(3, '0')}</span>
                 </div>
             </td>
-            <td><span class="font-13 text-main"">${emp.job_title}</span></td>
+            <td><span class="font-13 text-main">${emp.job_title}</span></td>
             <td><span class="font-13 text-main">${emp.dept_name || 'N/A'}</span></td>
             <td><span class="font-14 font-600">PKR ${Math.round(emp.salary).toLocaleString()}</span></td>
         `;

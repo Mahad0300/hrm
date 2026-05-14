@@ -13,6 +13,12 @@
         return (d.textContent || '').replace(/\s+/g, '').trim();
     }
 
+    function todayIso() {
+        var now = new Date();
+        now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+        return now.toISOString().slice(0, 10);
+    }
+
     function getAddRichHtml() {
         var el = document.getElementById('policyAddRichEditor');
         return el ? el.innerHTML : '';
@@ -61,6 +67,17 @@
         var d = document.createElement('div');
         d.textContent = s;
         return d.innerHTML;
+    }
+
+    function formatPolicyDate(value) {
+        if (!value) return '—';
+        var date = new Date(String(value) + 'T00:00:00');
+        if (Number.isNaN(date.getTime())) return value;
+        return date.toLocaleDateString('en-US', {
+            month: 'long',
+            day: 'numeric',
+            year: 'numeric'
+        });
     }
 
     function statusClass(st) {
@@ -113,7 +130,7 @@
 
         root.innerHTML = list
             .map(function (p) {
-                var ed = p.effective_date ? escapeHtml(p.effective_date) : '—';
+                var ed = escapeHtml(formatPolicyDate(p.effective_date));
                 
                 var updatedHtml = '';
                 if (p.updated_at && p.updated_at !== '0000-00-00 00:00:00') {
@@ -180,7 +197,10 @@
         if (form) form.reset();
 
         var eff = document.getElementById('policyAddEffective');
-        if (eff) eff.value = new Date().toISOString().slice(0, 10);
+        if (eff) {
+            eff.min = todayIso();
+            eff.value = '';
+        }
 
         var st = document.getElementById('policyAddStatus');
         if (st) st.value = 'Active';
@@ -206,7 +226,10 @@
         if (stEl) stEl.value = p.status || 'Active';
 
         var eff = document.getElementById('policyEditEffective');
-        if (eff) eff.value = p.effective_date || new Date().toISOString().slice(0, 10);
+        if (eff) {
+            eff.min = todayIso();
+            eff.value = p.effective_date && p.effective_date >= todayIso() ? p.effective_date : todayIso();
+        }
 
         var editEd = document.getElementById('policyEditRichEditor');
         if (editEd) editEd.innerHTML = p.content || '';
@@ -281,6 +304,11 @@
 
                     if (!title || !plainFromHtml(content)) {
                         Swal.fire('Warning', 'Please enter title and policy content.', 'warning');
+                        return;
+                    }
+
+                    if (eff && eff < todayIso()) {
+                        Swal.fire('Warning', 'Effective date cannot be a past date.', 'warning');
                         return;
                     }
 

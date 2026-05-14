@@ -135,7 +135,7 @@ include 'includes/header.php';
                         <div class="input-with-icon">
                             <i data-lucide="calendar-check" class="input-icon"></i>
                             <input type="date" id="add_ann_end" class="form-control bg-white-input pl-45"
-                                value="<?= date('Y-m-d', strtotime('+7 days')) ?>">
+                                value="<?= date('Y-m-d', strtotime('+7 days')) ?>" min="<?= date('Y-m-d') ?>">
                         </div>
                     </div>
                 </div>
@@ -230,14 +230,16 @@ include 'includes/header.php';
                         <label class="admin-form-label">Start Date</label>
                         <div class="input-with-icon">
                             <i data-lucide="calendar" class="input-icon"></i>
-                            <input type="date" id="edit_ann_start" class="form-control bg-white-input pl-45">
+                            <input type="date" id="edit_ann_start" class="form-control bg-white-input pl-45"
+                                min="<?= date('Y-m-d') ?>">
                         </div>
                     </div>
                     <div class="form-group">
                         <label class="admin-form-label">End Date</label>
                         <div class="input-with-icon">
                             <i data-lucide="calendar-check" class="input-icon"></i>
-                            <input type="date" id="edit_ann_end" class="form-control bg-white-input pl-45">
+                            <input type="date" id="edit_ann_end" class="form-control bg-white-input pl-45"
+                                min="<?= date('Y-m-d') ?>">
                         </div>
                     </div>
                 </div>

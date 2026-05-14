@@ -22,6 +22,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Fetch Data
     fetchEvents();
+    setInterval(fetchEvents, 5000);
 
     if (typeof lucide !== 'undefined') lucide.createIcons();
 

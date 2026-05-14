@@ -42,8 +42,7 @@ include 'includes/header.php';
             <select id="filterStatus" class="form-control font-13">
                 <option value="">All Status</option>
                 <option value="Active">Active</option>
-                <option value="Closed">Closed</option>
-                <option value="Draft">Draft</option>
+                <option value="Close">Closed</option>
             </select>
         </div>
         <div class="filter-item">
@@ -202,17 +201,12 @@ include 'includes/header.php';
         </div>
 
         <div class="modal-footer flex-between p-30 border-top-0">
-            <button type="button" class="btn-primary no-bg border text-light js-modal-close">
-                <i data-lucide="x" size="18"></i> <span>Cancel</span>
+            <button type="button" class="btn-primary no-bg border text-light px-24 font-13" id="detailCopyLinkBtn">
+                <i data-lucide="link" size="16"></i> <span>Copy Apply Link</span>
             </button>
-            <div class="flex-center gap-12">
-                <button type="button" class="btn-primary no-bg border text-light px-24 font-13" id="detailCopyLinkBtn">
-                    <i data-lucide="link" size="16"></i> <span>Copy Apply Link</span>
-                </button>
-                <button type="button" class="btn-primary px-30 font-13" id="detailEditBtn">
-                    <i data-lucide="edit-2" size="16"></i> <span>Edit Job Post</span>
-                </button>
-            </div>
+            <button type="button" class="btn-primary px-30 font-13" id="detailEditBtn">
+                <i data-lucide="edit-2" size="16"></i> <span>Edit Job Post</span>
+            </button>
         </div>
     </div>
 </div>

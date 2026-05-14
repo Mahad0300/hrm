@@ -80,6 +80,16 @@ try {
             $target_depts = $_POST['target_depts'];
             $created_by = $_SESSION['user_id'];
 
+            if ($start_date < $today) {
+                echo json_encode(['status' => 'error', 'message' => 'Start date cannot be a past date.']);
+                exit;
+            }
+
+            if ($end_date < $start_date) {
+                echo json_encode(['status' => 'error', 'message' => 'End date cannot be before start date.']);
+                exit;
+            }
+
             if ($id) {
                 $sql = "UPDATE announcements SET 
                         title = ?, content = ?, type = ?, 
@@ -174,6 +184,6 @@ try {
             break;
     }
 } catch (PDOException $e) {
-    echo json_encode(['status' => 'error', 'message' => $e->getMessage()]);
+    echo json_encode(['status' => 'error', 'message' => 'A server error occurred. Please try again.']);
 }
 ?>

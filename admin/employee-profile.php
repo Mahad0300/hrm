@@ -4,16 +4,30 @@ require_once '../includes/db_connect.php';
 require_once '../includes/auth_helper.php';
 
 $page_title = 'Employee Profile - HRM';
-include 'includes/header.php';
-include 'includes/sidebar.php';
+
+function getEmployeeProfileFullName(array $employee)
+{
+    return trim(
+        ($employee['first_name'] ?? '') . ' ' .
+        (!empty($employee['middle_name']) ? $employee['middle_name'] . ' ' : '') .
+        ($employee['last_name'] ?? '')
+    );
+}
+
+function createEmployeeProfileSlug($firstName, $middleName = '', $lastName = '')
+{
+    $fullName = trim($firstName . ' ' . ($middleName ? $middleName . ' ' : '') . $lastName);
+    $slug = strtolower(trim(preg_replace('/[^a-z0-9]+/i', '-', $fullName), '-'));
+
+    return $slug ?: '';
+}
 
 // Fetch Employee Data
-$emp_id = $_GET['id'] ?? '';
+$id_param = trim($_GET['id'] ?? '');
+$employee_param = trim($_GET['employee'] ?? ($_GET['name'] ?? ''));
 $employee = null;
 
-if ($emp_id) {
-    try {
-        $stmt = $pdo->prepare("
+$employeeSelectSql = "
             SELECT e.*, d.name as dept_name, s.name as shift_name, s.start_time, s.end_time,
                    b.bank_name, b.account_type, b.account_title, b.account_number, b.branch_info,
                    ex.qualification, ex.degree_cert as degree_certification, ex.university as college_university, 
@@ -24,22 +38,42 @@ if ($emp_id) {
             LEFT JOIN shifts s ON e.shift_id = s.id
             LEFT JOIN banking_info b ON e.id = b.employee_id
             LEFT JOIN education_experience ex ON e.id = ex.employee_id
-            WHERE e.id = ?
-        ");
-        $stmt->execute([$emp_id]);
-        $employee = $stmt->fetch();
-    } catch (PDOException $e) {
-        $error = "Error fetching employee details.";
+";
+
+try {
+    if ($employee_param !== '') {
+        $targetSlug = createEmployeeProfileSlug($employee_param);
+        $stmt = $pdo->query($employeeSelectSql . " WHERE e.deleted_at IS NULL ORDER BY e.created_at DESC, e.id DESC");
+        $employees = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        foreach ($employees as $row) {
+            $rowSlug = createEmployeeProfileSlug($row['first_name'], $row['middle_name'] ?? '', $row['last_name']);
+            if ($rowSlug === $targetSlug) {
+                $employee = $row;
+                break;
+            }
+        }
+    } elseif ($id_param !== '') {
+        $stmt = $pdo->prepare($employeeSelectSql . " WHERE e.id = ?");
+        $stmt->execute([$id_param]);
+        $employee = $stmt->fetch(PDO::FETCH_ASSOC);
     }
+} catch (PDOException $e) {
+    $error = "Error fetching employee details.";
 }
 
 if (!$employee) {
-    echo "<script>window.location.href='employees.php';</script>";
+    header('Location: employees.php');
     exit;
 }
 
 // Format Name
-$full_name = trim($employee['first_name'] . ' ' . ($employee['middle_name'] ? $employee['middle_name'] . ' ' : '') . $employee['last_name']);
+$emp_id = (int) $employee['id'];
+$full_name = getEmployeeProfileFullName($employee);
+$page_title = $full_name . ' - Employee Profile - HRM';
+
+include 'includes/header.php';
+include 'includes/sidebar.php';
 
 // Default Avatar URL
 $avatar_url = $employee['profile_pic'] ? '../' . $employee['profile_pic'] : '../images/profile-image/default-avatar.svg';

@@ -7,7 +7,7 @@ include 'includes/header.php';
 
 <div class="job-creation-container max-w-1000 mx-auto">
     <div class="card premium mb-30 overflow-hidden">
-        <div class="card-header-gradient p-30 text-white">
+        <div class="card-header-gradient p-30 text-white mb-24">
             <h3 class="m-0 font-600">Job Posting Details</h3>
             <p class="font-13 opacity-8 mt-1">Fill in the basic information for the new position</p>
         </div>
@@ -48,23 +48,31 @@ include 'includes/header.php';
                     </div>
                 </div>
 
-                <div class="form-group mb-30">
+                <div class="form-group mb-24">
                     <label class="admin-form-label" for="jobDesc">Job Description *</label>
                     <textarea id="jobDesc" class="form-control bg-white-input" style="min-height: 120px;"
                         placeholder="Describe the responsibilities, requirements, and benefits..." required></textarea>
                 </div>
 
+                <div class="form-group mb-24">
+                    <label class="admin-form-label" for="jobStatus">Posting Status *</label>
+                    <select id="jobStatus" class="form-control bg-white-input" required>
+                        <option value="Active">Active (Accepting Applications)</option>
+                        <option value="Close">Close (No longer accepting)</option>
+                    </select>
+                </div>
+
                 <!-- Form Builder Section -->
                 <div class="form-builder-section pt-30 border-top mt-30">
-                    <div class="mb-20">
+                    <div class="mb-24">
                         <h4 class="m-0 font-600 text-dark">Application Form Builder</h4>
                         <p class="font-12 text-light mt-1">Configure the questions candidates must answer during
                             application</p>
                     </div>
 
                     <!-- Quick Add Section -->
-                    <div class="flex align-center gap-20 mb-30">
-                        <span class="create-job-quick-add-label flex align-center gap-8">
+                    <div class="flex-center gap-10 mb-30">
+                        <span class="create-job-quick-add-label">
                             <i data-lucide="zap" size="16" class="text-primary-color"></i> QUICK ADD:
                         </span>
                         <div class="quick-add-chips">

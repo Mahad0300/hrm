@@ -267,8 +267,8 @@ if ($shift_info) {
                 });
         }
         refreshNotiBadge();
-        // Refresh every 30 seconds for real-time feel
-        setInterval(refreshNotiBadge, 30000);
+        // Keep the badge fresh while employees stay on any user page.
+        setInterval(refreshNotiBadge, 5000);
 
         // Lucide init (ensure it runs after potential dynamic content)
         lucide.createIcons();

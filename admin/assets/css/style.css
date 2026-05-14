@@ -1196,6 +1196,8 @@ a.activity-view-all {
 /* Create job: use global .admin-form-label / .admin-form-label--inner */
 
 .job-creation-container .create-job-quick-add-label {
+    display: flex;
+    align-items: center;
     font-size: 13px;
     font-weight: 700;
     color: var(--text-dark);
@@ -1347,6 +1349,55 @@ a.activity-view-all {
 
 .candidates-grid .announcement-content {
     padding-bottom: 2px;
+}
+
+.new-joining-card .candidate-info-rows {
+    display: grid;
+    gap: 8px;
+}
+
+.new-joining-info__row,
+.new-joining-date {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 13px;
+    font-weight: 500;
+    line-height: 1.35;
+    color: var(--text-light);
+}
+
+.new-joining-info__icon,
+.new-joining-info__row svg,
+.new-joining-date svg {
+    width: 16px !important;
+    height: 16px !important;
+    flex: 0 0 16px;
+    stroke-width: 2.15;
+    color: #64748b;
+}
+
+.new-joining-date span {
+    color: var(--text-light);
+    font-weight: 500;
+}
+
+.new-joining-actions {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.new-joining-actions .action-btn {
+    width: 34px;
+    height: 34px;
+    min-width: 34px;
+    border-radius: 10px;
+}
+
+.new-joining-actions .action-btn svg {
+    width: 15px !important;
+    height: 15px !important;
 }
 
 .announcement-card {
@@ -3828,13 +3879,16 @@ a.stat-card.stat-card--link:focus-visible {
 #jobDetailModal .job-detail-pill {
     display: inline-flex;
     align-items: center;
-    gap: 6px;
+    justify-content: center;
     padding: 6px 12px;
     border-radius: 999px;
-    font-size: 12px;
-    font-weight: 600;
-    background: #fff;
-    border: 1px solid #e2e8f0;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    line-height: 1;
+    white-space: nowrap;
+    text-align: center;
     color: var(--text-light);
 }
 
@@ -3845,20 +3899,22 @@ a.stat-card.stat-card--link:focus-visible {
 
 #jobDetailModal .job-detail-pill--success {
     background: rgba(34, 197, 94, 0.1);
-    border-color: rgba(34, 197, 94, 0.25);
     color: var(--success);
 }
 
 #jobDetailModal .job-detail-pill--info {
     background: rgba(14, 165, 233, 0.1);
-    border-color: rgba(14, 165, 233, 0.25);
     color: #0284c7;
 }
 
 #jobDetailModal .job-detail-pill--neutral {
     background: rgba(100, 116, 139, 0.1);
-    border-color: rgba(100, 116, 139, 0.2);
     color: #64748b;
+}
+
+#jobDetailModal .job-detail-pill--danger {
+    background: #fee2e2;
+    color: #ef4444;
 }
 
 #jobDetailModal .job-detail-modal__close {
@@ -5584,7 +5640,7 @@ a.stat-card.stat-card--link:focus-visible {
     flex-direction: column;
     align-items: flex-start;
     padding-left: 0;
-    margin-left: 110px;
+    margin-left: 240px;
     /* Offset to align with center of 220px node */
 }
 
@@ -5928,7 +5984,6 @@ code {
 .period-card {
     flex: 1;
     display: flex;
-    flex-direction: column;
     align-items: center;
     justify-content: center;
     padding: 12px 8px;
@@ -6632,7 +6687,7 @@ a.candidate-detail-back-btn.btn-primary.no-bg.border svg {
 .policy-badge {
     display: inline-flex;
     align-items: center;
-    padding: 5px 12px;
+    padding: 4px 12px;
     border-radius: 999px;
     font-size: 11px;
     font-weight: 600;
@@ -6644,19 +6699,16 @@ a.candidate-detail-back-btn.btn-primary.no-bg.border svg {
 .policy-badge--status.policy-status--active {
     background: rgba(34, 197, 94, 0.1);
     color: #0f766e;
-    border: 1px solid rgba(34, 197, 94, 0.25);
 }
 
 .policy-badge--status.policy-status--draft {
     background: rgba(100, 116, 139, 0.08);
     color: #475569;
-    border: 1px solid rgba(100, 116, 139, 0.12);
 }
 
 .policy-badge--status.policy-status--archived {
     background: rgba(15, 23, 42, 0.05);
     color: #64748b;
-    border: 1px solid rgba(15, 23, 42, 0.08);
 }
 
 .policy-tile__meta {
@@ -6871,7 +6923,7 @@ a.candidate-detail-back-btn.btn-primary.no-bg.border svg {
 
 /* Timeline Compact (For detail view & history) */
 .timeline-compact {
-    padding-left: 24px;
+    padding-left: 10px;
     border-left: 2px solid #f1f5f9;
     position: relative;
 }
@@ -6883,7 +6935,7 @@ a.candidate-detail-back-btn.btn-primary.no-bg.border svg {
 
 .timeline-dot-lite {
     position: absolute;
-    left: -31px;
+    left: -17px;
     top: 4px;
     width: 12px;
     height: 12px;
@@ -6918,6 +6970,246 @@ a.candidate-detail-back-btn.btn-primary.no-bg.border svg {
     border-color: #f1f5f9;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
     transform: translateX(4px);
+}
+
+.kpi-history-actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 8px;
+}
+
+.kpi-history-actions .action-btn {
+    width: 32px;
+    height: 32px;
+    min-width: 32px;
+    padding: 0;
+    border-radius: 8px;
+}
+
+.review-detail-modal {
+    max-width: 720px;
+}
+
+.review-detail-modal__header {
+    padding: 26px 32px 18px;
+    border-bottom: 1px solid rgba(226, 232, 240, 0.85);
+}
+
+.review-detail-modal__header h3 {
+    margin: 0;
+    font-size: 20px;
+    font-weight: 800;
+    line-height: 1.25;
+    letter-spacing: -0.02em;
+    color: var(--text-dark);
+}
+
+.review-detail-modal__header p {
+    margin: 6px 0 0;
+    font-size: 13px;
+    line-height: 1.5;
+    color: var(--text-light);
+}
+
+.review-detail-modal__header p span {
+    color: var(--text-dark);
+    font-weight: 700;
+}
+
+.review-detail-modal__body {
+    padding: 28px 32px;
+    max-height: 70vh;
+    overflow-y: auto;
+}
+
+.review-detail-summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    padding: 20px;
+    margin-bottom: 26px;
+    border: 1px solid rgba(226, 232, 240, 0.9);
+    border-radius: 18px;
+    background: #f8fafc;
+}
+
+.review-detail-summary__item {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.review-detail-summary__icon {
+    width: 46px;
+    height: 46px;
+    border-radius: 14px;
+    display: grid;
+    place-items: center;
+    background: rgba(var(--primary-rgb), 0.1);
+    color: var(--primary-color);
+}
+
+.review-detail-label {
+    display: block;
+    margin-bottom: 6px;
+    font-size: 11px;
+    font-weight: 800;
+    line-height: 1;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-light);
+}
+
+.review-detail-period {
+    margin: 0;
+    font-size: 20px;
+    font-weight: 850;
+    line-height: 1.1;
+    text-transform: uppercase;
+    color: var(--text-dark);
+}
+
+.review-detail-score-block {
+    text-align: right;
+}
+
+.review-detail-rating {
+    gap: 8px;
+    padding: 9px 16px;
+    border-radius: 999px;
+    background: #ffffff;
+}
+
+.review-detail-rating span {
+    font-size: 18px;
+    font-weight: 850;
+    line-height: 1;
+    color: var(--text-dark);
+}
+
+.review-detail-section {
+    margin-bottom: 28px;
+}
+
+.review-detail-section__head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 12px;
+}
+
+.review-detail-section__head--goals h4 {
+    margin: 0;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--text-light);
+}
+
+.review-detail-section__head--goals span {
+    font-size: 12px;
+    line-height: 1.4;
+    color: var(--text-light);
+}
+
+.review-detail-feedback {
+    min-height: unset;
+    padding: 16px 20px;
+    border: 1px solid rgba(226, 232, 240, 0.95);
+    border-radius: 16px;
+    background: #ffffff;
+    box-shadow: 0 10px 24px -24px rgba(15, 23, 42, 0.45);
+    font-size: 14px;
+    line-height: 1.65;
+    color: #475569;
+    font-style: italic;
+}
+
+.review-detail-goals {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 16px;
+}
+
+.review-detail-goal {
+    padding: 10px 15px;
+    border: 1px solid rgba(226, 232, 240, 0.95);
+    border-radius: 16px;
+    background: #ffffff;
+}
+
+.review-detail-goal__head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 10px;
+}
+
+.review-detail-goal__title {
+    font-size: 13px;
+    font-weight: 600;
+    line-height: 1.35;
+    letter-spacing: 0.04em;
+    color: var(--text-dark);
+}
+
+.review-detail-goal__score {
+    font-size: 10px;
+    font-weight: 800;
+}
+
+.review-detail-goal__comment {
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px dashed #e2e8f0;
+}
+
+.review-detail-goal__comment p {
+    margin: 0;
+    font-size: 13px;
+    line-height: 1.6;
+    color: #64748b;
+    font-style: italic;
+}
+
+.review-detail-modal__footer {
+    padding: 20px 32px;
+    border-top: 1px solid rgba(226, 232, 240, 0.85);
+    background: #f8fafc;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.review-detail-modal__footer .btn-danger-light,
+.review-detail-modal__footer .btn-primary {
+    min-height: 42px;
+    padding: 10px 22px;
+    font-size: 14px;
+    font-weight: 750;
+}
+
+@media (max-width: 640px) {
+    .review-detail-summary {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .review-detail-score-block {
+        text-align: left;
+    }
+
+    .review-detail-modal__header,
+    .review-detail-modal__body,
+    .review-detail-modal__footer {
+        padding-left: 22px;
+        padding-right: 22px;
+    }
 }
 
 .rating-tag {
@@ -7032,7 +7324,7 @@ a.candidate-detail-back-btn.btn-primary.no-bg.border svg {
 /* Modal & Input Components */
 .kpi-range-input {
     width: 100%;
-    height: 6px;
+    height: 4px;
     background: #eef2ff;
     border-radius: 5px;
     outline: none;
@@ -7056,7 +7348,6 @@ a.candidate-detail-back-btn.btn-primary.no-bg.border svg {
     border: 1.5px solid #f1f5f9;
     border-radius: 12px;
     display: flex;
-    flex-direction: column;
     align-items: center;
     gap: 8px;
     cursor: pointer;

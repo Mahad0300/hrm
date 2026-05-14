@@ -70,7 +70,7 @@ include 'includes/header.php';
                     <div class="form-group">
                         <label class="admin-form-label" for="policyAddEffective">Effective from</label>
                         <input type="date" id="policyAddEffective" class="form-control bg-white-input"
-                            value="<?= date('Y-m-d') ?>">
+                            min="<?= date('Y-m-d') ?>">
                     </div>
                 </div>
 
@@ -134,7 +134,8 @@ include 'includes/header.php';
                     </div>
                     <div class="form-group">
                         <label class="admin-form-label" for="policyEditEffective">Effective from</label>
-                        <input type="date" id="policyEditEffective" class="form-control bg-white-input">
+                        <input type="date" id="policyEditEffective" class="form-control bg-white-input"
+                            min="<?= date('Y-m-d') ?>">
                     </div>
                 </div>
 

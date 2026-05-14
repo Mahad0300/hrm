@@ -50,7 +50,7 @@ switch ($action) {
                 ]
             ]);
         } catch (PDOException $e) {
-            echo json_encode(['status' => 'error', 'message' => $e->getMessage()]);
+            echo json_encode(['status' => 'error', 'message' => 'A server error occurred. Please try again.']);
         }
         break;
 
@@ -80,7 +80,7 @@ switch ($action) {
             ");
             echo json_encode(['status' => 'success', 'data' => $stmt->fetchAll()]);
         } catch (PDOException $e) {
-            echo json_encode(['status' => 'error', 'message' => $e->getMessage()]);
+            echo json_encode(['status' => 'error', 'message' => 'A server error occurred. Please try again.']);
         }
         break;
 
@@ -89,7 +89,7 @@ switch ($action) {
             $stmt = $pdo->query("SELECT id, first_name, middle_name, last_name, profile_pic FROM employees WHERE deleted_at IS NULL AND role != 'Admin'");
             echo json_encode(['status' => 'success', 'data' => $stmt->fetchAll()]);
         } catch (PDOException $e) {
-            echo json_encode(['status' => 'error', 'message' => $e->getMessage()]);
+            echo json_encode(['status' => 'error', 'message' => 'A server error occurred. Please try again.']);
         }
         break;
 
@@ -105,7 +105,7 @@ switch ($action) {
             $stmt->execute([$empId]);
             echo json_encode(['status' => 'success', 'data' => $stmt->fetchAll(PDO::FETCH_COLUMN)]);
         } catch (PDOException $e) {
-            echo json_encode(['status' => 'error', 'message' => $e->getMessage()]);
+            echo json_encode(['status' => 'error', 'message' => 'A server error occurred. Please try again.']);
         }
         break;
 
@@ -153,7 +153,7 @@ switch ($action) {
                 'history' => $history
             ]);
         } catch (PDOException $e) {
-            echo json_encode(['status' => 'error', 'message' => $e->getMessage()]);
+            echo json_encode(['status' => 'error', 'message' => 'A server error occurred. Please try again.']);
         }
         break;
 
@@ -220,7 +220,7 @@ switch ($action) {
         } catch (Exception $e) {
             if ($pdo->inTransaction())
                 $pdo->rollBack();
-            echo json_encode(['status' => 'error', 'message' => $e->getMessage()]);
+            echo json_encode(['status' => 'error', 'message' => 'A server error occurred. Please try again.']);
         }
         break;
 
@@ -242,7 +242,7 @@ switch ($action) {
 
             echo json_encode(['status' => 'success', 'message' => 'Review deleted successfully!']);
         } catch (PDOException $e) {
-            echo json_encode(['status' => 'error', 'message' => $e->getMessage()]);
+            echo json_encode(['status' => 'error', 'message' => 'A server error occurred. Please try again.']);
         }
         break;
 
@@ -262,7 +262,7 @@ switch ($action) {
                 echo json_encode(['status' => 'error', 'message' => 'Review not found.']);
             }
         } catch (PDOException $e) {
-            echo json_encode(['status' => 'error', 'message' => $e->getMessage()]);
+            echo json_encode(['status' => 'error', 'message' => 'A server error occurred. Please try again.']);
         }
         break;
 

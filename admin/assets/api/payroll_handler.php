@@ -46,10 +46,24 @@ switch ($action) {
 
             $whereSql = implode(" AND ", $where);
 
-            // Fetch Total for Pagination
-            $countSql = "SELECT COUNT(*) FROM employees e WHERE $whereSql";
+            // Status filter via HAVING (because payroll status uses COALESCE on LEFT JOIN)
+            $havingSql = '';
+            $havingParams = [];
+            if (!empty($status)) {
+                $havingSql = "HAVING status = ?";
+                $havingParams[] = $status;
+            }
+
+            // Fetch Total for Pagination (with status filter)
+            $countSql = "SELECT COUNT(*) FROM (
+                SELECT COALESCE(p.status, 'Pending') as status
+                FROM employees e
+                LEFT JOIN payroll p ON e.id = p.employee_id AND p.month_year = ?
+                WHERE $whereSql
+                $havingSql
+            ) as filtered";
             $countStmt = $pdo->prepare($countSql);
-            $countStmt->execute($params);
+            $countStmt->execute(array_merge([$month], $params, $havingParams));
             $totalEntries = $countStmt->fetchColumn();
 
             // Fetch Employees with their Payroll Status for the specific month
@@ -61,22 +75,14 @@ switch ($action) {
                     LEFT JOIN departments d ON e.department_id = d.id
                     LEFT JOIN payroll p ON e.id = p.employee_id AND p.month_year = ?
                     WHERE $whereSql
+                    $havingSql
                     ORDER BY e.first_name ASC
                     LIMIT $limit OFFSET $offset";
             
             $stmt = $pdo->prepare($sql);
-            $execParams = array_merge([$month], $params);
+            $execParams = array_merge([$month], $params, $havingParams);
             $stmt->execute($execParams);
             $payrolls = $stmt->fetchAll();
-
-            // Filter by status on the final results if status is set
-            if (!empty($status)) {
-                $payrolls = array_filter($payrolls, function($p) use ($status) {
-                    return $p['status'] === $status;
-                });
-                $payrolls = array_values($payrolls);
-                $totalEntries = count($payrolls); // Simplified for now
-            }
 
             echo json_encode([
                 'status' => 'success',
@@ -86,7 +92,8 @@ switch ($action) {
                 'limit' => $limit
             ]);
         } catch (PDOException $e) {
-            echo json_encode(['status' => 'error', 'message' => $e->getMessage()]);
+            error_log("Payroll Error: " . $e->getMessage());
+            echo json_encode(['status' => 'error', 'message' => 'A server error occurred. Please try again.']);
         }
         break;
 
@@ -130,7 +137,7 @@ switch ($action) {
             $employees = $stmt->fetchAll();
             echo json_encode(['status' => 'success', 'data' => $employees]);
         } catch (PDOException $e) {
-            echo json_encode(['status' => 'error', 'message' => $e->getMessage()]);
+            echo json_encode(['status' => 'error', 'message' => 'A server error occurred. Please try again.']);
         }
         break;
 
@@ -227,7 +234,7 @@ switch ($action) {
                 echo json_encode(['status' => 'success', 'data' => $data, 'employee' => $employee, 'cycle' => ['start' => $startDate, 'end' => $endDate]]);
             }
         } catch (PDOException $e) {
-            echo json_encode(['status' => 'error', 'message' => $e->getMessage()]);
+            echo json_encode(['status' => 'error', 'message' => 'A server error occurred. Please try again.']);
         }
         break;
 
@@ -287,9 +294,16 @@ switch ($action) {
                 $med = $gross_salary * 0.10;
 
                 // Check if payroll already exists
-                $checkStmt = $pdo->prepare("SELECT id FROM payroll WHERE employee_id = ? AND month_year = ?");
+                $checkStmt = $pdo->prepare("SELECT id, loan_deduction, provident_fund, professional_tax FROM payroll WHERE employee_id = ? AND month_year = ?");
                 $checkStmt->execute([$employee_id, $month]);
                 $exists = $checkStmt->fetch();
+
+                // Preserve existing loan/PF/tax if record exists, otherwise default to 0
+                $loan = (float)($exists['loan_deduction'] ?? 0);
+                $pfund = (float)($exists['provident_fund'] ?? 0);
+                $ptax = (float)($exists['professional_tax'] ?? 0);
+                $totalDeductions = $attendanceDeduction + $loan + $pfund + $ptax;
+                $net_payable = $gross_salary - $totalDeductions;
 
                 if ($exists) {
                     $sql = "UPDATE payroll SET 
@@ -298,19 +312,19 @@ switch ($action) {
                             net_payable = ?, status = 'Paid'
                             WHERE id = ?";
                     $stmt = $pdo->prepare($sql);
-                    $stmt->execute([$basic, $hrent, $util, $fuel, $mob, $med, $absents, $lates, $halfdays, $attendanceDeduction, ($gross_salary - $attendanceDeduction), $exists['id']]);
+                    $stmt->execute([$basic, $hrent, $util, $fuel, $mob, $med, $absents, $lates, $halfdays, $attendanceDeduction, $net_payable, $exists['id']]);
                 } else {
                     $sql = "INSERT INTO payroll (employee_id, month_year, basic_salary, house_rent, utility, fuel, mobile, medical, leaves_count, lates_count, halfdays_count, deductions, net_payable, status) 
                             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'Paid')";
                     $stmt = $pdo->prepare($sql);
-                    $stmt->execute([$employee_id, $month, $basic, $hrent, $util, $fuel, $mob, $med, $absents, $lates, $halfdays, $attendanceDeduction, ($gross_salary - $attendanceDeduction)]);
+                    $stmt->execute([$employee_id, $month, $basic, $hrent, $util, $fuel, $mob, $med, $absents, $lates, $halfdays, $attendanceDeduction, $net_payable]);
                 }
                 $count++;
             }
 
             echo json_encode(['status' => 'success', 'message' => 'Bulk payroll generated.', 'count' => $count]);
         } catch (Exception $e) {
-            echo json_encode(['status' => 'error', 'message' => $e->getMessage()]);
+            echo json_encode(['status' => 'error', 'message' => 'A server error occurred. Please try again.']);
         }
         break;
 
@@ -383,7 +397,7 @@ switch ($action) {
 
             echo json_encode(['status' => 'success', 'message' => 'Payroll record saved successfully.']);
         } catch (PDOException $e) {
-            echo json_encode(['status' => 'error', 'message' => $e->getMessage()]);
+            echo json_encode(['status' => 'error', 'message' => 'A server error occurred. Please try again.']);
         }
         break;
 

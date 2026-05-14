@@ -3,11 +3,33 @@
 require_once dirname(__DIR__, 3) . '/includes/db_connect.php';
 require_once dirname(__DIR__, 3) . '/includes/api/notification_handler.php';
 require_once dirname(__DIR__, 3) . '/includes/api/activity_helper.php';
+require_once dirname(__DIR__, 3) . '/includes/api/rate_limiter.php';
 
 header('Content-Type: application/json');
 
 $action = $_GET['action'] ?? ($_POST['action'] ?? '');
-$user_id = $_SESSION['user_id'] ?? 1; // Default to 1 if session missing
+
+// Rate limit public-facing endpoints
+if ($action === 'submit_application' && !checkRateLimit('submit_application', 5, 60)) { rateLimitExceeded(); }
+
+// Public actions that don't require authentication (used by job-apply.php)
+$public_actions = ['submit_application', 'fetch_jobs', 'fetch_job_detail', 'fetch_interviews'];
+
+// Auth Check — Block all non-public actions for unauthenticated users
+if (!in_array($action, $public_actions)) {
+    if (!isLoggedIn() || !in_array($_SESSION['user_role'], ['Admin', 'HR'])) {
+        echo json_encode(['status' => 'error', 'message' => 'Unauthorized access.']);
+        exit;
+    }
+}
+
+$user_id = $_SESSION['user_id'] ?? 0;
+
+function createJobSlug($title) {
+    $slug = strtolower((string) $title);
+    $slug = preg_replace('/[^a-z0-9]+/', '-', $slug);
+    return trim($slug, '-');
+}
 
 
 try {
@@ -97,9 +119,24 @@ try {
 
         case 'fetch_job_detail':
             $id = $_GET['id'] ?? '';
-            $stmt = $pdo->prepare("SELECT j.*, d.name as department_name, (SELECT COUNT(*) FROM candidates WHERE job_id = j.id AND deleted_at IS NULL) as applicant_count FROM jobs j LEFT JOIN departments d ON j.department_id = d.id WHERE j.id = ?");
-            $stmt->execute([$id]);
-            $job = $stmt->fetch();
+            $slug = createJobSlug(trim($_GET['slug'] ?? ($_GET['job'] ?? '')));
+            $job = false;
+
+            if ($id !== '') {
+                $stmt = $pdo->prepare("SELECT j.*, d.name as department_name, (SELECT COUNT(*) FROM candidates WHERE job_id = j.id AND deleted_at IS NULL) as applicant_count FROM jobs j LEFT JOIN departments d ON j.department_id = d.id WHERE j.id = ? AND j.deleted_at IS NULL");
+                $stmt->execute([$id]);
+                $job = $stmt->fetch();
+            } elseif ($slug !== '') {
+                $stmt = $pdo->query("SELECT j.*, d.name as department_name, (SELECT COUNT(*) FROM candidates WHERE job_id = j.id AND deleted_at IS NULL) as applicant_count FROM jobs j LEFT JOIN departments d ON j.department_id = d.id WHERE j.deleted_at IS NULL ORDER BY j.created_at DESC");
+                foreach ($stmt->fetchAll() as $candidateJob) {
+                    if (createJobSlug($candidateJob['title']) === $slug) {
+                        $job = $candidateJob;
+                        $id = $candidateJob['id'];
+                        break;
+                    }
+                }
+            }
+
             if ($job) {
                 $qStmt = $pdo->prepare("SELECT * FROM job_questions WHERE job_id = ?");
                 $qStmt->execute([$id]);
@@ -111,6 +148,7 @@ try {
             break;
 
         case 'delete_job':
+            $jobId = $_POST['id'] ?? $_GET['id'] ?? null;
             if (!$jobId) throw new Exception("Job ID missing.");
 
             // Fetch title for logging before delete
@@ -270,7 +308,7 @@ try {
                 echo json_encode(['status' => 'success', 'message' => 'Application submitted successfully']);
             } catch (Exception $e) {
                 $pdo->rollBack();
-                echo json_encode(['status' => 'error', 'message' => $e->getMessage()]);
+                echo json_encode(['status' => 'error', 'message' => 'A server error occurred. Please try again.']);
             }
             break;
 
@@ -392,9 +430,27 @@ try {
             echo json_encode(['status' => 'success', 'message' => 'Interview rescheduled successfully']);
             break;
 
+        case 'toggle_job_status':
+            $id = $_POST['id'] ?? null;
+            $status = $_POST['status'] ?? null;
+
+            if (!$id || !$status) throw new Exception("ID and Status are required.");
+
+            $stmt = $pdo->prepare("UPDATE jobs SET status = ?, updated_at = NOW() WHERE id = ?");
+            $stmt->execute([$status, $id]);
+
+            // [LOG]
+            $t_stmt = $pdo->prepare("SELECT title FROM jobs WHERE id = ?");
+            $t_stmt->execute([$id]);
+            $j_title = $t_stmt->fetchColumn() ?: "Job";
+            logActivity($user_id, "Updated Job Status", "Job Management", "Changed status for '$j_title' to '$status'.");
+
+            echo json_encode(['status' => 'success', 'message' => 'Job status updated to ' . $status]);
+            break;
+
         default:
             throw new Exception("Invalid action.");
     }
 } catch (Exception $e) {
-    echo json_encode(['status' => 'error', 'message' => $e->getMessage()]);
+    echo json_encode(['status' => 'error', 'message' => 'A server error occurred. Please try again.']);
 }

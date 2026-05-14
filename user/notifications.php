@@ -155,6 +155,7 @@ include 'includes/header.php';
         }
 
         fetchNotifications();
+        setInterval(fetchNotifications, 5000);
     })();
 </script>
 

@@ -17,7 +17,12 @@ $startDay = (int)($settings['payroll_start_day'] ?? 1);
 $endDay = (int)($settings['payroll_end_day'] ?? 30);
 
 // Calculate Cycle Range
-$currentMonthObj = new DateTime($month . "-01");
+try {
+    $currentMonthObj = new DateTime($month . "-01");
+} catch (Exception $e) {
+    $month = date('Y-m');
+    $currentMonthObj = new DateTime($month . "-01");
+}
 $prevMonthObj = clone $currentMonthObj;
 $prevMonthObj->modify("-1 month");
 
@@ -62,7 +67,7 @@ $workedDays = $daysInCycle - (float)$data['leaves_count'] - ((float)$data['halfd
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Payslip - <?= $fullName ?></title>
+    <title>Payslip - <?= htmlspecialchars($fullName) ?></title>
     <style>
         body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; padding: 40px; color: #333; }
         .payslip-container { max-width: 900px; margin: 0 auto; border: 1px solid #000; padding: 20px; }
@@ -138,15 +143,15 @@ $workedDays = $daysInCycle - (float)$data['leaves_count'] - ((float)$data['halfd
             <div>
                 <div class="info-item">
                     <span class="info-label">Employee Name</span>
-                    <span class="info-value">: <?= $fullName ?></span>
+                    <span class="info-value">: <?= htmlspecialchars($fullName) ?></span>
                 </div>
                 <div class="info-item">
                     <span class="info-label">Designation</span>
-                    <span class="info-value">: <?= $data['job_title'] ?></span>
+                    <span class="info-value">: <?= htmlspecialchars($data['job_title'] ?? '') ?></span>
                 </div>
                 <div class="info-item">
                     <span class="info-label">Department</span>
-                    <span class="info-value">: <?= $data['dept_name'] ?></span>
+                    <span class="info-value">: <?= htmlspecialchars($data['dept_name'] ?? '') ?></span>
                 </div>
             </div>
         </div>

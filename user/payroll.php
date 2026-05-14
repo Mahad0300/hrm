@@ -3,11 +3,6 @@ $page_title = "My Payroll";
 $page_subtitle = "Your salary records and net pay by month in one place.";
 include 'includes/header.php';
 
-$payroll_user_name = 'James Wilson';
-$payroll_user_id = 'EM-4820';
-$payroll_user_role = 'Developer';
-$payroll_user_avatar = 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&q=80&w=150';
-
 $user_id = $_SESSION['user_id'] ?? 0;
 
 // Fetch Employee Name for URL

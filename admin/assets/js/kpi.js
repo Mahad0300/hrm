@@ -121,7 +121,7 @@ function renderKpiTable(data) {
                     </div>
                 </td>
                 <td>
-                    <div class="flex-center justify-start gap-4">
+                    <div class="flex-center justify-start gap-8">
                         <i data-lucide="star" class="text-warning ${item.overall_rating ? 'fill-warning' : ''}" size="14"></i>
                         <span class="font-14 font-600">${score}</span>
                     </div>

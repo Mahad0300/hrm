@@ -8,5 +8,8 @@ Thumbs.db
 # XAMPP specific
 /phpmyadmin/
 
-# Config files (Optional: uncomment if you want to keep local DB credentials private)
-# includes/db_connect.php
+# Config files — keep local DB credentials private
+includes/db_connect.php
+
+# Rate limiting storage (auto-generated)
+/storage/rate_limits/

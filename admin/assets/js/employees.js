@@ -41,6 +41,27 @@ function handleFileSelect(input, wrapperId, filenameId) {
         else filenameLabel.textContent = "Certificates, etc.";
     }
 }
+
+function getEmployeeFullName(emp) {
+    return [emp.first_name, emp.middle_name, emp.last_name]
+        .filter(part => part && String(part).trim())
+        .join(' ')
+        .trim();
+}
+
+function createEmployeeProfileSlug(name) {
+    return String(name || '')
+        .trim()
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/gi, '-')
+        .replace(/^-+|-+$/g, '');
+}
+
+function getEmployeeProfileUrl(emp) {
+    const slug = createEmployeeProfileSlug(getEmployeeFullName(emp));
+    return slug ? `employee-profile.php?employee=${encodeURIComponent(slug)}` : `employee-profile.php?id=${encodeURIComponent(emp.id)}`;
+}
+
 async function loadRequirementData() {
     try {
         const response = await fetch('assets/api/employee_handler.php?action=fetch_requirements');
@@ -172,11 +193,12 @@ document.addEventListener('DOMContentLoaded', () => {
             const badgeClass = statusClass === 'active' ? 'badge-success' : 
                                (statusClass === 'onleave' ? 'badge-warning' : 
                                (statusClass === 'terminated' || statusClass === 'exit' ? 'badge-danger' : 'badge-light'));
+            const profileUrl = getEmployeeProfileUrl(emp);
 
             return `
                 <tr data-emp-id="${emp.id}">
                     <td>
-                        <a href="employee-profile.php?id=${emp.id}" class="emp-profile no-decoration hover-opacity">
+                        <a href="${profileUrl}" class="emp-profile no-decoration hover-opacity">
                             <img src="${emp.profile_pic ? '../' + emp.profile_pic : '../images/profile-image/default-avatar.svg'}"
                                 class="emp-avatar" alt="Avatar"
                                 onerror="this.src='../images/profile-image/default-avatar.svg'">
@@ -192,7 +214,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     <td><span class="badge ${badgeClass}">${emp.status}</span></td>
                     <td class="text-right px-30">
                         <div class="btn-group justify-end">
-                            <button class="action-btn action-btn-view" title="View Details" onclick="window.location.href='employee-profile.php?id=${emp.id}'"><i data-lucide="eye"
+                            <button class="action-btn action-btn-view" title="View Details" onclick="window.location.href='${profileUrl}'"><i data-lucide="eye"
                                     size="14"></i></button>
                             <button class="action-btn action-btn-edit" title="Edit"
                                 onclick="openEditEmployeeModal('${emp.id}')"><i data-lucide="user-pen"

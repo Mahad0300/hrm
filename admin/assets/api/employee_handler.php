@@ -3,11 +3,16 @@
 require_once '../../../includes/db_connect.php';
 require_once '../../../includes/auth_helper.php';
 require_once '../../../includes/api/activity_helper.php';
+require_once '../../../includes/api/rate_limiter.php';
 
 header('Content-Type: application/json');
 
 // Session & Role Check (Optional: Allow Onboarding without full session if needed)
 $action = $_POST['action'] ?? $_GET['action'] ?? '';
+
+// Rate limit public-facing endpoints
+if ($action === 'check_email' && !checkRateLimit('check_email', 15, 60)) { rateLimitExceeded(); }
+if ($action === 'onboard' && !checkRateLimit('onboard', 5, 60)) { rateLimitExceeded(); }
 
 // Standard Auth check for Admin actions
 if ($action !== 'onboard' && $action !== 'check_email' && (!isLoggedIn() || !in_array($_SESSION['user_role'], ['Admin', 'HR']))) {
@@ -27,7 +32,14 @@ function validatePhone($phone) {
 function uploadFile($file, $targetDir) {
     if (!$file || $file['error'] !== UPLOAD_ERR_OK) return null;
     
-    $ext = pathinfo($file['name'], PATHINFO_EXTENSION);
+    // Security: Validate file extension
+    $allowed_exts = ['pdf', 'jpg', 'jpeg', 'png', 'webp', 'doc', 'docx'];
+    $ext = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
+    if (!in_array($ext, $allowed_exts)) return null;
+    
+    // Security: Validate file size (max 10MB)
+    if ($file['size'] > 10 * 1024 * 1024) return null;
+    
     $newName = uniqid('EMP_') . '.' . $ext;
     $targetPath = '../../../' . $targetDir . $newName;
     
@@ -44,7 +56,7 @@ switch ($action) {
             $employees = $stmt->fetchAll();
             echo json_encode(['status' => 'success', 'data' => $employees]);
         } catch (PDOException $e) {
-            echo json_encode(['status' => 'error', 'message' => $e->getMessage()]);
+            echo json_encode(['status' => 'error', 'message' => 'A server error occurred. Please try again.']);
         }
         break;
 
@@ -58,7 +70,7 @@ switch ($action) {
                 'shifts' => $shifts
             ]);
         } catch (PDOException $e) {
-            echo json_encode(['status' => 'error', 'message' => $e->getMessage()]);
+            echo json_encode(['status' => 'error', 'message' => 'A server error occurred. Please try again.']);
         }
         break;
 
@@ -152,7 +164,7 @@ switch ($action) {
                 'limit' => $limit
             ]);
         } catch (PDOException $e) {
-            echo json_encode(['status' => 'error', 'message' => $e->getMessage()]);
+            echo json_encode(['status' => 'error', 'message' => 'A server error occurred. Please try again.']);
         }
         break;
 
@@ -331,7 +343,7 @@ switch ($action) {
 
             } catch (Exception $e) {
                 if ($pdo->inTransaction()) $pdo->rollBack();
-                echo json_encode(['status' => 'error', 'message' => $e->getMessage()]);
+                echo json_encode(['status' => 'error', 'message' => 'A server error occurred. Please try again.']);
             }
         }
         break;
@@ -363,7 +375,7 @@ switch ($action) {
                 echo json_encode(['status' => 'error', 'message' => 'Employee not found.']);
             }
         } catch (PDOException $e) {
-            echo json_encode(['status' => 'error', 'message' => 'Database error: ' . $e->getMessage()]);
+            echo json_encode(['status' => 'error', 'message' => 'A server error occurred. Please try again.']);
         }
         break;
 
@@ -532,7 +544,7 @@ switch ($action) {
                 $pdo->rollBack();
             }
             header('Content-Type: application/json');
-            echo json_encode(['status' => 'error', 'message' => 'Transaction failed: ' . $e->getMessage()]);
+            echo json_encode(['status' => 'error', 'message' => 'A server error occurred. Please try again.']);
             exit;
         }
         break;
@@ -563,23 +575,30 @@ switch ($action) {
                 echo json_encode(['status' => 'error', 'message' => 'Employee not found or already exited.']);
             }
         } catch (PDOException $e) {
-            echo json_encode(['status' => 'error', 'message' => 'Database error: ' . $e->getMessage()]);
+            echo json_encode(['status' => 'error', 'message' => 'A server error occurred. Please try again.']);
         }
         break;
     
     case 'fetch_hierarchy_roles':
         try {
-            // Managers: Only from the 'Manager' department (ID 5)
-            $stmtM = $pdo->query("SELECT id, first_name, middle_name, last_name FROM employees WHERE department_id = 5 AND deleted_at IS NULL ORDER BY first_name ASC");
+            // 1. Dynamically find the ID of the 'Manager' department
+            $stmtDept = $pdo->query("SELECT id FROM departments WHERE name = 'Manager' AND deleted_at IS NULL LIMIT 1");
+            $managerDept = $stmtDept->fetch();
+            $managerDeptId = $managerDept ? $managerDept['id'] : 0;
+
+            // 2. Managers: Only from the identified 'Manager' department
+            $stmtM = $pdo->prepare("SELECT id, first_name, middle_name, last_name FROM employees WHERE department_id = ? AND deleted_at IS NULL ORDER BY first_name ASC");
+            $stmtM->execute([$managerDeptId]);
             $managers = $stmtM->fetchAll();
             
-            // Heads: Regular employees, excluding Admin/HR roles AND excluding the 'Manager' department (ID 5)
-            $stmtH = $pdo->query("SELECT id, first_name, middle_name, last_name FROM employees WHERE role = 'Employee' AND department_id != 5 AND deleted_at IS NULL ORDER BY first_name ASC");
+            // 3. Heads: Regular employees, excluding the 'Manager' department
+            $stmtH = $pdo->prepare("SELECT id, first_name, middle_name, last_name FROM employees WHERE role = 'Employee' AND department_id != ? AND deleted_at IS NULL ORDER BY first_name ASC");
+            $stmtH->execute([$managerDeptId]);
             $heads = $stmtH->fetchAll();
             
             echo json_encode(['status' => 'success', 'managers' => $managers, 'heads' => $heads]);
         } catch (PDOException $e) {
-            echo json_encode(['status' => 'error', 'message' => $e->getMessage()]);
+            echo json_encode(['status' => 'error', 'message' => 'A server error occurred. Please try again.']);
         }
         break;
 
