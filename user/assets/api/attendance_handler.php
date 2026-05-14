@@ -48,29 +48,38 @@ function handleGetStatus($pdo, $user_id) {
 
     $logical_date = determineLogicalDate($shift);
 
-    // 2. Check for attendance record on this logical date
-    $stmt = $pdo->prepare("SELECT * FROM attendance WHERE employee_id = ? AND date = ? LIMIT 1");
-    $stmt->execute([$user_id, $logical_date]);
-    $record = $stmt->fetch();
+    // 2. Check for ANY open attendance record (clock_out is null)
+    $stmt = $pdo->prepare("SELECT * FROM attendance WHERE employee_id = ? AND clock_out IS NULL AND status != 'ABSENT' ORDER BY clock_in DESC LIMIT 1");
+    $stmt->execute([$user_id]);
+    $open_record = $stmt->fetch();
 
     $can_check_in = false;
     $can_check_out = false;
     $is_checked_in = false;
+    $check_in_full = null;
     $check_in_time = null;
 
-    if (!$record || $record['status'] === 'ABSENT') {
-        // If no record or it's an ABSENT placeholder, user can check in
-        $can_check_in = true;
-    } else {
-        // Record exists and is NOT ABSENT
-        if ($record['clock_in'] && !$record['clock_out']) {
+    if ($open_record) {
+        // We have an open session. Is it from today/shift or a forgotten one?
+        $in_ts = strtotime($open_record['clock_in']);
+        $diff_hours = (time() - $in_ts) / 3600;
+
+        if ($diff_hours > 24) {
+            // Forgotten check-out from more than 24h ago. 
+            // In a real app, we might auto-close it here, but for now, let's just allow a new check-in
+            $can_check_in = true;
+        } else {
             $is_checked_in = true;
             $can_check_out = true;
-            $check_in_time = date('h:i A', strtotime($record['clock_in']));
-        } elseif ($record['clock_in'] && $record['clock_out']) {
-            // Already finished this shift
-            $can_check_in = false;
-            $can_check_out = false;
+            $check_in_full = $open_record['clock_in'];
+            $check_in_time = date('h:i A', $in_ts);
+        }
+    } else {
+        // No open session. Check if already checked in and out for THIS logical date
+        $stmt = $pdo->prepare("SELECT id FROM attendance WHERE employee_id = ? AND date = ? AND clock_out IS NOT NULL LIMIT 1");
+        $stmt->execute([$user_id, $logical_date]);
+        if (!$stmt->fetch()) {
+            $can_check_in = true;
         }
     }
 
@@ -80,6 +89,8 @@ function handleGetStatus($pdo, $user_id) {
         'can_check_in' => $can_check_in,
         'can_check_out' => $can_check_out,
         'check_in_time' => $check_in_time,
+        'check_in_full' => $check_in_full,
+        'server_time' => date('Y-m-d H:i:s'),
         'logical_date' => $logical_date
     ]);
 }
@@ -97,7 +108,17 @@ function handleCheckIn($pdo, $user_id) {
 
     $logical_date = determineLogicalDate($shift);
 
-    // 2. Prevent Duplicate Check-in for this logical shift
+    // 2. Auto-close any previous open sessions from other days
+    $stmt = $pdo->prepare("SELECT id, clock_in FROM attendance WHERE employee_id = ? AND clock_out IS NULL AND status != 'ABSENT' AND date != ?");
+    $stmt->execute([$user_id, $logical_date]);
+    $open_previous = $stmt->fetchAll();
+
+    foreach ($open_previous as $prev) {
+        $stmt = $pdo->prepare("UPDATE attendance SET clock_out = clock_in, working_hours = '0h 00m', status = 'ABSENT', message = 'Auto-closed: Missed check-out' WHERE id = ?");
+        $stmt->execute([$prev['id']]);
+    }
+
+    // 3. Prevent Duplicate Check-in for this logical shift
     $stmt = $pdo->prepare("SELECT id, status FROM attendance WHERE employee_id = ? AND date = ? LIMIT 1");
     $stmt->execute([$user_id, $logical_date]);
     $existing = $stmt->fetch();
@@ -105,11 +126,6 @@ function handleCheckIn($pdo, $user_id) {
     if ($existing && $existing['status'] !== 'ABSENT') {
         echo json_encode(['status' => 'error', 'message' => 'Attendance already recorded for shift starting on ' . date('d M', strtotime($logical_date))]);
         return;
-    }
-
-    // If there's an ABSENT record, we'll delete it or overwrite it
-    if ($existing && $existing['status'] === 'ABSENT') {
-        $pdo->prepare("DELETE FROM attendance WHERE id = ?")->execute([$existing['id']]);
     }
 
     $now = new DateTime();
