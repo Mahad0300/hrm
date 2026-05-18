@@ -5,6 +5,15 @@
 
 const ITSupport = (() => {
     const apiUrl = '../includes/api/it-support-handler.php';
+
+    const escapeHtml = (str) => {
+        if (str == null) return '';
+        return String(str)
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;');
+    };
     let cachedTickets = [];
     let currentFilter = 'All';
     let currentTicketId = null;
@@ -21,7 +30,7 @@ const ITSupport = (() => {
             if (currentTicketId) {
                 loadTicketDetails(currentTicketId, true);
             }
-        }, 3000);
+        }, 8000);
     };
 
     const fetchTickets = () => {
@@ -270,7 +279,7 @@ const ITSupport = (() => {
                     action: 'send_message',
                     ticket_id: currentTicketId,
                     message: msg,
-                    is_internal: isInternal
+                    is_internal: isInternal ? 'true' : 'false'
                 },
                 dataType: 'json',
                 success: (res) => {
@@ -318,7 +327,8 @@ const ITSupport = (() => {
         
         cachedTickets.forEach(t => {
             if(currentFilter !== 'All' && t.status !== currentFilter) return;
-            if(t.subject.toLowerCase().indexOf(query) === -1) return;
+            const haystack = (t.subject + ' ' + (t.user || '') + ' ' + (t.category || '')).toLowerCase();
+            if(query && haystack.indexOf(query) === -1) return;
             
             const activeClass = currentTicketId == t.id ? 'active' : '';
             const unreadBadge = t.unread_count > 0 ? `<span class="it-ticket-unread-badge" style="background: #EF4444; color: white; border-radius: 10px; padding: 3px 8px; font-size: 11px; font-weight: 600; line-height: 1;">${t.unread_count}</span>` : '';
@@ -326,10 +336,10 @@ const ITSupport = (() => {
             html += `
                 <div class="it-ticket-item ${activeClass}" data-id="${t.id}">
                     <div class="it-ticket-user" style="font-size: 13.5px; font-weight: 600; color: #1E293B; margin-bottom: 4px;">
-                        ${t.user}
+                        ${escapeHtml(t.user)}
                     </div>
                     <div class="it-ticket-item-header" style="display: flex; justify-content: space-between; align-items: flex-start; gap: 8px;">
-                        <h6 class="it-ticket-title" style="margin: 0; font-size: 12.5px; font-weight: 500; line-height: 1.4; color: #64748B; white-space: normal; text-overflow: unset; max-width: unset;">#${t.id} - ${t.subject} - ${t.category}</h6>
+                        <h6 class="it-ticket-title" style="margin: 0; font-size: 12.5px; font-weight: 500; line-height: 1.4; color: #64748B; white-space: normal; text-overflow: unset; max-width: unset;">#${t.id} - ${escapeHtml(t.subject)} - ${escapeHtml(t.category)}</h6>
                         <span class="it-ticket-status status-${t.status.toLowerCase()}" style="flex-shrink: 0; margin-top: 2px;">${t.status}</span>
                     </div>
                     <div class="it-ticket-meta" style="display: flex; justify-content: space-between; align-items: center; width: 100%; margin-top: 6px;">
@@ -360,6 +370,18 @@ const ITSupport = (() => {
                         renderTicketDetails(res.data);
                         applyFilters(); // refresh active state
                     }
+                } else {
+                    Swal.fire('Error', res.message || 'Could not load ticket.', 'error');
+                }
+            },
+            error: (xhr) => {
+                let msg = 'Could not load ticket. Check database column admin_unread or server logs.';
+                try {
+                    const j = JSON.parse(xhr.responseText);
+                    if (j.message) msg = j.message;
+                } catch (e) { /* ignore */ }
+                if (!silentUpdate) {
+                    Swal.fire('Error', msg, 'error');
                 }
             }
         });
@@ -453,7 +475,7 @@ const ITSupport = (() => {
                         <i class="fas fa-hand-pointer"></i> Claim Ticket
                     </button>
                 `;
-            } else if (ticket.status === 'In-Progress') {
+            } else {
                 const isAssignedAgent = ticket.assigned_to == IT_USER.emp_id;
                 const isAdmin = IT_USER.role === 'Admin';
                 if (isAssignedAgent || isAdmin) {

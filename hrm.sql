@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 15, 2026 at 10:32 PM
+-- Generation Time: May 19, 2026 at 01:46 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -145,7 +145,23 @@ INSERT INTO `activity_logs` (`id`, `employee_id`, `action`, `description`, `ip_a
 (102, 22, 'User Login', '[Authentication] User authenticated successfully and accessed the system dashboard.', '::1', '2026-05-14 16:21:13'),
 (103, 22, 'User Login', '[Authentication] User authenticated successfully and accessed the system dashboard.', '::1', '2026-05-14 20:21:16'),
 (104, 1, 'User Login', '[Authentication] User authenticated successfully and accessed the system dashboard.', '::1', '2026-05-15 17:37:59'),
-(105, 22, 'User Login', '[Authentication] User authenticated successfully and accessed the system dashboard.', '::1', '2026-05-15 18:35:15');
+(105, 22, 'User Login', '[Authentication] User authenticated successfully and accessed the system dashboard.', '::1', '2026-05-15 18:35:15'),
+(106, 1, 'User Login', '[Authentication] User authenticated successfully and accessed the system dashboard.', '::1', '2026-05-15 21:29:51'),
+(107, 22, 'User Login', '[Authentication] User authenticated successfully and accessed the system dashboard.', '::1', '2026-05-15 21:32:44'),
+(108, 1, 'User Login', '[Authentication] User authenticated successfully and accessed the system dashboard.', '::1', '2026-05-15 22:23:38'),
+(109, 1, 'Completed Employee Onboarding', '[Employees] Formally completed and finalized the onboarding profile for new team member: Syed Bukhari', '::1', '2026-05-15 22:24:22'),
+(110, 1, 'User Login', '[Authentication] User authenticated successfully and accessed the system dashboard.', '::1', '2026-05-18 15:04:53'),
+(111, 22, 'User Login', '[Authentication] User authenticated successfully and accessed the system dashboard.', '::1', '2026-05-18 15:12:07'),
+(112, 1, 'User Login', '[Authentication] User authenticated successfully and accessed the system dashboard.', '::1', '2026-05-18 15:26:47'),
+(113, 22, 'User Login', '[Authentication] User authenticated successfully and accessed the system dashboard.', '::1', '2026-05-18 15:28:06'),
+(114, 30, 'User Login', '[Authentication] User authenticated successfully and accessed the system dashboard.', '::1', '2026-05-18 16:29:44'),
+(115, 34, 'User Login', '[Authentication] User authenticated successfully and accessed the system dashboard.', '::1', '2026-05-18 18:14:52'),
+(116, 30, 'User Login', '[Authentication] User authenticated successfully and accessed the system dashboard.', '::1', '2026-05-18 18:15:29'),
+(117, 28, 'User Login', '[Authentication] User authenticated successfully and accessed the system dashboard.', '::1', '2026-05-18 18:46:57'),
+(118, 34, 'User Login', '[Authentication] User authenticated successfully and accessed the system dashboard.', '::1', '2026-05-18 18:49:45'),
+(119, 28, 'User Login', '[Authentication] User authenticated successfully and accessed the system dashboard.', '::1', '2026-05-18 20:56:14'),
+(120, 1, 'User Login', '[Authentication] User authenticated successfully and accessed the system dashboard.', '::1', '2026-05-18 23:30:02'),
+(121, 30, 'User Login', '[Authentication] User authenticated successfully and accessed the system dashboard.', '::1', '2026-05-18 23:45:07');
 
 -- --------------------------------------------------------
 
@@ -466,7 +482,8 @@ INSERT INTO `departments` (`id`, `name`, `manager`, `head`, `created_at`, `updat
 (9, 'Production', 22, 29, '2026-04-15 21:18:59', '2026-05-13 16:43:39', NULL),
 (10, 'Marketing', 28, 31, '2026-04-15 21:19:09', '2026-05-13 16:43:07', NULL),
 (11, 'Chat Support', 28, 33, '2026-04-15 21:19:47', '2026-05-13 16:43:01', NULL),
-(12, 'Test 1', NULL, NULL, '2026-04-15 21:19:53', '2026-04-15 21:19:58', '2026-04-15 21:19:58');
+(12, 'Test 1', NULL, NULL, '2026-04-15 21:19:53', '2026-04-15 21:19:58', '2026-04-15 21:19:58'),
+(13, 'IT', NULL, NULL, '2026-05-15 22:24:02', NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -542,17 +559,17 @@ CREATE TABLE `employees` (
 
 INSERT INTO `employees` (`id`, `first_name`, `middle_name`, `last_name`, `email`, `password`, `role`, `gender`, `dob`, `phone`, `cnic_number`, `address`, `emergency_contact`, `emergency_relation`, `department_id`, `shift_id`, `job_title`, `job_type`, `salary`, `joining_date`, `status`, `id_card_path`, `other_docs`, `resume_path`, `profile_pic`, `created_at`, `updated_at`, `deleted_at`) VALUES
 (1, 'System', '', 'Admin', 'admin@gmail.com', '$2y$12$RKq6kP5En4KGCUYd3.hBIuE1WdPKNb7GFcnlE21gAgoiEA0i0noeS', 'Admin', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '', 0.00, '2026-04-06', 'Active', NULL, NULL, NULL, NULL, '2026-04-06 17:51:22', NULL, NULL),
-(22, 'Syed', 'Mahad', 'Bukhari', 'mahad@gmail.com', '$2y$10$MJSzzQkWueYLdZlP6A3pjOF2FtmO3h8IEpKJ./Gj0Q4dQG6LXX2D2', 'Employee', 'Male', '2002-07-05', '2222-2222227', '1111111111111', 'North Nazimabad', '33333333333', 'Test Emergency contact relation', 8, 7, 'Frontend Developer', 'Permanent', 40000.00, '2026-01-20', 'Active', 'uploads/employees/id_cards/EMP_69dffe42dcfe4.pdf', NULL, 'uploads/employees/resumes/EMP_69dffe42dd1fa.pdf', 'uploads/employees/profiles/user_22_69f3c6c79e71e.png', '2026-04-15 21:08:18', '2026-05-11 18:33:17', NULL),
+(22, 'Syed', 'Mahad', 'Bukhari', 'mahad@gmail.com', '$2y$10$MJSzzQkWueYLdZlP6A3pjOF2FtmO3h8IEpKJ./Gj0Q4dQG6LXX2D2', 'Employee', 'Male', '2002-07-05', '2222-2222227', '1111111111111', 'North Nazimabad', '33333333333', 'Test Emergency contact relation', 9, 7, 'Frontend Developer', 'Permanent', 40000.00, '2026-01-20', 'Active', 'uploads/employees/id_cards/EMP_69dffe42dcfe4.pdf', NULL, 'uploads/employees/resumes/EMP_69dffe42dd1fa.pdf', 'uploads/employees/profiles/user_22_69f3c6c79e71e.png', '2026-04-15 21:08:18', '2026-05-18 16:27:30', NULL),
 (25, 'test', 'test', 'test', 'test@gmail.com', '$2y$10$X4oArjIECxAau3.mp4y99.Pt.y5dt42xOj/ghJb4RbUN9N7WgYsyK', 'Employee', 'Male', '2000-01-02', '2222-2222222', '1111111111111', 'test', '33333333333', 'Test Emergency contact relation', 9, 5, 'test', 'Permanent', 65000.00, '2026-05-04', 'Active', 'uploads/employees/id_cards/EMP_69f3cfb2604a1.pdf', NULL, 'uploads/employees/resumes/EMP_69f3cfb2606a4.pdf', NULL, '2026-04-30 21:54:58', '2026-04-30 21:58:03', NULL),
 (26, 'test', 'test', 'test', 'test1@gmail.com', '$2y$10$SR6ZJqPiUKin/28qO3Kw3OwX3/Xugu2A3v1VfJ0mAX8XYN5l.C1km', 'Employee', 'Male', '2002-05-05', '2222-2222222', '1111111111111', 'north', '33333333333', 'testttt', 10, 6, 'test', 'Probation', 45000.00, '2026-05-05', 'Active', 'uploads/employees/id_cards/EMP_69f3d853ab1b8.pdf', NULL, 'uploads/employees/resumes/EMP_69f3d853ab3b9.pdf', NULL, '2026-04-30 22:31:47', '2026-04-30 22:34:35', NULL),
 (27, 'user', '', 'user', 'test2@gmail.com', '$2y$10$zG/p6Il95cae.1MWZllMyek46hyMsmafgaR8XeIRxay54zzOa68KW', 'Employee', 'Male', '2003-05-07', '3333-3333333', '4444444444444', 'test', '55555555555', 'test', 11, 5, 'Job Title Test', 'Permanent', 90000.00, '2026-05-04', 'Active', 'uploads/employees/id_cards/EMP_69f3da0719fe3.pdf', NULL, 'uploads/employees/resumes/EMP_69f3da071a1c4.pdf', NULL, '2026-04-30 22:39:03', NULL, NULL),
-(28, 'Ahmed', 'Ali', 'Khan', 'ahmed@gmail.com', '$2y$10$zG/p6Il95cae.1MWZllMyek46hyMsmafgaR8XeIRxay54zzOa68KW', 'Employee', 'Male', '1995-03-12', '0300-1111111', '42101-1111111-1', 'Gulshan-e-Iqbal, Karachi', '0300-9999999', 'Brother', 8, 5, 'Backend Developer', 'Permanent', 30000.00, '2026-05-01', 'Active', NULL, NULL, NULL, NULL, '2026-05-07 22:46:12', '2026-05-12 17:26:55', NULL),
+(28, 'Ahmed', 'Ali', 'Khan', 'ahmed@gmail.com', '$2y$12$RKq6kP5En4KGCUYd3.hBIuE1WdPKNb7GFcnlE21gAgoiEA0i0noeS', 'Employee', 'Male', '1995-03-12', '0300-1111111', '42101-1111111-1', 'Gulshan-e-Iqbal, Karachi', '0300-9999999', 'Brother', 13, 5, 'Backend Developer', 'Permanent', 30000.00, '2026-05-01', 'Active', NULL, NULL, NULL, NULL, '2026-05-07 22:46:12', '2026-05-18 18:14:34', NULL),
 (29, 'Sara', '', 'Ahmed', 'sara@gmail.com', '$2y$10$zG/p6Il95cae.1MWZllMyek46hyMsmafgaR8XeIRxay54zzOa68KW', 'Employee', 'Female', '1998-06-25', '0300-2222222', '42101-2222222-2', 'DHA Phase 6, Karachi', '0300-8888888', 'Father', 9, 6, 'UI/UX Designer', 'Permanent', 60000.00, '2026-05-02', 'Active', NULL, NULL, NULL, NULL, '2026-05-07 22:46:12', NULL, NULL),
-(30, 'Zain', 'Ul', 'Abidin', 'zain@gmail.com', '$2y$10$zG/p6Il95cae.1MWZllMyek46hyMsmafgaR8XeIRxay54zzOa68KW', 'Employee', 'Male', '1992-11-10', '0300-3333333', '42101-3333333-3', 'North Karachi', '0300-7777777', 'Mother', 10, 7, 'Full Stack Developer', 'Permanent', 85000.00, '2026-05-03', 'Active', NULL, NULL, NULL, NULL, '2026-05-07 22:46:12', NULL, NULL),
+(30, 'Zain', 'Ul', 'Abidin', 'zain@gmail.com', '$2y$12$RKq6kP5En4KGCUYd3.hBIuE1WdPKNb7GFcnlE21gAgoiEA0i0noeS', 'Employee', 'Male', '1992-11-10', '0300-3333333', '42101-3333333-3', 'North Karachi', '0300-7777777', 'Mother', 13, 7, 'Full Stack Developer', 'Permanent', 85000.00, '2026-05-03', 'Active', NULL, NULL, NULL, NULL, '2026-05-07 22:46:12', '2026-05-18 16:29:23', NULL),
 (31, 'Fatima', '', 'Zehra', 'fatima@gmail.com', '$2y$10$zG/p6Il95cae.1MWZllMyek46hyMsmafgaR8XeIRxay54zzOa68KW', 'Employee', 'Female', '1996-08-15', '0300-4444444', '42101-4444444-4', 'Malir Cantt, Karachi', '0300-6666666', 'Husband', 11, 5, 'QA Engineer', 'Probation', 45000.00, '2026-05-04', 'Active', NULL, NULL, NULL, NULL, '2026-05-07 22:46:12', NULL, NULL),
 (32, 'Hamza', 'Bin', 'Tariq', 'hamza@gmail.com', '$2y$10$zG/p6Il95cae.1MWZllMyek46hyMsmafgaR8XeIRxay54zzOa68KW', 'Employee', 'Male', '1994-12-30', '0300-5555555', '42101-5555555-5', 'Federal B Area, Karachi', '0300-5555555', 'Sister', 8, 6, 'SEO Specialist', 'Permanent', 40000.00, '2026-05-05', 'Active', NULL, NULL, NULL, NULL, '2026-05-07 22:46:12', NULL, NULL),
 (33, 'Ayesha', '', 'Siddiqui', 'ayesha@gmail.com', '$2y$12$RKq6kP5En4KGCUYd3.hBIuE1WdPKNb7GFcnlE21gAgoiEA0i0noeS', 'Employee', 'Female', '1997-04-22', '0300-6666666', '42101-6666666-6', 'Clifton, Karachi', '0300-4444444', 'Friend', 9, 7, 'Content Writer', 'Internship', 25000.00, '2026-05-06', 'Active', NULL, NULL, NULL, NULL, '2026-05-07 22:46:12', '2026-05-11 16:10:42', NULL),
-(34, 'Bilal', '', 'Sheikh', 'bilal@gmail.com', '$2y$10$zG/p6Il95cae.1MWZllMyek46hyMsmafgaR8XeIRxay54zzOa68KW', 'Employee', 'Male', '1990-01-18', '0300-7777777', '42101-7777777-7', 'Garden West, Karachi', '0300-3333333', 'Wife', 10, 5, 'Project Manager', 'Permanent', 120000.00, '2026-05-07', 'Active', NULL, NULL, NULL, NULL, '2026-05-07 22:46:12', NULL, NULL),
+(34, 'Bilal', '', 'Sheikh', 'bilal@gmail.com', '$2y$12$RKq6kP5En4KGCUYd3.hBIuE1WdPKNb7GFcnlE21gAgoiEA0i0noeS', 'Employee', 'Male', '1990-01-18', '0300-7777777', '42101-7777777-7', 'Garden West, Karachi', '0300-3333333', 'Wife', 13, 5, 'Project Manager', 'Permanent', 120000.00, '2026-05-07', 'Active', NULL, NULL, NULL, NULL, '2026-05-07 22:46:12', '2026-05-18 18:14:40', NULL),
 (35, 'Nimra', 'Arshad', 'Rao', 'nimra@gmail.com', '$2y$10$zG/p6Il95cae.1MWZllMyek46hyMsmafgaR8XeIRxay54zzOa68KW', 'Employee', 'Female', '1999-09-09', '0300-8888888', '42101-8888888-8', 'PECHS Block 2, Karachi', '0300-2222222', 'Uncle', 11, 6, 'HR Executive', 'Permanent', 50000.00, '2026-05-08', 'Active', NULL, NULL, NULL, NULL, '2026-05-07 22:46:12', NULL, NULL),
 (36, 'Usman', '', 'Ghani', 'usman@gmail.com', '$2y$10$zG/p6Il95cae.1MWZllMyek46hyMsmafgaR8XeIRxay54zzOa68KW', 'Employee', 'Male', '1993-02-14', '0300-9999999', '42101-9999999-9', 'Korangi, Karachi', '0300-1111111', 'Aunt', 8, 7, 'Network Engineer', 'Permanent', 70000.00, '2026-05-09', 'Active', NULL, NULL, NULL, NULL, '2026-05-07 22:46:12', NULL, NULL),
 (37, 'Hina', '', 'Pervez', 'hina@gmail.com', '$2y$10$zG/p6Il95cae.1MWZllMyek46hyMsmafgaR8XeIRxay54zzOa68KW', 'HR', 'Female', '1991-05-20', '0300-0000000', '42101-0000000-0', 'Saddar, Karachi', '0300-0000000', 'Cousin', 9, 5, 'Marketing Head', 'Permanent', 95000.00, '2026-05-10', 'Active', NULL, NULL, NULL, NULL, '2026-05-07 22:46:12', '2026-05-11 21:14:28', NULL),
@@ -1094,7 +1111,6 @@ CREATE TABLE `support_tickets` (
   `target_dept_id` int(11) DEFAULT NULL,
   `assigned_to` int(11) DEFAULT NULL,
   `description` text NOT NULL,
-  `priority` enum('Low','Medium','High') DEFAULT 'Medium',
   `status` enum('Open','In Progress','Resolved','Closed') DEFAULT 'Open',
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
   `resolved_by` int(11) DEFAULT NULL,
@@ -1102,8 +1118,18 @@ CREATE TABLE `support_tickets` (
   `closed_by` int(11) DEFAULT NULL,
   `closed_at` timestamp NULL DEFAULT NULL,
   `resolution_duration` varchar(100) DEFAULT NULL,
-  `reopen_count` int(11) DEFAULT 0
+  `reopen_count` int(11) DEFAULT 0,
+  `employee_unread` int(11) DEFAULT 0,
+  `it_unread` int(11) DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `support_tickets`
+--
+
+INSERT INTO `support_tickets` (`id`, `employee_id`, `subject`, `category`, `target_dept_id`, `assigned_to`, `description`, `status`, `created_at`, `resolved_by`, `resolved_at`, `closed_by`, `closed_at`, `resolution_duration`, `reopen_count`, `employee_unread`, `it_unread`) VALUES
+(12, 22, 'Test Ticket Subject', 'Hardware', NULL, 28, 'Test Description', 'Closed', '2026-05-18 23:11:25', 34, '2026-05-18 23:15:32', 28, '2026-05-18 23:17:35', '6 mins', 1, 0, 0),
+(13, 22, 'Test Ticket Subject', 'Test Specify Category', NULL, 30, 'Test Description', 'Closed', '2026-05-18 23:32:51', 28, '2026-05-18 23:43:32', 30, '2026-05-18 23:45:46', '12 mins', 1, 0, 0);
 
 -- --------------------------------------------------------
 
@@ -1116,10 +1142,46 @@ CREATE TABLE `ticket_messages` (
   `ticket_id` int(11) NOT NULL,
   `sender_id` int(11) NOT NULL,
   `message` text NOT NULL,
-  `attachment` varchar(255) DEFAULT NULL,
   `is_internal` tinyint(1) DEFAULT 0,
+  `is_system` tinyint(1) DEFAULT 0,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `ticket_messages`
+--
+
+INSERT INTO `ticket_messages` (`id`, `ticket_id`, `sender_id`, `message`, `is_internal`, `is_system`, `created_at`) VALUES
+(102, 12, 22, 'Test Description', 0, 0, '2026-05-18 23:11:25'),
+(103, 12, 22, 'testtt', 0, 0, '2026-05-18 23:12:06'),
+(104, 12, 22, 'test', 0, 0, '2026-05-18 23:12:45'),
+(105, 12, 22, 'test', 0, 0, '2026-05-18 23:12:46'),
+(106, 12, 22, 'test', 0, 0, '2026-05-18 23:12:47'),
+(107, 12, 22, 'test', 0, 0, '2026-05-18 23:12:50'),
+(108, 12, 34, 'testtttt it', 0, 0, '2026-05-18 23:15:00'),
+(109, 12, 22, 'Ticket Re-opened. Previously resolved by Bilal  Sheikh in 4 mins.', 0, 1, '2026-05-18 23:15:42'),
+(110, 12, 34, 'Ticket handed over to Ahmed Ali Khan.', 1, 1, '2026-05-18 23:16:03'),
+(111, 12, 28, 'testtttttt', 0, 0, '2026-05-18 23:16:24'),
+(112, 12, 22, 'testtt', 0, 0, '2026-05-18 23:16:45'),
+(113, 12, 22, 'testttt', 0, 0, '2026-05-18 23:16:47'),
+(114, 12, 22, 'testttt', 0, 0, '2026-05-18 23:16:48'),
+(115, 12, 22, 'testttt', 0, 0, '2026-05-18 23:16:50'),
+(116, 12, 22, 'testttt', 0, 0, '2026-05-18 23:17:06'),
+(117, 12, 22, 'testttt', 0, 0, '2026-05-18 23:17:07'),
+(118, 12, 22, 'testttt', 0, 0, '2026-05-18 23:17:09'),
+(119, 13, 22, 'Test Description', 0, 0, '2026-05-18 23:32:51'),
+(120, 13, 22, 'Test', 0, 0, '2026-05-18 23:33:41'),
+(121, 13, 22, 'Test', 0, 0, '2026-05-18 23:33:42'),
+(122, 13, 22, 'Test', 0, 0, '2026-05-18 23:33:44'),
+(123, 13, 22, 'Test', 0, 0, '2026-05-18 23:33:45'),
+(124, 13, 22, 'Test', 0, 0, '2026-05-18 23:33:46'),
+(125, 13, 22, 'Testtt', 0, 0, '2026-05-18 23:42:33'),
+(126, 13, 22, 'Testttt', 0, 0, '2026-05-18 23:42:37'),
+(127, 13, 22, 'TEsttt', 0, 0, '2026-05-18 23:42:40'),
+(128, 13, 1, 'Ticket Re-opened. Previously resolved by Ahmed Ali Khan in 10 mins.', 0, 1, '2026-05-18 23:44:09'),
+(129, 13, 1, 'Ticket handed over to Zain Ul Abidin.', 1, 1, '2026-05-18 23:44:34'),
+(130, 13, 1, 'admin handover ticket to zain', 1, 0, '2026-05-18 23:44:46'),
+(131, 13, 30, 'hello Im here', 0, 0, '2026-05-18 23:45:28');
 
 --
 -- Indexes for dumped tables
@@ -1345,7 +1407,7 @@ ALTER TABLE `ticket_messages`
 -- AUTO_INCREMENT for table `activity_logs`
 --
 ALTER TABLE `activity_logs`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=106;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=122;
 
 --
 -- AUTO_INCREMENT for table `announcements`
@@ -1363,7 +1425,7 @@ ALTER TABLE `attendance`
 -- AUTO_INCREMENT for table `banking_info`
 --
 ALTER TABLE `banking_info`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=74;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=75;
 
 --
 -- AUTO_INCREMENT for table `candidates`
@@ -1387,13 +1449,13 @@ ALTER TABLE `candidate_history`
 -- AUTO_INCREMENT for table `departments`
 --
 ALTER TABLE `departments`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- AUTO_INCREMENT for table `education_experience`
 --
 ALTER TABLE `education_experience`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=74;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=75;
 
 --
 -- AUTO_INCREMENT for table `employees`
@@ -1495,13 +1557,13 @@ ALTER TABLE `shifts`
 -- AUTO_INCREMENT for table `support_tickets`
 --
 ALTER TABLE `support_tickets`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- AUTO_INCREMENT for table `ticket_messages`
 --
 ALTER TABLE `ticket_messages`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=132;
 
 --
 -- Constraints for dumped tables

@@ -26,6 +26,8 @@ try {
 } catch (Exception $e) {
     // Fallback if PDO is not configured this way
 }
+
+$user_role = $_SESSION['user_role'] ?? 'Employee';
 ?>
 
 <!-- Add IT Support Specific CSS -->
@@ -42,7 +44,7 @@ try {
     // Pass user info to Javascript
     const IT_USER = {
         emp_id: '<?php echo $_SESSION['user_id']; ?>',
-        role: '<?php echo isset($_SESSION['role']) ? $_SESSION['role'] : 'Employee'; ?>',
+        role: '<?php echo htmlspecialchars($user_role, ENT_QUOTES, 'UTF-8'); ?>',
         dept: '<?php echo htmlspecialchars($user_dept); ?>',
         is_it_staff: <?php echo $is_it_staff ? 'true' : 'false'; ?>
     };

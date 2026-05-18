@@ -52,8 +52,8 @@
 
 .it-filter-tabs {
     display: flex;
-    padding: 10px 15px;
-    gap: 1px;
+    padding: 10px 10px;
+    gap: 3px;
     border-bottom: 1px solid var(--it-border);
     background: #fdfdfd;
 }

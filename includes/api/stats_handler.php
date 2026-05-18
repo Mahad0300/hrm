@@ -49,7 +49,9 @@ try {
 
         case 'get_announcements_notifications':
             $user_id = $_SESSION['user_id'];
-            $dept_id = $_SESSION['user_dept_id'] ?? 0;
+            $dept_stmt = $pdo->prepare("SELECT department_id FROM employees WHERE id = ?");
+            $dept_stmt->execute([$user_id]);
+            $dept_id = (int) ($dept_stmt->fetchColumn() ?: 0);
 
             // 1. Latest Announcements (Events with show_in_announcement = 1)
             // Show for their dept or 'All'
@@ -121,7 +123,7 @@ try {
 
             // 3. My Department Info
             $stmt = $pdo->prepare("
-                SELECT d.name, (SELECT COUNT(*) FROM employees WHERE department_id = d.id AND status NOT IN ('Terminated', 'Exit')) as dept_count
+                SELECT d.name, e.job_title, (SELECT COUNT(*) FROM employees WHERE department_id = d.id AND status NOT IN ('Terminated', 'Exit') AND deleted_at IS NULL) as dept_count
                 FROM departments d
                 JOIN employees e ON d.id = e.department_id
                 WHERE e.id = ?
@@ -129,6 +131,7 @@ try {
             $stmt->execute([$user_id]);
             $dept_info = $stmt->fetch();
             $dept_name = $dept_info['name'] ?? 'General';
+            $job_title = trim($dept_info['job_title'] ?? '') ?: 'Employee';
             $dept_count = $dept_info['dept_count'] ?? 0;
 
             // 4. Today's or Active Attendance Details
@@ -171,6 +174,7 @@ try {
                     'monthly_attendance' => (int)$attendance_count,
                     'dept_employees' => (int)$dept_count,
                     'dept_name' => $dept_name,
+                    'job_title' => $job_title,
                     'unread_notifications' => (int)$unread_count,
                     'today_attendance' => $today_attendance ? array_merge($today_attendance, [
                         'shift_end_raw' => $today_attendance['end_time'] // We'll handle date in JS or here

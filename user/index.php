@@ -71,8 +71,8 @@ include 'includes/header.php';
                 <div class="trend-up"><i data-lucide="users" size="14"></i><span id="stat-dept-count-badge">...</span></div>
             </div>
             <div class="stat-content">
-                <h3 id="user-job-title"><?= htmlspecialchars($_SESSION['user_role'] ?? 'Employee') ?></h3>
-                <p id="user-dept-name">My Department</p>
+                <h3 id="user-job-title">...</h3>
+                <p id="user-dept-name">...</p>
             </div>
             <div class="stat-footer"><span id="stat-dept-employees-count">... employees in your department</span></div>
         </article>

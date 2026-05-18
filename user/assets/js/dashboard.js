@@ -105,7 +105,8 @@ function fetchPersonalStats() {
                 updateStat('stat-dept-employees-count', d.dept_employees + ' employees in your department');
                 updateStat('stat-unread-notifications', d.unread_notifications);
                 updateStat('stat-unread-count-badge', '+' + d.unread_notifications);
-                updateStat('user-job-title', d.dept_name); // Set Big Title to Dept Name
+                updateStat('user-job-title', d.job_title || 'Employee');
+                updateStat('user-dept-name', d.dept_name || 'My Department');
                 updateStat('stat-work-target', 'Target: ' + d.target_hours);
 
                 // Attendance Stats

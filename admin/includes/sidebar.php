@@ -114,6 +114,12 @@ $current_page = basename($_SERVER['PHP_SELF']);
             </a>
         </div>
         
+        <div class="menu-item">
+            <a href="it-support.php" class="menu-link <?= ($current_page == 'it-support.php') ? 'active' : '' ?>">
+                <i data-lucide="headset" size="18"></i>
+                <span>IT Helpdesk</span>
+            </a>
+        </div>
         <div class="menu-label">System</div>
         <div class="menu-item has-submenu <?= in_array($current_page, ['shifts.php', 'department-management.php', 'role-management.php', 'policy-management.php', 'payroll-settings.php']) ? 'active open' : '' ?>">
             <a href="javascript:void(0)" class="menu-link submenu-toggle">
@@ -312,3 +318,4 @@ $current_page = basename($_SERVER['PHP_SELF']);
         setInterval(refreshNotiBadge, 30000);
     </script>
     <div class="content-body">
+
