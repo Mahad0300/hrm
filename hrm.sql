@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 14, 2026 at 11:10 PM
+-- Generation Time: May 15, 2026 at 10:32 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -143,7 +143,9 @@ INSERT INTO `activity_logs` (`id`, `employee_id`, `action`, `description`, `ip_a
 (100, 22, 'User Login', '[Authentication] User authenticated successfully and accessed the system dashboard.', '::1', '2026-05-14 15:26:42'),
 (101, 1, 'User Login', '[Authentication] User authenticated successfully and accessed the system dashboard.', '::1', '2026-05-14 16:04:43'),
 (102, 22, 'User Login', '[Authentication] User authenticated successfully and accessed the system dashboard.', '::1', '2026-05-14 16:21:13'),
-(103, 22, 'User Login', '[Authentication] User authenticated successfully and accessed the system dashboard.', '::1', '2026-05-14 20:21:16');
+(103, 22, 'User Login', '[Authentication] User authenticated successfully and accessed the system dashboard.', '::1', '2026-05-14 20:21:16'),
+(104, 1, 'User Login', '[Authentication] User authenticated successfully and accessed the system dashboard.', '::1', '2026-05-15 17:37:59'),
+(105, 22, 'User Login', '[Authentication] User authenticated successfully and accessed the system dashboard.', '::1', '2026-05-15 18:35:15');
 
 -- --------------------------------------------------------
 
@@ -306,7 +308,8 @@ INSERT INTO `attendance` (`id`, `employee_id`, `date`, `shift_id`, `clock_in`, `
 (125, 30, '2026-05-11', 7, '2026-05-11 21:00:00', '2026-05-12 06:00:00', '9h 00m', 'ON TIME', NULL, '2026-05-11 20:56:58', NULL),
 (131, 22, '2026-05-12', 7, NULL, NULL, NULL, 'ABSENT', NULL, '2026-05-14 17:56:56', NULL),
 (132, 22, '2026-05-13', 7, NULL, NULL, NULL, 'ABSENT', NULL, '2026-05-14 17:56:56', NULL),
-(133, 22, '2026-05-14', 7, '2026-05-14 22:56:56', NULL, NULL, 'LATE IN', NULL, '2026-05-14 17:56:56', NULL);
+(133, 22, '2026-05-14', 7, '2026-05-14 22:56:56', '2026-05-14 22:56:56', '0h 00m', 'ABSENT', 'Auto-closed: Missed check-out', '2026-05-14 17:56:56', '2026-05-15 18:57:19'),
+(134, 22, '2026-05-15', 7, '2026-05-15 23:57:19', NULL, NULL, 'LATE IN', NULL, '2026-05-15 18:57:19', NULL);
 
 -- --------------------------------------------------------
 
@@ -1077,6 +1080,47 @@ INSERT INTO `shifts` (`id`, `name`, `start_time`, `end_time`, `grace_time`, `hal
 (7, 'D', '21:00:00', '06:00:00', 30, 4.00, '', '2026-04-15 21:18:12', '2026-05-14 17:04:17', NULL),
 (8, 'Test', '20:15:00', '05:15:00', 25, 5.00, '', '2026-05-13 18:24:45', '2026-05-13 18:25:17', '2026-05-13 18:25:17');
 
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `support_tickets`
+--
+
+CREATE TABLE `support_tickets` (
+  `id` int(11) NOT NULL,
+  `employee_id` int(11) NOT NULL,
+  `subject` varchar(255) NOT NULL,
+  `category` varchar(100) NOT NULL,
+  `target_dept_id` int(11) DEFAULT NULL,
+  `assigned_to` int(11) DEFAULT NULL,
+  `description` text NOT NULL,
+  `priority` enum('Low','Medium','High') DEFAULT 'Medium',
+  `status` enum('Open','In Progress','Resolved','Closed') DEFAULT 'Open',
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `resolved_by` int(11) DEFAULT NULL,
+  `resolved_at` timestamp NULL DEFAULT NULL,
+  `closed_by` int(11) DEFAULT NULL,
+  `closed_at` timestamp NULL DEFAULT NULL,
+  `resolution_duration` varchar(100) DEFAULT NULL,
+  `reopen_count` int(11) DEFAULT 0
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `ticket_messages`
+--
+
+CREATE TABLE `ticket_messages` (
+  `id` int(11) NOT NULL,
+  `ticket_id` int(11) NOT NULL,
+  `sender_id` int(11) NOT NULL,
+  `message` text NOT NULL,
+  `attachment` varchar(255) DEFAULT NULL,
+  `is_internal` tinyint(1) DEFAULT 0,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
 --
 -- Indexes for dumped tables
 --
@@ -1280,6 +1324,20 @@ ALTER TABLE `shifts`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `support_tickets`
+--
+ALTER TABLE `support_tickets`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `employee_id` (`employee_id`);
+
+--
+-- Indexes for table `ticket_messages`
+--
+ALTER TABLE `ticket_messages`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `ticket_id` (`ticket_id`);
+
+--
 -- AUTO_INCREMENT for dumped tables
 --
 
@@ -1287,7 +1345,7 @@ ALTER TABLE `shifts`
 -- AUTO_INCREMENT for table `activity_logs`
 --
 ALTER TABLE `activity_logs`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=104;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=106;
 
 --
 -- AUTO_INCREMENT for table `announcements`
@@ -1299,7 +1357,7 @@ ALTER TABLE `announcements`
 -- AUTO_INCREMENT for table `attendance`
 --
 ALTER TABLE `attendance`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=134;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=135;
 
 --
 -- AUTO_INCREMENT for table `banking_info`
@@ -1434,6 +1492,18 @@ ALTER TABLE `shifts`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
+-- AUTO_INCREMENT for table `support_tickets`
+--
+ALTER TABLE `support_tickets`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT for table `ticket_messages`
+--
+ALTER TABLE `ticket_messages`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
 -- Constraints for dumped tables
 --
 
@@ -1544,6 +1614,18 @@ ALTER TABLE `payroll`
 --
 ALTER TABLE `salary_history`
   ADD CONSTRAINT `salary_history_ibfk_1` FOREIGN KEY (`employee_id`) REFERENCES `employees` (`id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `support_tickets`
+--
+ALTER TABLE `support_tickets`
+  ADD CONSTRAINT `support_tickets_ibfk_1` FOREIGN KEY (`employee_id`) REFERENCES `employees` (`id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `ticket_messages`
+--
+ALTER TABLE `ticket_messages`
+  ADD CONSTRAINT `ticket_messages_ibfk_1` FOREIGN KEY (`ticket_id`) REFERENCES `support_tickets` (`id`) ON DELETE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

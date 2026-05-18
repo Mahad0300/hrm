@@ -127,15 +127,18 @@ function fetchPersonalStats() {
                         if (!att.clock_out) {
                             // Calculate Shift End Timestamp
                             const shiftDate = att.date; // YYYY-MM-DD
-                            let shiftEnd = new Date(shiftDate + ' ' + att.end_time);
-                            const shiftStart = new Date(shiftDate + ' ' + att.start_time);
+                            // Combine date and time for robust overnight calculation
+                            const fullClockIn = att.date + ' ' + (att.clock_in.includes(' ') ? att.clock_in.split(' ')[1] : att.clock_in);
                             
-                            // Handle overnight shift
+                            let shiftEnd = new Date(att.date + ' ' + att.end_time);
+                            const shiftStart = new Date(att.date + ' ' + att.start_time);
+                            
+                            // Handle overnight shift end
                             if (shiftStart > shiftEnd) {
                                 shiftEnd.setDate(shiftEnd.getDate() + 1);
                             }
                             
-                            startLiveTimer(att.clock_in, d.server_time, d.target_hours, shiftEnd.getTime());
+                            startLiveTimer(fullClockIn, d.server_time, d.target_hours, shiftEnd.getTime());
                         } else {
                             if (liveTimerInterval) clearInterval(liveTimerInterval);
                             workHoursEl.textContent = att.working_hours || '0h 00m';

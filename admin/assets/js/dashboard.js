@@ -2,6 +2,7 @@
 
 document.addEventListener('DOMContentLoaded', function() {
     fetchOverviewStats();
+    startLiveClock();
     
     // Refresh every 5 minutes
     setInterval(fetchOverviewStats, 300000);
@@ -60,4 +61,23 @@ function animateValue(obj, start, end, duration) {
         }
     };
     window.requestAnimationFrame(step);
+}
+
+function startLiveClock() {
+    const clockEl = document.getElementById("dashLiveClock");
+    if (!clockEl) return;
+
+    const updateClock = () => {
+        const now = new Date();
+        const timeStr = now.toLocaleTimeString("en-US", {
+            hour: "2-digit",
+            minute: "2-digit",
+            second: "2-digit",
+            hour12: true
+        });
+        clockEl.textContent = timeStr;
+    };
+
+    updateClock();
+    setInterval(updateClock, 1000);
 }

@@ -8,10 +8,16 @@ include 'includes/header.php';
 ?>
 <?php include 'includes/sidebar.php'; ?>
 
-<p class="dashboard-data-meta font-12 text-light mb-15" role="note" id="live-data-indicator">
-    <span class="live-indicator-dot"></span> Live Data 
-    <span class="dashboard-as-of-label ml-10">As of <?= htmlspecialchars($dashboard_as_of, ENT_QUOTES, 'UTF-8') ?></span>
-</p>
+<header class="dashboard-greeting mb-25">
+    <div class="greeting-content">
+        <h2 class="font-700 mb-5">Welcome back, <span class="text-primary"><?php echo $_SESSION['user_name'] ?? 'Admin'; ?></span></h2>
+        <p class="text-light font-14">Here is your organization overview for today.</p>
+    </div>
+    <div class="greeting-meta text-right">
+        <div class="live-clock font-600 text-dark" id="dashLiveClock">00:00:00 AM</div>
+        <div class="dash-date font-13 text-light mt-5" id="dashDate"><?php echo date('d M, Y'); ?></div>
+    </div>
+</header>
 
 <!-- Stats -->
 <div class="stat-grid">

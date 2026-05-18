@@ -106,6 +106,14 @@ if ($shift_info) {
                 <span class="badge badge-primary badge-pill ml-auto hidden" id="notiSidebarBadge">0</span>
             </a>
         </div>
+
+        <div class="menu-label">Support & Help</div>
+        <div class="menu-item">
+            <a href="it-support.php" class="menu-link <?= ($current_page == 'it-support.php') ? 'active' : '' ?>">
+                <i data-lucide="headset" size="18"></i>
+                <span>IT Helpdesk</span>
+            </a>
+        </div>
     </div>
 
     <div class="sidebar-footer">
