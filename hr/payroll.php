@@ -369,24 +369,30 @@ include 'includes/header.php';
                                 </div>
                             </div>
                             
-                            <div class="form-group">
-                                <label class="admin-form-label">Total Leaves</label>
-                                <input type="number" class="form-control bg-white-input" name="leaves" value="2" placeholder="0">
-                            </div>
-                            
-                            <div class="form-group">
-                                <label class="admin-form-label">Total Late</label>
-                                <input type="number" class="form-control bg-white-input" name="late" value="1" placeholder="0">
-                            </div>
-                            
-                            <div class="form-group">
-                                <label class="admin-form-label">Total Half-day</label>
-                                <input type="number" class="form-control bg-white-input" name="halfday" value="0" placeholder="0">
+                            <div class="form-grid-3 col-span-2">
+                                <div class="form-group">
+                                    <label class="admin-form-label">Total Leaves</label>
+                                    <input type="number" class="form-control bg-white-input" name="leaves" value="0" placeholder="0" min="0">
+                                </div>
+                                <div class="form-group">
+                                    <label class="admin-form-label">Total Late</label>
+                                    <input type="number" class="form-control bg-white-input" name="late" value="0" placeholder="0" min="0">
+                                </div>
+                                <div class="form-group">
+                                    <label class="admin-form-label">Total Half-day</label>
+                                    <input type="number" class="form-control bg-white-input" name="halfday" value="0" placeholder="0" min="0">
+                                </div>
                             </div>
                             
                             <div class="form-group">
                                 <label class="admin-form-label">Loan Deduction</label>
                                 <input type="number" class="form-control bg-white-input" name="loan" value="0" placeholder="0.00">
+                            </div>
+
+                            <div class="form-group">
+                                <label class="admin-form-label">Other Deduction</label>
+                                <input type="number" class="form-control bg-white-input" name="other" value="0"
+                                    min="0" step="0.01" placeholder="0.00">
                             </div>
                         </div>
                     </div>

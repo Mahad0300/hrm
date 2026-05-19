@@ -31,6 +31,9 @@ if ($shift_info) {
 
     if (!$att_record || $att_record['status'] === 'ABSENT') {
         $can_check_in = true;
+    } elseif ($att_record && $att_record['status'] === 'LEAVE') {
+        $can_check_in = false;
+        $can_check_out = false;
     } elseif ($att_record['clock_in'] && !$att_record['clock_out']) {
         $can_check_out = true;
     }

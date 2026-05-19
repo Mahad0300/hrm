@@ -1,5 +1,19 @@
 // user/assets/js/attendance-log.js
 
+function getAttendanceStatusClass(status) {
+    const s = (status || '').trim().toUpperCase();
+    switch (s) {
+        case 'ON TIME': return 'status-v2-ontime';
+        case 'LATE IN': return 'status-v2-late';
+        case 'HALF DAY': return 'status-v2-halfday';
+        case 'ABSENT': return 'status-v2-absent';
+        case 'LEAVE': return 'status-v2-leave';
+        case 'WEEKEND':
+        case 'HOLIDAY': return 'status-v2-holiday';
+        default: return 'status-v2-none';
+    }
+}
+
 document.addEventListener('DOMContentLoaded', function () {
     const monthFilter = document.getElementById('monthFilter');
     const tableBody = document.getElementById('attendanceTableBody');
@@ -47,14 +61,15 @@ document.addEventListener('DOMContentLoaded', function () {
             const row = document.createElement('tr');
             const inTime = r.clock_in ? formatTimeStr(r.clock_in) : '--:--';
             const outTime = r.clock_out ? formatTimeStr(r.clock_out) : '--:--';
-            const statusClass = getStatusClass(r.status);
+            const statusLabel = (r.status || '').trim();
+            const statusClass = r.status_class || getAttendanceStatusClass(statusLabel);
 
             row.innerHTML = `
                 <td class="font-600">${formatDateLong(r.date)}</td>
                 <td>${inTime}</td>
                 <td>${outTime}</td>
                 <td>${r.working_hours || '—'}</td>
-                <td><span class="status-badge-v2 ${statusClass}">${r.status}</span></td>
+                <td><span class="status-badge-v2 ${statusClass}">${statusLabel || '—'}</span></td>
                 <td><span class="status-msg-v2" title="${r.message || ''}">${r.message || '-'}</span></td>
                 <td>
                     <button class="action-btn p-6" onclick="openAttendanceModal(${JSON.stringify({
@@ -129,8 +144,8 @@ document.addEventListener('DOMContentLoaded', function () {
             const dw = current.getDay();
             const isWeekend = (dw === 0 || dw === 6);
 
-            let status = log ? log.status : (isWeekend ? 'WEEKEND' : '');
-            let statusClass = getStatusClass(status);
+            let status = log ? (log.status || '').trim() : (isWeekend ? 'WEEKEND' : '');
+            let statusClass = log && log.status_class ? log.status_class : getAttendanceStatusClass(status);
 
             let contentHtml = '';
             if (status === 'WEEKEND') {
@@ -211,19 +226,18 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     function formatDateLong(dateStr) {
-        return new Date(dateStr).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
-    }
-
-    function getStatusClass(status) {
-        switch (status) {
-            case 'ON TIME': return 'status-v2-ontime';
-            case 'LATE IN': return 'status-v2-late';
-            case 'HALF DAY': return 'status-v2-halfday';
-            case 'ABSENT': return 'status-v2-absent';
-            case 'WEEKEND':
-            case 'HOLIDAY': return 'status-v2-holiday';
-            default: return 'status-v2-none';
+        if (!dateStr) return '--';
+        let date;
+        const raw = String(dateStr).trim();
+        if (/^\d{4}-\d{2}-\d{2}$/.test(raw)) {
+            const [y, m, d] = raw.split('-').map(Number);
+            date = new Date(y, m - 1, d);
+        } else {
+            date = new Date(dateStr);
         }
+        if (isNaN(date.getTime())) return '--';
+        const month = date.toLocaleDateString('en-GB', { month: 'short' });
+        return date.getDate() + ' ' + month + ', ' + date.getFullYear();
     }
 
     // --- Events ---
@@ -276,12 +290,11 @@ window.openAttendanceModal = function(data) {
     const statusBadge = document.getElementById('modalStatus');
     statusBadge.textContent = data.status || '—';
     statusBadge.className = 'status-badge-v2 status-badge-modal';
-    const st = data.status || '';
-    if (st === 'ON TIME') statusBadge.classList.add('status-v2-ontime');
-    else if (st === 'LATE IN') statusBadge.classList.add('status-v2-late');
-    else if (st === 'ABSENT') statusBadge.classList.add('status-v2-absent');
-    else if (st === 'HALF DAY') statusBadge.classList.add('status-v2-halfday');
-    else if (st === 'WEEKEND' || st === 'HOLIDAY') statusBadge.classList.add('status-v2-holiday');
+    const st = (data.status || '').trim();
+    const modalStatusClass = getAttendanceStatusClass(st);
+    if (modalStatusClass && modalStatusClass !== 'status-v2-none') {
+        statusBadge.classList.add(modalStatusClass);
+    }
 
     document.getElementById('modalMsgInput').value = data.msg || '';
 

@@ -66,7 +66,14 @@ $payroll_row_count = count($payroll_records);
                         <td><?= (int) $row['leaves_count'] ?></td>
                         <td><?= (int) $row['lates_count'] ?></td>
                         <td><?= (int) $row['halfdays_count'] ?></td>
-                        <td>PKR <?= number_format($row['deductions']) ?></td>
+                        <?php
+                        $totalDeduction = (float)($row['deductions'] ?? 0)
+                            + (float)($row['loan_deduction'] ?? 0)
+                            + (float)($row['provident_fund'] ?? 0)
+                            + (float)($row['professional_tax'] ?? 0)
+                            + (float)($row['other_deduction'] ?? 0);
+                        ?>
+                        <td class="text-danger font-600">PKR <?= number_format($totalDeduction) ?></td>
                         <td class="font-bold">PKR <?= number_format($row['net_payable']) ?></td>
                         <td class="text-center">
                             <div class="btn-group justify-center">

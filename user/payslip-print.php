@@ -52,7 +52,7 @@ if (!$data) {
 $fullName = $data['first_name'] . ($data['middle_name'] ? ' ' . $data['middle_name'] : '') . ' ' . $data['last_name'];
 
 $total_earnings = (float)$data['basic_salary'] + (float)$data['house_rent'] + (float)$data['utility'] + (float)$data['fuel'] + (float)$data['mobile'] + (float)$data['medical'];
-$total_deductions = (float)$data['deductions'] + (float)($data['loan_deduction'] ?? 0) + (float)($data['provident_fund'] ?? 0) + (float)($data['professional_tax'] ?? 0);
+$total_deductions = (float)$data['deductions'] + (float)($data['loan_deduction'] ?? 0) + (float)($data['provident_fund'] ?? 0) + (float)($data['professional_tax'] ?? 0) + (float)($data['other_deduction'] ?? 0);
 
 // Format month for display
 $dateObj = DateTime::createFromFormat('Y-m', $data['month_year']);
@@ -72,6 +72,7 @@ $workedDays = $daysInCycle - (float)$data['leaves_count'] - ((float)$data['halfd
         body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; padding: 40px; color: #333; }
         .payslip-container { max-width: 900px; margin: 0 auto; border: 1px solid #000; padding: 20px; }
         .header { text-align: center; margin-bottom: 30px; }
+        .header-brand img { max-height: 56px; max-width: 220px; width: auto; height: auto; object-fit: contain; margin-bottom: 12px; }
         .header h1 { margin: 0; font-size: 28px; text-transform: uppercase; letter-spacing: 2px; }
         .header p { margin: 5px 0; font-size: 14px; line-height: 1.4; }
         
@@ -119,6 +120,9 @@ $workedDays = $daysInCycle - (float)$data['leaves_count'] - ((float)$data['halfd
 
     <div class="payslip-container">
         <div class="header">
+            <div class="header-brand">
+                <img src="../images/loginimage/logo.png" alt="Richmond Tech Group" width="200" height="48">
+            </div>
             <h1>Payslip</h1>
             <p class="font-bold">Richmond Tech Group</p>
             <p>Address: Office # 14, Hillview Apt, Block-D North Nazimabad, Karachi, Pakistan.</p>
@@ -193,8 +197,8 @@ $workedDays = $daysInCycle - (float)$data['leaves_count'] - ((float)$data['halfd
                 <tr>
                     <td>Fuel</td>
                     <td class="text-right"><?= number_format($data['fuel'], 0) ?></td>
-                    <td></td>
-                    <td class="text-right">-</td>
+                    <td>Other Deduction</td>
+                    <td class="text-right"><?= number_format($data['other_deduction'] ?? 0, 0) ?></td>
                 </tr>
                 <tr>
                     <td>Medical</td>

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 19, 2026 at 01:46 AM
+-- Generation Time: May 20, 2026 at 12:18 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -161,7 +161,12 @@ INSERT INTO `activity_logs` (`id`, `employee_id`, `action`, `description`, `ip_a
 (118, 34, 'User Login', '[Authentication] User authenticated successfully and accessed the system dashboard.', '::1', '2026-05-18 18:49:45'),
 (119, 28, 'User Login', '[Authentication] User authenticated successfully and accessed the system dashboard.', '::1', '2026-05-18 20:56:14'),
 (120, 1, 'User Login', '[Authentication] User authenticated successfully and accessed the system dashboard.', '::1', '2026-05-18 23:30:02'),
-(121, 30, 'User Login', '[Authentication] User authenticated successfully and accessed the system dashboard.', '::1', '2026-05-18 23:45:07');
+(121, 30, 'User Login', '[Authentication] User authenticated successfully and accessed the system dashboard.', '::1', '2026-05-18 23:45:07'),
+(122, 1, 'User Login', '[Authentication] User authenticated successfully and accessed the system dashboard.', '::1', '2026-05-19 15:18:34'),
+(123, 22, 'User Login', '[Authentication] User authenticated successfully and accessed the system dashboard.', '::1', '2026-05-19 15:21:50'),
+(124, 1, 'Deleted Employee Profile', '[Employees] Moved team member: Nimra Rao to the Exit list.', '::1', '2026-05-19 18:26:56'),
+(125, 22, 'Submitted Leave Request', '[Leave Management] Applied for Sick Leave from May 11, 2026 to May 18, 2026', '::1', '2026-05-19 21:47:52'),
+(126, 1, 'Approved Leave', '[Leave Management] Formally approved the Sick Leave request for team member: Syed Bukhari', '::1', '2026-05-19 21:48:06');
 
 -- --------------------------------------------------------
 
@@ -225,7 +230,7 @@ INSERT INTO `attendance` (`id`, `employee_id`, `date`, `shift_id`, `clock_in`, `
 (6, 22, '2026-05-06', 6, '2026-05-06 20:19:46', '2026-05-07 05:00:50', '8h 41m', 'LATE IN', NULL, '2026-05-06 15:19:46', '2026-05-07 00:00:50'),
 (7, 22, '2026-05-07', 6, '2026-05-07 20:05:28', '2026-05-08 04:42:54', '8h 37m', 'ON TIME', 'wqeeweweq', '2026-05-07 15:05:28', '2026-05-07 16:40:11'),
 (11, 22, '2026-05-08', 6, '2026-05-09 00:37:01', '2026-05-09 03:42:04', '3h 05m', 'HALF DAY', 'asdsaadsdasdasd', '2026-05-08 19:37:01', '2026-05-07 16:40:01'),
-(17, 22, '2026-05-11', 7, '2026-05-11 21:00:00', '2026-05-12 06:00:00', '9h 00m', 'ON TIME', NULL, '2026-05-12 16:20:07', '2026-05-11 20:56:58'),
+(17, 22, '2026-05-11', 7, NULL, NULL, '—', 'LEAVE', 'Approved Sick Leave', '2026-05-12 16:20:07', '2026-05-19 21:48:05'),
 (25, 33, '2026-05-08', 7, '2026-05-08 21:00:00', '2026-05-09 06:00:00', '9h 00m', 'ON TIME', NULL, '2026-05-08 00:09:29', '2026-05-08 00:11:01'),
 (26, 37, '2026-05-08', 5, '2026-05-08 19:00:00', '2026-05-09 04:00:00', '9h 00m', 'ON TIME', NULL, '2026-05-08 00:09:29', '2026-05-08 00:11:01'),
 (27, 29, '2026-05-08', 6, '2026-05-08 20:00:00', '2026-05-09 05:00:00', '9h 00m', 'ON TIME', NULL, '2026-05-08 00:09:29', '2026-05-08 00:11:01'),
@@ -322,10 +327,14 @@ INSERT INTO `attendance` (`id`, `employee_id`, `date`, `shift_id`, `clock_in`, `
 (123, 27, '2026-05-11', 5, '2026-05-11 19:00:00', '2026-05-12 04:00:00', '9h 00m', 'ON TIME', NULL, '2026-05-11 20:56:58', NULL),
 (124, 36, '2026-05-11', 7, '2026-05-11 21:00:00', '2026-05-12 06:00:00', '9h 00m', 'ON TIME', NULL, '2026-05-11 20:56:58', NULL),
 (125, 30, '2026-05-11', 7, '2026-05-11 21:00:00', '2026-05-12 06:00:00', '9h 00m', 'ON TIME', NULL, '2026-05-11 20:56:58', NULL),
-(131, 22, '2026-05-12', 7, NULL, NULL, NULL, 'ABSENT', NULL, '2026-05-14 17:56:56', NULL),
-(132, 22, '2026-05-13', 7, NULL, NULL, NULL, 'ABSENT', NULL, '2026-05-14 17:56:56', NULL),
-(133, 22, '2026-05-14', 7, '2026-05-14 22:56:56', '2026-05-14 22:56:56', '0h 00m', 'ABSENT', 'Auto-closed: Missed check-out', '2026-05-14 17:56:56', '2026-05-15 18:57:19'),
-(134, 22, '2026-05-15', 7, '2026-05-15 23:57:19', NULL, NULL, 'LATE IN', NULL, '2026-05-15 18:57:19', NULL);
+(143, 22, '2026-05-12', 7, NULL, NULL, '—', 'LEAVE', 'Approved Sick Leave', '2026-05-19 21:48:05', NULL),
+(144, 22, '2026-05-13', 7, NULL, NULL, '—', 'LEAVE', 'Approved Sick Leave', '2026-05-19 21:48:05', NULL),
+(145, 22, '2026-05-14', 7, NULL, NULL, '—', 'LEAVE', 'Approved Sick Leave', '2026-05-19 21:48:05', NULL),
+(146, 22, '2026-05-15', 7, NULL, NULL, '—', 'LEAVE', 'Approved Sick Leave', '2026-05-19 21:48:05', NULL),
+(147, 22, '2026-05-16', 7, NULL, NULL, '—', 'LEAVE', 'Approved Sick Leave', '2026-05-19 21:48:05', NULL),
+(148, 22, '2026-05-17', 7, NULL, NULL, '—', 'LEAVE', 'Approved Sick Leave', '2026-05-19 21:48:05', NULL),
+(149, 22, '2026-05-18', 7, NULL, NULL, '—', 'LEAVE', 'Approved Sick Leave', '2026-05-19 21:48:05', NULL),
+(150, 22, '2026-05-19', 7, '2026-05-20 02:54:05', NULL, NULL, 'LATE IN', NULL, '2026-05-19 21:54:05', NULL);
 
 -- --------------------------------------------------------
 
@@ -570,9 +579,9 @@ INSERT INTO `employees` (`id`, `first_name`, `middle_name`, `last_name`, `email`
 (32, 'Hamza', 'Bin', 'Tariq', 'hamza@gmail.com', '$2y$10$zG/p6Il95cae.1MWZllMyek46hyMsmafgaR8XeIRxay54zzOa68KW', 'Employee', 'Male', '1994-12-30', '0300-5555555', '42101-5555555-5', 'Federal B Area, Karachi', '0300-5555555', 'Sister', 8, 6, 'SEO Specialist', 'Permanent', 40000.00, '2026-05-05', 'Active', NULL, NULL, NULL, NULL, '2026-05-07 22:46:12', NULL, NULL),
 (33, 'Ayesha', '', 'Siddiqui', 'ayesha@gmail.com', '$2y$12$RKq6kP5En4KGCUYd3.hBIuE1WdPKNb7GFcnlE21gAgoiEA0i0noeS', 'Employee', 'Female', '1997-04-22', '0300-6666666', '42101-6666666-6', 'Clifton, Karachi', '0300-4444444', 'Friend', 9, 7, 'Content Writer', 'Internship', 25000.00, '2026-05-06', 'Active', NULL, NULL, NULL, NULL, '2026-05-07 22:46:12', '2026-05-11 16:10:42', NULL),
 (34, 'Bilal', '', 'Sheikh', 'bilal@gmail.com', '$2y$12$RKq6kP5En4KGCUYd3.hBIuE1WdPKNb7GFcnlE21gAgoiEA0i0noeS', 'Employee', 'Male', '1990-01-18', '0300-7777777', '42101-7777777-7', 'Garden West, Karachi', '0300-3333333', 'Wife', 13, 5, 'Project Manager', 'Permanent', 120000.00, '2026-05-07', 'Active', NULL, NULL, NULL, NULL, '2026-05-07 22:46:12', '2026-05-18 18:14:40', NULL),
-(35, 'Nimra', 'Arshad', 'Rao', 'nimra@gmail.com', '$2y$10$zG/p6Il95cae.1MWZllMyek46hyMsmafgaR8XeIRxay54zzOa68KW', 'Employee', 'Female', '1999-09-09', '0300-8888888', '42101-8888888-8', 'PECHS Block 2, Karachi', '0300-2222222', 'Uncle', 11, 6, 'HR Executive', 'Permanent', 50000.00, '2026-05-08', 'Active', NULL, NULL, NULL, NULL, '2026-05-07 22:46:12', NULL, NULL),
+(35, 'Nimra', 'Arshad', 'Rao', 'nimra@gmail.com', '$2y$10$zG/p6Il95cae.1MWZllMyek46hyMsmafgaR8XeIRxay54zzOa68KW', 'Employee', 'Female', '1999-09-09', '0300-8888888', '42101-8888888-8', 'PECHS Block 2, Karachi', '0300-2222222', 'Uncle', 11, 6, 'HR Executive', 'Permanent', 50000.00, '2026-05-08', 'Exit', NULL, NULL, NULL, NULL, '2026-05-07 22:46:12', '2026-05-19 18:26:56', '2026-05-19 18:26:56'),
 (36, 'Usman', '', 'Ghani', 'usman@gmail.com', '$2y$10$zG/p6Il95cae.1MWZllMyek46hyMsmafgaR8XeIRxay54zzOa68KW', 'Employee', 'Male', '1993-02-14', '0300-9999999', '42101-9999999-9', 'Korangi, Karachi', '0300-1111111', 'Aunt', 8, 7, 'Network Engineer', 'Permanent', 70000.00, '2026-05-09', 'Active', NULL, NULL, NULL, NULL, '2026-05-07 22:46:12', NULL, NULL),
-(37, 'Hina', '', 'Pervez', 'hina@gmail.com', '$2y$10$zG/p6Il95cae.1MWZllMyek46hyMsmafgaR8XeIRxay54zzOa68KW', 'HR', 'Female', '1991-05-20', '0300-0000000', '42101-0000000-0', 'Saddar, Karachi', '0300-0000000', 'Cousin', 9, 5, 'Marketing Head', 'Permanent', 95000.00, '2026-05-10', 'Active', NULL, NULL, NULL, NULL, '2026-05-07 22:46:12', '2026-05-11 21:14:28', NULL),
+(37, 'Hina', '', 'Pervez', 'hina@gmail.com', '$2y$10$zG/p6Il95cae.1MWZllMyek46hyMsmafgaR8XeIRxay54zzOa68KW', 'Employee', 'Female', '1991-05-20', '0300-0000000', '42101-0000000-0', 'Saddar, Karachi', '0300-0000000', 'Cousin', 9, 5, 'Marketing Head', 'Permanent', 95000.00, '2026-05-10', 'Active', NULL, NULL, NULL, NULL, '2026-05-07 22:46:12', '2026-05-19 17:43:34', NULL),
 (38, 'Shayan', NULL, 'Shaikh', 'shayan@gmail.com', '$2y$10$aw1Kb0jIU2hOOBCgYt4AqeytXt4rnJ0pQ39LG6a9tdivrG8Xs41Km', 'Employee', 'Male', '2005-05-07', '5645-6465465', '7898987987987', 'PIB', '78546213456', 'Father', 9, 6, 'Wordpress Developer', 'Permanent', 60000.00, '2026-05-18', 'Active', 'uploads/employees/id_cards/EMP_6a04fd82901fe.jpeg', NULL, 'uploads/employees/resumes/EMP_6a04fd8290448.pdf', NULL, '2026-05-13 22:38:58', '2026-05-13 22:49:43', NULL);
 
 -- --------------------------------------------------------
@@ -771,7 +780,8 @@ CREATE TABLE `leave_requests` (
 --
 
 INSERT INTO `leave_requests` (`id`, `employee_id`, `leave_type_id`, `start_date`, `end_date`, `reason`, `document_path`, `status`, `admin_note`, `applied_at`, `updated_at`) VALUES
-(14, 22, 1, '2026-05-04', '2026-05-05', '2 days leave', 'uploads/leaves/leave_22_1777583394.pdf', 'Approved', 'Test', '2026-04-30 21:09:28', '2026-05-01 18:33:50');
+(14, 22, 1, '2026-05-04', '2026-05-05', '2 days leave', 'uploads/leaves/leave_22_1777583394.pdf', 'Approved', 'Test', '2026-04-30 21:09:28', '2026-05-01 18:33:50'),
+(15, 22, 1, '2026-05-11', '2026-05-18', 'Test 11 May to 18 May', NULL, 'Approved', '', '2026-05-19 21:47:52', '2026-05-19 21:48:05');
 
 -- --------------------------------------------------------
 
@@ -842,7 +852,9 @@ INSERT INTO `notifications` (`id`, `title`, `message`, `target_url`, `sender_id`
 (45, 'Upcoming Event', 'New Event: Event Title  Test on 18 May, 2026 at 08:00 PM.', 'event-calendar.php', 1, 'System', '2026-05-13 21:22:52', NULL),
 (46, 'Event Updated', 'Event Updated: Event Title  Test is scheduled for 18 May, 2026 at 08:00 PM.', 'event-calendar.php', 1, 'System', '2026-05-13 21:23:16', NULL),
 (47, 'Event Updated', 'Event Updated: Event Title  Test is scheduled for 18 May, 2026 at 08:00 PM.', 'event-calendar.php', 1, 'System', '2026-05-13 21:31:02', NULL),
-(48, 'Event Updated', 'Event Updated: Event Title  Test is scheduled for 18 May, 2026 at 08:00 PM.', 'event-calendar.php', 1, 'System', '2026-05-13 21:33:59', NULL);
+(48, 'Event Updated', 'Event Updated: Event Title  Test is scheduled for 18 May, 2026 at 08:00 PM.', 'event-calendar.php', 1, 'System', '2026-05-13 21:33:59', NULL),
+(49, 'New Leave Request Submitted', 'Syed Mahad Bukhari has submitted a new leave request (Sick Leave, From 11 May, 2026 to 18 May, 2026). Awaiting your approval.', 'leave-management.php', 22, 'Leave', '2026-05-19 21:47:52', NULL),
+(50, 'Leave Request Approved', 'Your leave request has been Approved.', 'leave-management.php', 1, 'Leave', '2026-05-19 21:48:06', NULL);
 
 -- --------------------------------------------------------
 
@@ -952,7 +964,9 @@ INSERT INTO `notification_recipients` (`id`, `notification_id`, `employee_id`, `
 (211, 48, 25, 0, NULL),
 (212, 48, 29, 0, NULL),
 (213, 48, 33, 0, NULL),
-(214, 48, 37, 0, NULL);
+(214, 48, 37, 0, NULL),
+(215, 49, 1, 0, NULL),
+(216, 50, 22, 0, NULL);
 
 -- --------------------------------------------------------
 
@@ -983,16 +997,9 @@ CREATE TABLE `payroll` (
   `halfdays_count` int(11) DEFAULT 0,
   `loan_deduction` decimal(12,2) DEFAULT 0.00,
   `provident_fund` decimal(12,2) DEFAULT 0.00,
-  `professional_tax` decimal(12,2) DEFAULT 0.00
+  `professional_tax` decimal(12,2) DEFAULT 0.00,
+  `other_deduction` decimal(12,2) NOT NULL DEFAULT 0.00
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `payroll`
---
-
-INSERT INTO `payroll` (`id`, `employee_id`, `month_year`, `basic_salary`, `allowances`, `deductions`, `net_payable`, `payment_method`, `status`, `paid_date`, `created_at`, `updated_at`, `house_rent`, `utility`, `fuel`, `mobile`, `medical`, `leaves_count`, `lates_count`, `halfdays_count`, `loan_deduction`, `provident_fund`, `professional_tax`) VALUES
-(7, 22, '2026-05', 20000.00, 0.00, 2666.67, 37333.33, 'Bank Transfer', 'Paid', NULL, '2026-05-12 22:03:33', NULL, 8000.00, 4000.00, 2000.00, 2000.00, 4000.00, 1, 2, 2, 0.00, 0.00, 0.00),
-(8, 22, '2026-04', 20000.00, 0.00, 5333.33, 34666.67, 'Bank Transfer', 'Paid', NULL, '2026-05-12 22:04:56', NULL, 8000.00, 4000.00, 2000.00, 2000.00, 4000.00, 2, 5, 2, 0.00, 0.00, 0.00);
 
 -- --------------------------------------------------------
 
@@ -1066,7 +1073,7 @@ CREATE TABLE `settings` (
 
 INSERT INTO `settings` (`id`, `meta_key`, `meta_value`) VALUES
 (1, 'payroll_start_day', '23'),
-(2, 'payroll_end_day', '24');
+(2, 'payroll_end_day', '22');
 
 -- --------------------------------------------------------
 
@@ -1407,7 +1414,7 @@ ALTER TABLE `ticket_messages`
 -- AUTO_INCREMENT for table `activity_logs`
 --
 ALTER TABLE `activity_logs`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=122;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=127;
 
 --
 -- AUTO_INCREMENT for table `announcements`
@@ -1419,7 +1426,7 @@ ALTER TABLE `announcements`
 -- AUTO_INCREMENT for table `attendance`
 --
 ALTER TABLE `attendance`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=135;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=151;
 
 --
 -- AUTO_INCREMENT for table `banking_info`
@@ -1503,7 +1510,7 @@ ALTER TABLE `kpi_reviews`
 -- AUTO_INCREMENT for table `leave_requests`
 --
 ALTER TABLE `leave_requests`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- AUTO_INCREMENT for table `leave_types`
@@ -1515,19 +1522,19 @@ ALTER TABLE `leave_types`
 -- AUTO_INCREMENT for table `notifications`
 --
 ALTER TABLE `notifications`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=49;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=51;
 
 --
 -- AUTO_INCREMENT for table `notification_recipients`
 --
 ALTER TABLE `notification_recipients`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=215;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=217;
 
 --
 -- AUTO_INCREMENT for table `payroll`
 --
 ALTER TABLE `payroll`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT for table `policies`
@@ -1545,7 +1552,7 @@ ALTER TABLE `salary_history`
 -- AUTO_INCREMENT for table `settings`
 --
 ALTER TABLE `settings`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `shifts`

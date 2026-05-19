@@ -141,8 +141,17 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function formatDateLong(dateStr) {
         if (!dateStr) return '--';
-        const date = new Date(dateStr);
-        return date.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+        let date;
+        const raw = String(dateStr).trim();
+        if (/^\d{4}-\d{2}-\d{2}$/.test(raw)) {
+            const [y, m, d] = raw.split('-').map(Number);
+            date = new Date(y, m - 1, d);
+        } else {
+            date = new Date(dateStr);
+        }
+        if (isNaN(date.getTime())) return '--';
+        const month = date.toLocaleDateString('en-GB', { month: 'short' });
+        return date.getDate() + ' ' + month + ', ' + date.getFullYear();
     }
 
     function getStatusClass(status) {
@@ -151,6 +160,7 @@ document.addEventListener('DOMContentLoaded', function () {
             case 'LATE IN': return 'status-v2-late';
             case 'HALF DAY': return 'status-v2-halfday';
             case 'ABSENT': return 'status-v2-absent';
+            case 'LEAVE': return 'status-v2-leave';
             case 'WEEKEND':
             case 'HOLIDAY': return 'status-v2-holiday';
             default: return 'status-v2-none';

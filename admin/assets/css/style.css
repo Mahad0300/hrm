@@ -429,7 +429,61 @@ label,
     margin: 0 auto;
 }
 
-/* Leave by type (MTD) — vibrant horizontal bars (not donut) */
+/* Hiring funnel — stage bars */
+.hiring-funnel-vibrant {
+    padding: 8px 4px 4px;
+    min-height: 220px;
+}
+
+.hiring-funnel-rows {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.hiring-funnel-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 12px;
+    margin-bottom: 6px;
+}
+
+.hiring-funnel-stage {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-dark);
+}
+
+.hiring-funnel-count {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--primary-color);
+    font-variant-numeric: tabular-nums;
+}
+
+.hiring-funnel-track {
+    height: 14px;
+    border-radius: 999px;
+    background: rgba(15, 23, 42, 0.06);
+    overflow: hidden;
+}
+
+.hiring-funnel-fill {
+    display: block;
+    height: 100%;
+    border-radius: 999px;
+    min-width: 0;
+    transition: width 0.35s ease;
+}
+
+.hiring-funnel-total {
+    margin-top: 14px;
+    padding-top: 12px;
+    border-top: 1px solid rgba(15, 23, 42, 0.06);
+}
+
+/* Leave by type — vibrant horizontal bars */
 .leave-type-vibrant {
     padding: 4px 2px 0;
     min-height: 200px;
@@ -438,7 +492,7 @@ label,
 .leave-type-vibrant-rows {
     display: flex;
     flex-direction: column;
-    gap: 16px;
+    gap: 30px;
 }
 
 .leave-type-row-head {
@@ -617,8 +671,663 @@ label,
     gap: 6px;
 }
 
+/* Payroll vs budget — professional card */
+.dash-payroll-card--pro {
+    display: flex;
+    flex-direction: column;
+    min-height: 100%;
+    border: 1px solid var(--border-color);
+    box-shadow: var(--shadow-soft);
+}
+
+.dash-payroll-card--pro .card-header-v2--compact {
+    margin-bottom: 0;
+    padding-bottom: 0;
+}
+
+.dash-payroll-header {
+    align-items: center;
+}
+
+.dash-payroll-header__main {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    min-width: 0;
+}
+
+.dash-payroll-header__icon {
+    flex-shrink: 0;
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, rgba(var(--primary-rgb), 0.14), rgba(var(--primary-rgb), 0.06));
+    color: var(--primary-color);
+}
+
+.dash-payroll-header__icon svg {
+    width: 22px;
+    height: 22px;
+}
+
+.dash-payroll-status {
+    flex-shrink: 0;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    padding: 5px 10px;
+    border-radius: 999px;
+    background: rgba(245, 158, 11, 0.12);
+    color: #b45309;
+    border: 1px solid rgba(245, 158, 11, 0.25);
+}
+
 .dash-payroll-body {
+    padding-top: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    flex: 1;
+}
+
+.dash-payroll-hero {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    padding: 16px;
+    border-radius: 14px;
+    background: linear-gradient(145deg, rgba(var(--primary-rgb), 0.06) 0%, rgba(248, 250, 252, 0.9) 55%);
+    border: 1px solid rgba(var(--primary-rgb), 0.08);
+}
+
+.dash-payroll-ring-wrap {
+    flex-shrink: 0;
+}
+
+.dash-payroll-ring {
+    --pct: 0;
+    --ring-color: var(--primary-color);
+    width: 118px;
+    height: 118px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: conic-gradient(
+        var(--ring-color) calc(var(--pct) * 1%),
+        rgba(15, 23, 42, 0.07) 0
+    );
+    /* box-shadow: 0 4px 16px rgba(var(--primary-rgb), 0.12); */
+    transition: background 0.45s ease, box-shadow 0.3s ease;
+}
+
+.dash-payroll-ring--safe {
+    --ring-color: #22c55e;
+}
+
+.dash-payroll-ring--warning {
+    --ring-color: #f59e0b;
+    box-shadow: 0 4px 16px rgba(245, 158, 11, 0.2);
+}
+
+.dash-payroll-ring--danger {
+    --ring-color: #ef4444;
+    box-shadow: 0 4px 16px rgba(239, 68, 68, 0.18);
+}
+
+.dash-payroll-ring__inner {
+    width: 88px;
+    height: 88px;
+    border-radius: 50%;
+    background: var(--card-bg);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+    box-shadow: inset 0 0 0 1px rgba(15, 23, 42, 0.06);
+}
+
+.dash-payroll-ring__label {
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-muted);
+}
+
+.dash-payroll-ring__value {
+    font-size: 22px;
+    line-height: 1.1;
+    color: var(--text-dark);
+    font-family: 'Outfit', sans-serif;
+}
+
+.dash-payroll-hero__detail {
+    flex: 1;
+    min-width: 0;
+}
+
+.dash-payroll-util__head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 10px;
+    margin-bottom: 10px;
+    flex-wrap: wrap;
+}
+
+.dash-payroll-util__title {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-dark);
+}
+
+.dash-payroll-util__hint {
+    font-size: 11px;
+    color: var(--text-muted);
+}
+
+.dash-progress-track--payroll {
+    height: 12px;
+    background: rgba(15, 23, 42, 0.07);
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.04);
+}
+
+.dash-payroll-scale {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 6px;
+    font-size: 10px;
+    font-weight: 500;
+    color: var(--text-muted);
+}
+
+.dash-payroll-metrics {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+}
+
+@media (max-width: 520px) {
+    .dash-payroll-metrics {
+        grid-template-columns: 1fr;
+    }
+
+    .dash-payroll-hero {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .dash-payroll-util__head {
+        justify-content: center;
+    }
+}
+
+.dash-payroll-metric {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 12px 10px;
+    border-radius: 12px;
+    background: #f8fafc;
+    border: 1px solid rgba(15, 23, 42, 0.06);
+    transition: border-color 0.2s ease, background 0.2s ease;
+}
+
+.dash-payroll-metric--positive {
+    background: rgba(34, 197, 94, 0.06);
+    border-color: rgba(34, 197, 94, 0.2);
+}
+
+.dash-payroll-metric--negative {
+    background: rgba(239, 68, 68, 0.05);
+    border-color: rgba(239, 68, 68, 0.18);
+}
+
+.dash-payroll-metric__icon {
+    flex-shrink: 0;
+    width: 34px;
+    height: 34px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.dash-payroll-metric__icon svg {
+    width: 16px;
+    height: 16px;
+}
+
+.dash-payroll-metric__icon--allocated {
+    background: rgba(var(--primary-rgb), 0.12);
+    color: var(--primary-color);
+}
+
+.dash-payroll-metric__icon--committed {
+    background: rgba(14, 165, 233, 0.12);
+    color: #0284c7;
+}
+
+.dash-payroll-metric__icon--variance {
+    background: rgba(34, 197, 94, 0.12);
+    color: #16a34a;
+}
+
+.dash-payroll-metric--negative .dash-payroll-metric__icon--variance {
+    background: rgba(239, 68, 68, 0.1);
+    color: #dc2626;
+}
+
+.dash-payroll-metric__text {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+}
+
+.dash-payroll-metric__label {
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--text-light);
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+}
+
+.dash-payroll-metric__value {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text-dark);
+    line-height: 1.25;
+    word-break: break-word;
+}
+
+.dash-payroll-metric--negative .dash-payroll-metric__value {
+    color: var(--danger);
+}
+
+.dash-payroll-metric--positive .dash-payroll-metric__value {
+    color: #15803d;
+}
+
+.dash-payroll-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+    padding-top: 14px;
+    margin-top: auto;
+    border-top: 1px solid var(--border-color);
+}
+
+.dash-payroll-footer__meta {
+    margin: 0;
+    font-size: 12px;
+    color: var(--text-light);
+    line-height: 1.45;
+}
+
+.dash-payroll-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 9px 16px;
+    border-radius: 10px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #fff;
+    background: linear-gradient(135deg, var(--primary-color), var(--primary-light));
+    box-shadow: 0 4px 14px rgba(var(--primary-rgb), 0.35);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    text-decoration: none;
+}
+
+.dash-payroll-cta:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 18px rgba(var(--primary-rgb), 0.42);
+    color: #fff;
+}
+
+.dash-payroll-cta svg {
+    width: 16px;
+    height: 16px;
+}
+
+/* —— Enterprise: Payroll & workforce dashboard cards —— */
+.dashboard-section--enterprise {
+    margin-bottom: 28px;
+}
+
+.dash-ent-widgets {
+    align-items: stretch;
+}
+
+.dash-ent-card {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 0;
+    padding: 22px 24px 20px;
+    border: 1px solid var(--border-color);
+    border-radius: 16px;
+    box-shadow: var(--shadow-soft);
+    background: var(--card-bg);
+    min-height: 100%;
+}
+
+.dash-ent-card__head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 14px;
+    margin-bottom: 20px;
+}
+
+.dash-ent-card__title-block {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    min-width: 0;
+}
+
+.dash-ent-card__icon {
+    flex-shrink: 0;
+    width: 46px;
+    height: 46px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.dash-ent-card__icon svg {
+    width: 22px;
+    height: 22px;
+}
+
+.dash-ent-card__icon--primary {
+    background: linear-gradient(145deg, rgba(var(--primary-rgb), 0.16), rgba(var(--primary-rgb), 0.06));
+    color: var(--primary-color);
+}
+
+.dash-ent-card__icon--slate {
+    background: linear-gradient(145deg, #f1f5f9, #e8edf3);
+    color: #475569;
+}
+
+.dash-ent-card__title {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--text-dark);
+    margin: 0 0 2px;
+    letter-spacing: -0.02em;
+}
+
+.dash-ent-card__sub {
+    font-size: 12px;
+    color: var(--text-light);
+    margin: 0;
+    line-height: 1.4;
+}
+
+.dash-ent-pill {
+    flex-shrink: 0;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    padding: 6px 12px;
+    border-radius: 999px;
+}
+
+.dash-ent-pill--warn {
+    background: rgba(245, 158, 11, 0.12);
+    color: #b45309;
+    border: 1px solid rgba(245, 158, 11, 0.28);
+}
+
+.dash-ent-kpi-grid {
+    display: grid;
+    gap: 12px;
+    margin-bottom: 18px;
+}
+
+.dash-ent-kpi-grid--3 {
+    grid-template-columns: repeat(3, 1fr);
+}
+
+.dash-ent-kpi-grid--2x2 {
+    grid-template-columns: repeat(2, 1fr);
+}
+
+@media (max-width: 640px) {
+    .dash-ent-kpi-grid--3 {
+        grid-template-columns: 1fr;
+    }
+}
+
+.dash-ent-kpi {
+    padding: 14px 14px 12px;
+    border-radius: 12px;
+    background: #f8fafc;
+    border: 1px solid rgba(15, 23, 42, 0.06);
+}
+
+.dash-ent-kpi--compact {
+    padding: 12px;
+}
+
+.dash-ent-kpi__label {
+    display: block;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 6px;
+}
+
+.dash-ent-kpi__value {
+    display: block;
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--text-dark);
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+}
+
+.dash-ent-kpi__value--success {
+    color: #15803d;
+}
+
+.dash-ent-kpi__value--warn {
+    color: #b45309;
+}
+
+.dash-ent-kpi__value--danger {
+    color: #dc2626;
+}
+
+.dash-ent-kpi__hint {
+    display: block;
+    font-size: 11px;
+    color: var(--text-muted);
+    margin-top: 4px;
+    line-height: 1.35;
+}
+
+.dash-ent-meter {
+    padding: 16px;
+    border-radius: 12px;
+    background: linear-gradient(180deg, #fafbfc 0%, #f4f6f9 100%);
+    border: 1px solid rgba(15, 23, 42, 0.06);
+    margin-bottom: 18px;
+}
+
+.dash-ent-meter__head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.dash-ent-meter__title {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-dark);
+}
+
+.dash-ent-meter__pct {
+    font-size: 14px;
+    color: var(--primary-color);
+}
+
+.dash-ent-meter__track {
+    height: 10px;
+    background: rgba(15, 23, 42, 0.08);
+}
+
+.dash-ent-meter__meta {
+    margin: 8px 0 0;
+    font-size: 12px;
+    color: var(--text-light);
+}
+
+.dash-ent-exit-trend {
+    flex: 1;
+    padding: 16px;
+    border-radius: 12px;
+    background: #f8fafc;
+    border: 1px solid rgba(15, 23, 42, 0.06);
+    margin-bottom: 18px;
+}
+
+.dash-ent-exit-trend__head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 14px;
+}
+
+.dash-ent-exit-trend__caption {
+    font-size: 11px;
+    color: var(--text-muted);
+    font-weight: 500;
+}
+
+.dash-ent-exit-bars {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 8px;
+    min-height: 88px;
     padding-top: 4px;
+}
+
+.dash-ent-exit-bars__empty {
+    margin: 0;
+    font-size: 12px;
+    color: var(--text-muted);
+    text-align: center;
+    width: 100%;
+    padding: 24px 0;
+}
+
+.dash-ent-exit-bar {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 6px;
+    min-width: 0;
+    height: 80px;
+}
+
+.dash-ent-exit-bar__col {
+    display: block;
+    width: 100%;
+    max-width: 36px;
+    min-height: 12px;
+    border-radius: 6px 6px 4px 4px;
+    background: linear-gradient(180deg, #f87171 0%, #ef4444 100%);
+    transition: height 0.35s ease;
+}
+
+.dash-ent-exit-bar__val {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--text-dark);
+}
+
+.dash-ent-exit-bar__lbl {
+    font-size: 10px;
+    font-weight: 600;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.dash-ent-card__foot {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-top: auto;
+    padding-top: 16px;
+    border-top: 1px solid var(--border-color);
+}
+
+.dash-ent-card__meta {
+    margin: 0;
+    font-size: 12px;
+    color: var(--text-light);
+    line-height: 1.45;
+}
+
+.dash-ent-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 18px;
+    border-radius: 10px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #fff;
+    background: linear-gradient(135deg, var(--primary-color), var(--primary-light));
+    box-shadow: 0 4px 14px rgba(var(--primary-rgb), 0.32);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    text-decoration: none;
+    white-space: nowrap;
+}
+
+.dash-ent-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 18px rgba(var(--primary-rgb), 0.4);
+    color: #fff;
+}
+
+.dash-ent-btn--ghost {
+    color: var(--primary-color);
+    background: rgba(var(--primary-rgb), 0.08);
+    box-shadow: none;
+    border: 1px solid rgba(var(--primary-rgb), 0.18);
+}
+
+.dash-ent-btn--ghost:hover {
+    background: rgba(var(--primary-rgb), 0.12);
+    color: var(--primary-dark);
+}
+
+.dash-ent-btn svg {
+    width: 16px;
+    height: 16px;
 }
 
 .dash-budget-row {
@@ -677,6 +1386,10 @@ label,
 
 .dash-progress-fill--info {
     background: linear-gradient(90deg, #0ea5e9, #38bdf8);
+}
+
+.dash-progress-fill--danger {
+    background: linear-gradient(90deg, #ef4444, #f87171);
 }
 
 .dash-payroll-dl {
@@ -881,14 +1594,10 @@ label,
     color: var(--primary-color);
 }
 
-.dash-hierarchy-body {
-    padding-top: 4px;
-}
-
 .dash-hierarchy-stat {
     display: flex;
     gap: 16px;
-    align-items: flex-start;
+    align-items:center;
     margin-bottom: 16px;
     padding: 16px;
     border-radius: 12px;
@@ -899,6 +1608,107 @@ label,
 .dash-hierarchy-icon {
     color: var(--primary-color);
     flex-shrink: 0;
+}
+
+.dash-hierarchy-card {
+    display: flex;
+    flex-direction: column;
+}
+
+.dash-hierarchy-card .card-header-v2--compact {
+    margin-bottom: 0;
+}
+
+.dash-hierarchy-body {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    padding-top: 4px;
+}
+
+.dash-org-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: auto;
+}
+
+.dash-org-btn {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    padding: 12px 16px;
+    border-radius: 10px;
+    font-size: 13px;
+    font-weight: 600;
+    line-height: 1.3;
+    text-decoration: none;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease, border-color 0.2s ease;
+    border: 1px solid transparent;
+}
+
+.dash-org-btn__lead {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 9px;
+    flex-shrink: 0;
+}
+
+.dash-org-btn__lead svg {
+    width: 18px;
+    height: 18px;
+}
+
+.dash-org-btn__label {
+    flex: 1;
+    min-width: 0;
+    text-align: left;
+}
+
+.dash-org-btn__arrow {
+    width: 16px;
+    height: 16px;
+    flex-shrink: 0;
+    opacity: 0.85;
+}
+
+.dash-org-btn--primary {
+    color: #fff;
+    background: linear-gradient(135deg, var(--primary-color), var(--primary-light));
+    box-shadow: 0 4px 14px rgba(var(--primary-rgb), 0.32);
+}
+
+.dash-org-btn--primary .dash-org-btn__lead {
+    background: rgba(255, 255, 255, 0.18);
+    color: #fff;
+}
+
+.dash-org-btn--primary:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 18px rgba(var(--primary-rgb), 0.4);
+    color: #fff;
+}
+
+.dash-org-btn--secondary {
+    color: var(--text-dark);
+    background: #f8fafc;
+    border-color: rgba(15, 23, 42, 0.08);
+    box-shadow: none;
+}
+
+.dash-org-btn--secondary .dash-org-btn__lead {
+    background: rgba(var(--primary-rgb), 0.1);
+    color: var(--primary-color);
+}
+
+.dash-org-btn--secondary:hover {
+    background: #f1f5f9;
+    border-color: rgba(var(--primary-rgb), 0.22);
+    color: var(--primary-dark);
+    transform: translateY(-1px);
 }
 
 .donut-legend {
@@ -5472,6 +6282,7 @@ a.stat-card.stat-card--link:focus-visible {
 .status-v2-ontime { background: rgba(34, 197, 94, 0.12); color: #16a34a; }
 .status-v2-late { background: rgba(245, 158, 11, 0.12); color: #d97706; }
 .status-v2-absent { background: rgba(239, 68, 68, 0.12); color: #dc2626; }
+.status-v2-leave { background: rgba(59, 130, 246, 0.12); color: #2563eb; }
 .status-v2-halfday { background: rgba(14, 165, 233, 0.12); color: #0284c7; }
 .status-v2-holiday { background: rgba(148, 163, 184, 0.12); color: #64748b; }
 

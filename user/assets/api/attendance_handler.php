@@ -5,6 +5,7 @@ header('Content-Type: application/json');
 require_once dirname(__DIR__, 3) . '/includes/db_connect.php';
 require_once dirname(__DIR__, 3) . '/includes/auth_helper.php';
 require_once dirname(__DIR__, 3) . '/includes/payroll_config.php';
+require_once dirname(__DIR__, 3) . '/includes/leave_attendance_sync.php';
 
 if (!isLoggedIn()) {
     echo json_encode(['status' => 'error', 'message' => 'Unauthorized access.']);
@@ -49,7 +50,7 @@ function handleGetStatus($pdo, $user_id) {
     $logical_date = determineLogicalDate($shift);
 
     // 2. Check for ANY open attendance record (clock_out is null)
-    $stmt = $pdo->prepare("SELECT * FROM attendance WHERE employee_id = ? AND clock_out IS NULL AND status != 'ABSENT' ORDER BY clock_in DESC LIMIT 1");
+    $stmt = $pdo->prepare("SELECT * FROM attendance WHERE employee_id = ? AND clock_in IS NOT NULL AND clock_out IS NULL AND status NOT IN ('ABSENT', 'LEAVE') ORDER BY clock_in DESC LIMIT 1");
     $stmt->execute([$user_id]);
     $open_record = $stmt->fetch();
 
@@ -59,27 +60,28 @@ function handleGetStatus($pdo, $user_id) {
     $check_in_full = null;
     $check_in_time = null;
 
-    if ($open_record) {
-        // We have an open session. Is it from today/shift or a forgotten one?
+    if ($open_record && $open_record['date'] === $logical_date) {
+        // Open session for current shift day only
+        $is_checked_in = true;
+        $can_check_out = true;
         $in_ts = strtotime($open_record['clock_in']);
-        $diff_hours = (time() - $in_ts) / 3600;
-
-        if ($diff_hours > 24) {
-            // Forgotten check-out from more than 24h ago. 
-            // In a real app, we might auto-close it here, but for now, let's just allow a new check-in
-            $can_check_in = true;
-        } else {
-            $is_checked_in = true;
-            $can_check_out = true;
-            $check_in_full = $open_record['clock_in'];
-            $check_in_time = date('h:i A', $in_ts);
-        }
+        $check_in_full = $open_record['clock_in'];
+        $check_in_time = date('h:i A', $in_ts);
     } else {
-        // No open session. Check if already checked in and out for THIS logical date
-        $stmt = $pdo->prepare("SELECT id FROM attendance WHERE employee_id = ? AND date = ? AND clock_out IS NOT NULL LIMIT 1");
+        // No open session for today, or stale open from a previous shift (left incomplete on purpose)
+        $stmt = $pdo->prepare("SELECT id FROM attendance WHERE employee_id = ? AND date = ? AND clock_out IS NOT NULL AND status != 'ABSENT' LIMIT 1");
         $stmt->execute([$user_id, $logical_date]);
         if (!$stmt->fetch()) {
-            $can_check_in = true;
+            $stmt = $pdo->prepare("SELECT id, status FROM attendance WHERE employee_id = ? AND date = ? LIMIT 1");
+            $stmt->execute([$user_id, $logical_date]);
+            $today_row = $stmt->fetch();
+            if (!$today_row || $today_row['status'] === 'ABSENT') {
+                $can_check_in = true;
+            }
+            if ($today_row && $today_row['status'] === 'LEAVE') {
+                $can_check_in = false;
+                $can_check_out = false;
+            }
         }
     }
 
@@ -108,21 +110,18 @@ function handleCheckIn($pdo, $user_id) {
 
     $logical_date = determineLogicalDate($shift);
 
-    // 2. Auto-close any previous open sessions from other days
-    $stmt = $pdo->prepare("SELECT id, clock_in FROM attendance WHERE employee_id = ? AND clock_out IS NULL AND status != 'ABSENT' AND date != ?");
-    $stmt->execute([$user_id, $logical_date]);
-    $open_previous = $stmt->fetchAll();
+    // Previous shifts with missed check-out stay open (no fake clock_out, no ABSENT override)
 
-    foreach ($open_previous as $prev) {
-        $stmt = $pdo->prepare("UPDATE attendance SET clock_out = clock_in, working_hours = '0h 00m', status = 'ABSENT', message = 'Auto-closed: Missed check-out' WHERE id = ?");
-        $stmt->execute([$prev['id']]);
-    }
-
-    // 3. Prevent Duplicate Check-in for this logical shift
+    // 2. Prevent Duplicate Check-in for this logical shift
     $stmt = $pdo->prepare("SELECT id, status FROM attendance WHERE employee_id = ? AND date = ? LIMIT 1");
     $stmt->execute([$user_id, $logical_date]);
     $existing = $stmt->fetch();
     
+    if ($existing && $existing['status'] === 'LEAVE') {
+        echo json_encode(['status' => 'error', 'message' => 'You are on approved leave for ' . date('d M, Y', strtotime($logical_date)) . '. Check-in is not allowed.']);
+        return;
+    }
+
     if ($existing && $existing['status'] !== 'ABSENT') {
         echo json_encode(['status' => 'error', 'message' => 'Attendance already recorded for shift starting on ' . date('d M', strtotime($logical_date))]);
         return;
@@ -130,7 +129,7 @@ function handleCheckIn($pdo, $user_id) {
 
     $now = new DateTime();
 
-    // 3. Mark Absent for missed days (Backdate logic)
+    // 3. Mark absent for missed days between last record and today (weekdays only)
     markMissedDaysAbsent($pdo, $user_id, $logical_date, $shift['id']);
 
     // 4. Determine Status (ON TIME / LATE IN)
@@ -155,7 +154,7 @@ function handleCheckIn($pdo, $user_id) {
 
 function handleCheckOut($pdo, $user_id) {
     // Find latest open check-in (MUST have clock_in and MUST NOT be ABSENT)
-    $stmt = $pdo->prepare("SELECT a.*, s.halfday_hours FROM attendance a JOIN shifts s ON a.shift_id = s.id WHERE a.employee_id = ? AND a.clock_in IS NOT NULL AND a.clock_out IS NULL AND a.status != 'ABSENT' ORDER BY a.clock_in DESC LIMIT 1");
+    $stmt = $pdo->prepare("SELECT a.*, s.halfday_hours FROM attendance a JOIN shifts s ON a.shift_id = s.id WHERE a.employee_id = ? AND a.clock_in IS NOT NULL AND a.clock_out IS NULL AND a.status NOT IN ('ABSENT', 'LEAVE') ORDER BY a.clock_in DESC LIMIT 1");
     $stmt->execute([$user_id]);
     $record = $stmt->fetch();
 
@@ -255,6 +254,11 @@ function markMissedDaysAbsent($pdo, $user_id, $today, $shift_id) {
         // Skip Sat (6) and Sun (7)
         if ($day_of_week < 6) {
             $check_date = $last_date->format('Y-m-d');
+
+            if (employeeHasApprovedLeaveOnDate($pdo, (int) $user_id, $check_date)) {
+                $last_date->modify('+1 day');
+                continue;
+            }
             
             // Check if already exists (shouldn't, but safety first)
             $stmt = $pdo->prepare("SELECT id FROM attendance WHERE employee_id = ? AND date = ?");
@@ -274,6 +278,7 @@ function getStatusClass($status) {
         case 'LATE IN': return 'status-v2-late';
         case 'HALF DAY': return 'status-v2-halfday';
         case 'ABSENT': return 'status-v2-absent';
+        case 'LEAVE': return 'status-v2-leave';
         case 'WEEKEND':
         case 'HOLIDAY': return 'status-v2-holiday';
         default: return '';

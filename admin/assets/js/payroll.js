@@ -166,8 +166,16 @@ document.addEventListener('DOMContentLoaded', function() {
             const formattedMonth = new Date(monthVal + '-01').toLocaleString('default', { month: 'long', year: 'numeric' });
             
             const basicSal = parseFloat(p.basic_salary || 0);
-            const deductions = parseFloat(p.deductions || 0);
-            const netPayable = p.net_payable ? parseFloat(p.net_payable) : basicSal;
+            const totalDeduction = parseFloat(p.total_deduction ?? 0) || (
+                parseFloat(p.deductions || 0) +
+                parseFloat(p.loan_deduction || 0) +
+                parseFloat(p.provident_fund || 0) +
+                parseFloat(p.professional_tax || 0) +
+                parseFloat(p.other_deduction || 0)
+            );
+            const netPayable = p.net_payable != null && p.net_payable !== ''
+                ? parseFloat(p.net_payable)
+                : Math.max(0, basicSal - totalDeduction);
 
             const fullName = `${p.first_name} ${p.middle_name ? p.middle_name + ' ' : ''}${p.last_name}`;
 
@@ -184,7 +192,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     </td>
                     <td>${formattedMonth}</td>
                     <td>${basicSal.toLocaleString('en-US', { style: 'currency', currency: 'PKR' })}</td>
-                    <td>${deductions.toLocaleString('en-US', { style: 'currency', currency: 'PKR' })}</td>
+                    <td class="text-danger">${totalDeduction.toLocaleString('en-US', { style: 'currency', currency: 'PKR' })}</td>
                     <td class="font-bold">${netPayable.toLocaleString('en-US', { style: 'currency', currency: 'PKR' })}</td>
                     <td><span class="badge ${statusBadge}">${p.status}</span></td>
                     <td>
@@ -431,6 +439,7 @@ window.openEditPayrollModal = async function(empId, empName, month) {
             form.querySelector('[name="loan"]').value = Math.round(data.loan_deduction || 0);
             form.querySelector('[name="pfund"]').value = Math.round(data.provident_fund || 0);
             form.querySelector('[name="ptax"]').value = Math.round(data.professional_tax || 0);
+            form.querySelector('[name="other"]').value = Math.round(data.other_deduction || 0);
             
             // Update Month Picker Hidden Input
             document.getElementById('monthInput').value = month;
@@ -525,6 +534,10 @@ function updateSalaryInfoPanel(data, employee) {
                 <span class="info-label">Professional Tax</span>
                 <span class="info-value text-danger" id="summary-ptax-deduction">-${currencyFormat(data.professional_tax || 0)}</span>
             </div>
+            <div class="info-group">
+                <span class="info-label">Other Deduction</span>
+                <span class="info-value text-danger" id="summary-other-deduction">-${currencyFormat(data.other_deduction || 0)}</span>
+            </div>
 
             <div class="mt-20"></div>
 
@@ -561,12 +574,13 @@ function calculateLive(grossSalary) {
     const loan = parseFloat(form.querySelector('[name="loan"]').value) || 0;
     const pfund = parseFloat(form.querySelector('[name="pfund"]').value) || 0;
     const ptax = parseFloat(form.querySelector('[name="ptax"]').value) || 0;
+    const other = parseFloat(form.querySelector('[name="other"]').value) || 0;
 
     const oneDaySalary = grossSalary / 30;
     const lateDeductionDays = Math.floor(lates / 3);
     const attendanceDeduction = (leaves + lateDeductionDays + (halfdays * 0.5)) * oneDaySalary;
     
-    const totalDeductions = attendanceDeduction + loan + pfund + ptax;
+    const totalDeductions = attendanceDeduction + loan + pfund + ptax + other;
     const netPayable = grossSalary - totalDeductions;
 
     const currencyFormat = (val) => {
@@ -578,6 +592,8 @@ function calculateLive(grossSalary) {
     document.getElementById('summary-loan-deduction').textContent = `-${currencyFormat(loan)}`;
     document.getElementById('summary-pfund-deduction').textContent = `-${currencyFormat(pfund)}`;
     document.getElementById('summary-ptax-deduction').textContent = `-${currencyFormat(ptax)}`;
+    const otherEl = document.getElementById('summary-other-deduction');
+    if (otherEl) otherEl.textContent = `-${currencyFormat(other)}`;
     document.getElementById('summary-net-payable').textContent = currencyFormat(netPayable);
 }
 

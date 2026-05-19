@@ -2,6 +2,7 @@
 require_once '../db_connect.php';
 require_once '../auth_helper.php';
 require_once '../payroll_config.php';
+require_once __DIR__ . '/admin_dashboard_helpers.php';
 
 header('Content-Type: application/json');
 
@@ -45,6 +46,15 @@ try {
                     'active_jobs' => (int)$active_jobs
                 ]
             ]);
+            break;
+
+        case 'get_admin_dashboard':
+            if (!in_array($_SESSION['user_role'] ?? '', ['Admin', 'HR'], true)) {
+                echo json_encode(['status' => 'error', 'message' => 'Unauthorized access.']);
+                break;
+            }
+            $payload = buildAdminDashboardPayload($pdo, $user_id);
+            echo json_encode(['status' => 'success', 'data' => $payload]);
             break;
 
         case 'get_announcements_notifications':

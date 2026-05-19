@@ -506,9 +506,20 @@ include 'includes/header.php';
                         <p class="font-13 text-light mb-0">Department heads without documented backup</p>
                     </div>
                 </div>
-                <p class="font-13 text-light mb-15">Use hierarchy view to validate managers, dotted lines, and open headcount under each node.</p>
-                <a href="hierarchy.php" class="btn-primary w-full">Open hierarchy</a>
-                <a href="event-calendar.php" class="btn-primary w-full btn-muted mt-10">Event calendar</a>
+                <p class="font-13 text-light mb-15">Use hierarchy view to validate managers, dotted lines, and open
+                    headcount under each node.</p>
+                <div class="dash-org-actions">
+                    <a href="hierarchy.php" class="dash-org-btn dash-org-btn--primary">
+                        <span class="dash-org-btn__lead" aria-hidden="true"><i data-lucide="network"></i></span>
+                        <span class="dash-org-btn__label">Open hierarchy</span>
+                        <i data-lucide="arrow-right" class="dash-org-btn__arrow" aria-hidden="true"></i>
+                    </a>
+                    <a href="department-management.php" class="dash-org-btn dash-org-btn--secondary">
+                        <span class="dash-org-btn__lead" aria-hidden="true"><i data-lucide="building-2"></i></span>
+                        <span class="dash-org-btn__label">Manage departments</span>
+                        <i data-lucide="arrow-right" class="dash-org-btn__arrow" aria-hidden="true"></i>
+                    </a>
+                </div>
             </div>
         </div>
     </div>

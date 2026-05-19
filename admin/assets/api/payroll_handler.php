@@ -68,7 +68,12 @@ switch ($action) {
 
             // Fetch Employees with their Payroll Status for the specific month
             $sql = "SELECT e.id as employee_id, e.first_name, e.middle_name, e.last_name, e.profile_pic, e.salary as basic_salary,
-                           p.id as payroll_id, p.month_year, p.deductions, p.net_payable, 
+                           p.id as payroll_id, p.month_year, p.deductions, p.loan_deduction, p.provident_fund,
+                           p.professional_tax, p.other_deduction, p.net_payable,
+                           (
+                               COALESCE(p.deductions, 0) + COALESCE(p.loan_deduction, 0) + COALESCE(p.provident_fund, 0)
+                               + COALESCE(p.professional_tax, 0) + COALESCE(p.other_deduction, 0)
+                           ) AS total_deduction,
                            COALESCE(p.status, 'Pending') as status,
                            d.name as dept_name
                     FROM employees e
@@ -226,6 +231,10 @@ switch ($action) {
                     'lates_count' => $lates,
                     'halfdays_count' => $halfdays,
                     'deductions' => round($attendanceDeduction, 2),
+                    'loan_deduction' => 0,
+                    'provident_fund' => 0,
+                    'professional_tax' => 0,
+                    'other_deduction' => 0,
                     'net_payable' => round($gross_salary - $attendanceDeduction, 2),
                     'gross_salary' => $gross_salary,
                     'status' => 'Pending'
@@ -294,15 +303,16 @@ switch ($action) {
                 $med = $gross_salary * 0.10;
 
                 // Check if payroll already exists
-                $checkStmt = $pdo->prepare("SELECT id, loan_deduction, provident_fund, professional_tax FROM payroll WHERE employee_id = ? AND month_year = ?");
+                $checkStmt = $pdo->prepare("SELECT id, loan_deduction, provident_fund, professional_tax, other_deduction FROM payroll WHERE employee_id = ? AND month_year = ?");
                 $checkStmt->execute([$employee_id, $month]);
                 $exists = $checkStmt->fetch();
 
-                // Preserve existing loan/PF/tax if record exists, otherwise default to 0
+                // Preserve existing loan/PF/tax/other if record exists, otherwise default to 0
                 $loan = (float)($exists['loan_deduction'] ?? 0);
                 $pfund = (float)($exists['provident_fund'] ?? 0);
                 $ptax = (float)($exists['professional_tax'] ?? 0);
-                $totalDeductions = $attendanceDeduction + $loan + $pfund + $ptax;
+                $other = (float)($exists['other_deduction'] ?? 0);
+                $totalDeductions = $attendanceDeduction + $loan + $pfund + $ptax + $other;
                 $net_payable = $gross_salary - $totalDeductions;
 
                 if ($exists) {
@@ -369,8 +379,9 @@ switch ($action) {
             $loan = (float)($_POST['loan'] ?? 0);
             $pfund = (float)($_POST['pfund'] ?? 0);
             $ptax = (float)($_POST['ptax'] ?? 0);
+            $other = (float)($_POST['other'] ?? 0);
             
-            $totalDeductions = $attendanceDeduction + $loan + $pfund + $ptax;
+            $totalDeductions = $attendanceDeduction + $loan + $pfund + $ptax + $other;
             $net_payable = $gross_salary - $totalDeductions;
             $status = 'Paid'; // Automatically set to Paid when saved/updated
 
@@ -383,16 +394,16 @@ switch ($action) {
                 $sql = "UPDATE payroll SET 
                         basic_salary = ?, house_rent = ?, utility = ?, fuel = ?, mobile = ?, medical = ?,
                         leaves_count = ?, lates_count = ?, halfdays_count = ?, 
-                        loan_deduction = ?, provident_fund = ?, professional_tax = ?,
+                        loan_deduction = ?, provident_fund = ?, professional_tax = ?, other_deduction = ?,
                         deductions = ?, net_payable = ?, status = ?
                         WHERE id = ?";
                 $stmt = $pdo->prepare($sql);
-                $stmt->execute([$basic, $hrent, $util, $fuel, $mob, $med, $leaves, $lates, $halfdays, $loan, $pfund, $ptax, $attendanceDeduction, $net_payable, $status, $exists['id']]);
+                $stmt->execute([$basic, $hrent, $util, $fuel, $mob, $med, $leaves, $lates, $halfdays, $loan, $pfund, $ptax, $other, $attendanceDeduction, $net_payable, $status, $exists['id']]);
             } else {
-                $sql = "INSERT INTO payroll (employee_id, month_year, basic_salary, house_rent, utility, fuel, mobile, medical, leaves_count, lates_count, halfdays_count, loan_deduction, provident_fund, professional_tax, deductions, net_payable, status) 
-                        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                $sql = "INSERT INTO payroll (employee_id, month_year, basic_salary, house_rent, utility, fuel, mobile, medical, leaves_count, lates_count, halfdays_count, loan_deduction, provident_fund, professional_tax, other_deduction, deductions, net_payable, status) 
+                        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
                 $stmt = $pdo->prepare($sql);
-                $stmt->execute([$employee_id, $month, $basic, $hrent, $util, $fuel, $mob, $med, $leaves, $lates, $halfdays, $loan, $pfund, $ptax, $attendanceDeduction, $net_payable, $status]);
+                $stmt->execute([$employee_id, $month, $basic, $hrent, $util, $fuel, $mob, $med, $leaves, $lates, $halfdays, $loan, $pfund, $ptax, $other, $attendanceDeduction, $net_payable, $status]);
             }
 
             echo json_encode(['status' => 'success', 'message' => 'Payroll record saved successfully.']);

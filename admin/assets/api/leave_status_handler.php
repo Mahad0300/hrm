@@ -4,6 +4,7 @@ require_once __DIR__ . '/../../../includes/db_connect.php';
 require_once __DIR__ . '/../../../includes/auth_helper.php';
 require_once __DIR__ . '/../../../includes/api/notification_handler.php';
 require_once __DIR__ . '/../../../includes/api/activity_helper.php';
+require_once __DIR__ . '/../../../includes/leave_attendance_sync.php';
 
 header('Content-Type: application/json');
 
@@ -23,7 +24,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
     
     try {
-        $stmt = $pdo->prepare("SELECT id, status, employee_id FROM leave_requests WHERE id = ?");
+        $stmt = $pdo->prepare("SELECT id, status, employee_id, start_date, end_date FROM leave_requests WHERE id = ?");
         $stmt->execute([$leave_id]);
         $req = $stmt->fetch();
 
@@ -38,9 +39,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             echo json_encode(['status' => 'success', 'message' => 'Admin remarks updated successfully.']);
             exit;
         } else {
+            $previous_status = $req['status'];
             $new_status = ($action === 'Approve') ? 'Approved' : 'Rejected';
             $up_stmt = $pdo->prepare("UPDATE leave_requests SET status = ?, admin_note = ? WHERE id = ?");
             $up_stmt->execute([$new_status, $admin_note, $leave_id]);
+
+            if ($new_status === 'Approved') {
+                syncApprovedLeaveToAttendance($pdo, (int) $leave_id);
+            } elseif ($new_status === 'Rejected' && $previous_status === 'Approved') {
+                revertRejectedLeaveFromAttendance($pdo, (int) $leave_id);
+            }
             
             // [TRIGGER] Notify Employee
             $emp_id = $req['employee_id'];

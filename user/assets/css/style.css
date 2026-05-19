@@ -4223,6 +4223,7 @@ a.action-btn {
 .status-v2-ontime { background: rgba(34, 197, 94, 0.12); color: #16a34a; }
 .status-v2-late { background: rgba(245, 158, 11, 0.12); color: #d97706; }
 .status-v2-absent { background: rgba(239, 68, 68, 0.12); color: #dc2626; }
+.status-v2-leave { background: rgba(59, 130, 246, 0.12); color: #2563eb; }
 .status-v2-halfday { background: rgba(14, 165, 233, 0.12); color: #0284c7; }
 .status-v2-holiday { background: rgba(148, 163, 184, 0.12); color: #64748b; }
 
@@ -5442,6 +5443,14 @@ a.policy-tile--clickable:hover .policy-tile__title-text {
     text-transform: uppercase;
     white-space: nowrap;
 }
+
+.status-badge-v2.status-v2-ontime { background: rgba(34, 197, 94, 0.12); color: #16a34a; }
+.status-badge-v2.status-v2-late { background: rgba(245, 158, 11, 0.12); color: #d97706; }
+.status-badge-v2.status-v2-absent { background: rgba(239, 68, 68, 0.12); color: #dc2626; }
+.status-badge-v2.status-v2-leave { background: rgba(59, 130, 246, 0.12); color: #2563eb; }
+.status-badge-v2.status-v2-halfday { background: rgba(14, 165, 233, 0.12); color: #0284c7; }
+.status-badge-v2.status-v2-holiday { background: rgba(148, 163, 184, 0.12); color: #64748b; }
+.status-badge-v2.status-v2-none { background: rgba(148, 163, 184, 0.1); color: #64748b; }
 
 .status-msg-v2 {
     font-size: 13px;

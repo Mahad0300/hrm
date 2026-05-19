@@ -139,6 +139,10 @@ $current_session = $stmt->fetch();
                                     <span class="w-12 h-12 rounded-full status-v2-absent"></span>
                                     <span class="font-12 text-light">Absent</span>
                                 </div>
+                                <div class="flex-center gap-8">
+                                    <span class="w-12 h-12 rounded-full status-v2-leave"></span>
+                                    <span class="font-12 text-light">Leave</span>
+                                </div>
                             </div>
                         </div>
                     </div>
