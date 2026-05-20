@@ -33,7 +33,8 @@ protectModule(['Employee']);
     <script>
         window.HRM_CONFIG = {
             payroll_start_day: <?= defined('PAYROLL_START_DAY') ? PAYROLL_START_DAY : 21 ?>,
-            payroll_end_day: <?= defined('PAYROLL_END_DAY') ? PAYROLL_END_DAY : 20 ?>
+            payroll_end_day: <?= defined('PAYROLL_END_DAY') ? PAYROLL_END_DAY : 20 ?>,
+            current_payroll_month: '<?= getCurrentPayrollMonth() ?>'
         };
     </script>
 </head>

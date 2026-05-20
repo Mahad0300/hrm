@@ -266,10 +266,17 @@ try {
                 // Handle Resume Upload
                 $resume_path = null;
                 if (isset($_FILES['resume']) && $_FILES['resume']['error'] === UPLOAD_ERR_OK) {
+                    $allowed_exts = ['pdf', 'doc', 'docx', 'jpg', 'jpeg', 'png'];
+                    $file_ext = strtolower(pathinfo($_FILES['resume']['name'], PATHINFO_EXTENSION));
+                    
+                    if (!in_array($file_ext, $allowed_exts)) {
+                        echo json_encode(['status' => 'error', 'message' => 'Invalid resume format. Only PDF, DOCX and images are allowed.']);
+                        exit;
+                    }
+
                     $upload_dir = '../../../uploads/candidates/resumes/';
                     if (!is_dir($upload_dir)) mkdir($upload_dir, 0777, true);
                     
-                    $file_ext = pathinfo($_FILES['resume']['name'], PATHINFO_EXTENSION);
                     $file_name = 'RES_' . uniqid() . '.' . $file_ext;
                     $target_file = $upload_dir . $file_name;
                     

@@ -11,11 +11,15 @@ $logical_date = date('H') < 7 ? date('Y-m-d', strtotime('-1 day')) : date('Y-m-d
 <!-- Filters Card -->
 <div class="card p-24 mb-24">
     <div class="filter-grid">
-        <div class="search-box">
-            <i data-lucide="search" size="18"></i>
-            <input type="text" id="employeeSearch" placeholder="Search employee...">
+        <div class="filter-item">
+            <label class="admin-form-label font-12">Search Employee</label>
+            <div class="search-box w-full">
+                <i data-lucide="search" size="16"></i>
+                <input type="text" id="employeeSearch" class="form-control" placeholder="Search employee...">
+            </div>
         </div>
         <div class="filter-item">
+            <label class="admin-form-label font-12">Status</label>
             <select class="form-control" id="statusFilter">
                 <option value="">Status (All)</option>
                 <option value="ON TIME">On Time</option>
@@ -25,6 +29,7 @@ $logical_date = date('H') < 7 ? date('Y-m-d', strtotime('-1 day')) : date('Y-m-d
             </select>
         </div>
         <div class="filter-item">
+            <label class="admin-form-label font-12">Date</label>
             <input type="date" id="dateFilter" class="form-control" value="<?= $logical_date ?>">
         </div>
         <div class="filter-item text-right">

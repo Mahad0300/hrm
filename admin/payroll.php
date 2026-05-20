@@ -316,16 +316,16 @@ $departments = $deptStmt->fetchAll();
                     <div class="grid-3 gap-16">
                         <div class="form-group mb-0">
                             <label class="admin-form-label font-12">Search by ID</label>
-                            <div class="modal-search" style="margin-bottom: 0;">
-                                <i data-lucide="hash" class="input-icon" size="16"></i>
-                                <input type="text" id="genSearchId" class="form-control bg-white-input" placeholder="e.g. 033">
+                            <div class="search-box w-full">
+                                <i data-lucide="hash" size="16"></i>
+                                <input type="text" id="genSearchId" class="form-control" placeholder="e.g. 033">
                             </div>
                         </div>
                         <div class="form-group mb-0">
                             <label class="admin-form-label font-12">Search by Name</label>
-                            <div class="modal-search" style="margin-bottom: 0;">
-                                <i data-lucide="search" class="input-icon" size="16"></i>
-                                <input type="text" id="genSearchName" class="form-control bg-white-input" placeholder="e.g. Ahmed">
+                            <div class="search-box w-full">
+                                <i data-lucide="search" size="16"></i>
+                                <input type="text" id="genSearchName" class="form-control" placeholder="e.g. Ahmed">
                             </div>
                         </div>
                         <div class="form-group mb-0">

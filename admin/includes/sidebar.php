@@ -3,8 +3,13 @@ $current_page = basename($_SERVER['PHP_SELF']);
 ?>
 <aside class="sidebar" id="sidebar">
     <div class="sidebar-logo">
-        <i data-lucide="shield-check" size="28"></i>
-        <span>HRM Admin</span>
+        <a href="index.php" class="sidebar-logo-mark" aria-label="HRM Admin dashboard">
+            <img src="../images/loginimage/logo.png" alt="Richmond Tech Group" class="sidebar-logo-img" width="44" height="44">
+        </a>
+        <div class="sidebar-brand-text">
+            <span class="sidebar-brand-name">HRM</span>
+            <span class="sidebar-brand-tag">Admin portal</span>
+        </div>
     </div>
     
     <div class="sidebar-menu custom-scrollbar">

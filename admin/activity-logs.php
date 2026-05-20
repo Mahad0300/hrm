@@ -8,11 +8,15 @@ include 'includes/header.php';
 <!-- Filters Card -->
 <div class="card p-24 mb-24">
     <div class="filter-grid">
-        <div class="search-box">
-            <i data-lucide="search" size="18"></i>
-            <input type="text" placeholder="Search by employee name or ID...">
+        <div class="filter-item">
+            <label class="admin-form-label font-12">Search</label>
+            <div class="search-box w-full">
+                <i data-lucide="search" size="16"></i>
+                <input type="text" id="activityFilterSearch" class="form-control" placeholder="Search by employee name or ID...">
+            </div>
         </div>
         <div class="filter-item">
+            <label class="admin-form-label font-12">Module</label>
             <select class="form-control">
                 <option value="">All Modules</option>
                 <option value="employees">Employees</option>
@@ -32,6 +36,7 @@ include 'includes/header.php';
             </select>
         </div>
         <div class="filter-item">
+            <label class="admin-form-label font-12">Date</label>
             <input type="date" class="form-control">
         </div>
     </div>

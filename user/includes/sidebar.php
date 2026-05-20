@@ -1,6 +1,15 @@
 <?php
 $current_page = basename($_SERVER['PHP_SELF']);
 
+// Always use latest profile picture from DB (session can be stale after profile update)
+$profile_pic = null;
+if (!empty($_SESSION['user_id'])) {
+    $stmt_pic = $pdo->prepare("SELECT profile_pic FROM employees WHERE id = ? AND deleted_at IS NULL LIMIT 1");
+    $stmt_pic->execute([$_SESSION['user_id']]);
+    $profile_pic = $stmt_pic->fetchColumn() ?: null;
+    $_SESSION['user_profile_pic'] = $profile_pic;
+}
+
 // Fetch attendance status for topbar (respecting logical date and shift)
 $stmt_shift = $pdo->prepare("SELECT s.* FROM employees e JOIN shifts s ON e.shift_id = s.id WHERE e.id = ?");
 $stmt_shift->execute([$_SESSION['user_id']]);
@@ -41,7 +50,9 @@ if ($shift_info) {
 ?>
 <aside class="sidebar" id="sidebar">
     <div class="sidebar-logo">
-        <i data-lucide="shield-check" size="28"></i>
+        <a href="index.php" class="sidebar-logo-mark" aria-label="HRM Employee dashboard">
+            <img src="../images/loginimage/logo.png" alt="Richmond Tech Group" class="sidebar-logo-img" width="44" height="44">
+        </a>
         <div class="sidebar-brand-text">
             <span class="sidebar-brand-name">HRM</span>
             <span class="sidebar-brand-tag">Employee portal</span>
@@ -178,8 +189,7 @@ if ($shift_info) {
             
             <div class="user-profile-dropdown" id="userProfileDropdown">
                 <button type="button" class="user-profile user-profile-toggle" id="userProfileToggle" aria-haspopup="true" aria-expanded="false">
-                    <?php 
-                    $profile_pic = $_SESSION['user_profile_pic'] ?? null;
+                    <?php
                     $avatar_path = $profile_pic ? '../' . $profile_pic : '../images/profile-image/default-avatar.svg';
                     ?>
                     <img src="<?= $avatar_path ?>" alt="Employee" class="user-avatar" 

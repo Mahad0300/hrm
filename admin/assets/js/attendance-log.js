@@ -3,6 +3,9 @@
 document.addEventListener('DOMContentLoaded', function () {
     const empId = document.getElementById('currentEmpId').value;
     const monthFilter = document.getElementById('monthFilter');
+    if (monthFilter && window.HRM_CONFIG?.current_payroll_month) {
+        monthFilter.value = window.HRM_CONFIG.current_payroll_month;
+    }
     const tableBody = document.getElementById('attendanceTableBody');
     const perPageSelect = document.getElementById('perPageSelect');
     
@@ -136,6 +139,9 @@ document.addEventListener('DOMContentLoaded', function () {
             const isWeekend = (dw === 0 || dw === 6);
 
             let status = log ? log.status : (isWeekend ? 'WEEKEND' : '');
+            if (isWeekend && status === 'LEAVE') {
+                status = 'WEEKEND';
+            }
             let statusClass = getStatusClass(status);
 
             let contentHtml = '';

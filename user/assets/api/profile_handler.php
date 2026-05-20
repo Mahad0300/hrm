@@ -119,17 +119,20 @@ switch ($action) {
                 // Handle Other Documents (Multiple)
                 $new_other_docs = [];
                 if (!empty($_FILES['other_files']['name'][0])) {
+                    $allowed_exts = ['pdf', 'jpg', 'jpeg', 'png', 'webp', 'doc', 'docx'];
                     $files = $_FILES['other_files'];
                     foreach ($files['name'] as $key => $name) {
                         if ($files['error'][$key] === 0) {
-                            $tmp_name = $files['tmp_name'][$key];
-                            $ext = pathinfo($name, PATHINFO_EXTENSION);
-                            $new_name = 'user_' . $user_id . '_doc_' . uniqid() . '.' . $ext;
-                            $target_dir = '../../../uploads/employees/others/';
-                            if (!is_dir($target_dir)) mkdir($target_dir, 0777, true);
-                            
-                            if (move_uploaded_file($tmp_name, $target_dir . $new_name)) {
-                                $new_other_docs[] = 'uploads/employees/others/' . $new_name;
+                            $ext = strtolower(pathinfo($name, PATHINFO_EXTENSION));
+                            if (in_array($ext, $allowed_exts)) {
+                                $tmp_name = $files['tmp_name'][$key];
+                                $new_name = 'user_' . $user_id . '_doc_' . uniqid() . '.' . $ext;
+                                $target_dir = '../../../uploads/employees/others/';
+                                if (!is_dir($target_dir)) mkdir($target_dir, 0777, true);
+                                
+                                if (move_uploaded_file($tmp_name, $target_dir . $new_name)) {
+                                    $new_other_docs[] = 'uploads/employees/others/' . $new_name;
+                                }
                             }
                         }
                     }
@@ -227,15 +230,21 @@ switch ($action) {
                 $updated_user = $stmt->fetch();
                 unset($updated_user['password']);
 
-                // Update Session Name
+                // Update Session Name & Profile Picture
                 $middle_name_fmt = !empty($updated_user['middle_name']) ? $updated_user['middle_name'] . ' ' : '';
                 $_SESSION['user_name'] = $updated_user['first_name'] . ' ' . $middle_name_fmt . $updated_user['last_name'];
+                $_SESSION['user_profile_pic'] = $updated_user['profile_pic'] ?? null;
 
                 // [LOG]
                 $logMsg = $profile_pic_path ? "Updated their personal profile details and changed their profile picture." : "Updated their personal profile information.";
                 logActivity($user_id, "Updated Personal Profile", "Employees", $logMsg);
 
-                echo json_encode(['status' => 'success', 'message' => 'Profile updated successfully!', 'profile_pic' => $profile_pic_path, 'data' => $updated_user]);
+                echo json_encode([
+                    'status' => 'success',
+                    'message' => 'Profile updated successfully!',
+                    'profile_pic' => $updated_user['profile_pic'] ?? null,
+                    'data' => $updated_user
+                ]);
 
             } catch (Exception $e) {
                 if ($pdo->inTransaction()) $pdo->rollBack();

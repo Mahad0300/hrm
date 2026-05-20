@@ -34,6 +34,38 @@ function eachDateInRange(string $startDate, string $endDate): array
     return $dates;
 }
 
+/** Saturday / Sunday — same rule as attendance auto-absent & calendar UI */
+function isWeekendDate(string $date): bool
+{
+    $dw = (int) date('w', strtotime($date)); // 0 = Sun, 6 = Sat
+    return $dw === 0 || $dw === 6;
+}
+
+/** Remove mistaken LEAVE rows on weekends (no clock-in only) */
+function clearWeekendLeaveAttendance(PDO $pdo, int $employeeId, string $date): void
+{
+    if (!isWeekendDate($date)) {
+        return;
+    }
+    $stmt = $pdo->prepare("
+        DELETE FROM attendance
+        WHERE employee_id = ? AND date = ? AND status = 'LEAVE' AND clock_in IS NULL
+    ");
+    $stmt->execute([$employeeId, $date]);
+}
+
+/** Bulk cleanup for a payroll month (fixes rows created before weekend skip existed) */
+function cleanupWeekendLeaveInRange(PDO $pdo, int $employeeId, string $startDate, string $endDate): void
+{
+    $stmt = $pdo->prepare("
+        DELETE FROM attendance
+        WHERE employee_id = ? AND status = 'LEAVE' AND clock_in IS NULL
+          AND date BETWEEN ? AND ?
+          AND DAYOFWEEK(date) IN (1, 7)
+    ");
+    $stmt->execute([$employeeId, $startDate, $endDate]);
+}
+
 /**
  * After leave is Approved: create/update attendance rows as LEAVE for each day in range.
  */
@@ -57,8 +89,14 @@ function syncApprovedLeaveToAttendance(PDO $pdo, int $leaveRequestId): void
     $message = 'Approved ' . ($leave['leave_type_name'] ?? 'Leave');
     $shiftId = $leave['shift_id'] ?: null;
 
+    $employeeId = (int) $leave['employee_id'];
+
     foreach (eachDateInRange($leave['start_date'], $leave['end_date']) as $date) {
-        upsertLeaveAttendanceDay($pdo, (int) $leave['employee_id'], $date, $shiftId, $message);
+        if (isWeekendDate($date)) {
+            clearWeekendLeaveAttendance($pdo, $employeeId, $date);
+            continue;
+        }
+        upsertLeaveAttendanceDay($pdo, $employeeId, $date, $shiftId, $message);
     }
 }
 
@@ -105,11 +143,20 @@ function revertRejectedLeaveFromAttendance(PDO $pdo, int $leaveRequestId): void
 
 function upsertLeaveAttendanceDay(PDO $pdo, int $employeeId, string $date, ?int $shiftId, string $message): void
 {
-    $stmt = $pdo->prepare("SELECT id, status FROM attendance WHERE employee_id = ? AND date = ? LIMIT 1");
+    if (isWeekendDate($date)) {
+        return;
+    }
+
+    $stmt = $pdo->prepare("SELECT id, status, clock_in FROM attendance WHERE employee_id = ? AND date = ? LIMIT 1");
     $stmt->execute([$employeeId, $date]);
     $existing = $stmt->fetch(PDO::FETCH_ASSOC);
 
     if ($existing) {
+        // If employee has physically clocked in, do NOT overwrite their status to LEAVE.
+        if ($existing['clock_in'] !== null) {
+            return;
+        }
+
         $upd = $pdo->prepare("
             UPDATE attendance
             SET status = 'LEAVE', clock_in = NULL, clock_out = NULL, working_hours = '—',

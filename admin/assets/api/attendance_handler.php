@@ -5,6 +5,7 @@ header('Content-Type: application/json');
 require_once dirname(__DIR__, 3) . '/includes/db_connect.php';
 require_once dirname(__DIR__, 3) . '/includes/auth_helper.php';
 require_once dirname(__DIR__, 3) . '/includes/payroll_config.php';
+require_once dirname(__DIR__, 3) . '/includes/leave_attendance_sync.php';
 
 if (!isLoggedIn() || !in_array($_SESSION['user_role'], ['Admin', 'HR'])) {
     echo json_encode(['status' => 'error', 'message' => 'Unauthorized access.']);
@@ -86,7 +87,7 @@ function handleFetchDaily($pdo) {
 
 function handleFetchLog($pdo) {
     $emp_id = $_GET['emp_id'] ?? '';
-    $month = $_GET['month'] ?? date('Y-m');
+    $month = $_GET['month'] ?? getCurrentPayrollMonth();
     
     if (!$emp_id) {
         echo json_encode(['status' => 'error', 'message' => 'Employee ID required.']);
@@ -96,6 +97,8 @@ function handleFetchLog($pdo) {
     $range = getPayrollRange($month);
     $start_date = $range['start'];
     $end_date = $range['end'];
+
+    cleanupWeekendLeaveInRange($pdo, (int) $emp_id, $start_date, $end_date);
 
     // Fetch employee info
     $stmt = $pdo->prepare("SELECT e.*, s.name as shift_name, s.start_time, s.end_time FROM employees e LEFT JOIN shifts s ON e.shift_id = s.id WHERE e.id = ?");

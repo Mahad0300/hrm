@@ -8,7 +8,15 @@ document.addEventListener('DOMContentLoaded', () => {
     const openEditProfileModalBtn = document.getElementById('openEditProfileModalBtn');
 
     let userData = null;
-    
+
+    const defaultAvatarPath = '../images/profile-image/default-avatar.svg';
+
+    function updateTopbarAvatar(profilePic) {
+        const topbarImg = document.querySelector('.user-profile-dropdown .user-avatar');
+        if (!topbarImg) return;
+        topbarImg.src = profilePic ? '../' + profilePic : defaultAvatarPath;
+    }
+
     // --- Input Masking Helper ---
     const applyMask = (id, type) => {
         const input = document.getElementById(id);
@@ -59,8 +67,10 @@ document.addEventListener('DOMContentLoaded', () => {
         
         // Profile Picture
         if (profileAvatarImg) {
-            const defaultAvatar = profileAvatarImg.getAttribute('data-default-avatar');
-            profileAvatarImg.src = user.profile_pic ? '../' + user.profile_pic : defaultAvatar;
+            const defaultAvatar = profileAvatarImg.getAttribute('data-default-avatar') || defaultAvatarPath;
+            const picSrc = user.profile_pic ? '../' + user.profile_pic : defaultAvatar;
+            profileAvatarImg.src = picSrc;
+            updateTopbarAvatar(user.profile_pic);
         }
 
         // Contacts
@@ -417,6 +427,8 @@ document.addEventListener('DOMContentLoaded', () => {
  
                  if (result.status === 'success') {
                     if (typeof closeModal === 'function') closeModal('editProfileModal');
+                    const newPic = result.profile_pic || result.data?.profile_pic || null;
+                    if (newPic) updateTopbarAvatar(newPic);
                     loadProfile(); // Refresh data
                     Swal.fire({
                         icon: 'success',

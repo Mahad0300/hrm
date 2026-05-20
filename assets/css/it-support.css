@@ -93,11 +93,27 @@
 
 .it-search-inner input {
     width: 100%;
-    padding: 10px 15px 10px 35px;
+    padding: 12px 15px 12px 35px;
     border: 1px solid var(--it-border);
     border-radius: 10px;
     font-size: 13px;
     background: var(--it-light-bg);
+    outline: none;
+    font-family: inherit;
+    color: var(--text-dark, #0f172a);
+    transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+}
+
+.it-search-inner input:focus,
+.it-search-inner input:focus-visible {
+    outline: none;
+    background: #fff;
+    border-color: var(--it-primary);
+    box-shadow: 0 0 0 3px rgba(108, 76, 241, 0.12);
+}
+
+#it-search-input {
+    outline: none;
 }
 
 .it-ticket-list {
@@ -424,23 +440,25 @@
 
 .it-category-tabs {
     display: flex;
-    gap: 10px;
+    gap: 9px;
     margin-bottom: 25px;
     flex-wrap: wrap;
 }
 
 .it-cat-tab {
-    padding: 12px 20px;
+    padding: 12px 15px;
     border-radius: 12px;
     border: 1px solid var(--it-border);
     background: #fff;
     cursor: pointer;
-    transition: all 0.2s;
+    transition: background 0.2s, border-color 0.2s, box-shadow 0.2s, transform 0.15s;
     display: flex;
     align-items: center;
     gap: 8px;
     font-weight: 500;
+    font-size: 14px;
     color: #636e72;
+    box-shadow: 0 2px 8px rgba(15, 23, 42, 0.06);
 }
 
 .it-cat-tab i {
@@ -449,13 +467,77 @@
 
 .it-cat-tab:hover {
     background: var(--it-light-bg);
+    border-color: #cbd5e1;
+    box-shadow: 0 4px 14px rgba(15, 23, 42, 0.1);
+    transform: translateY(-1px);
 }
 
 .it-cat-tab.active {
     background: var(--it-primary);
     color: #fff;
     border-color: var(--it-primary);
-    box-shadow: 0 4px 12px rgba(0, 191, 165, 0.2);
+    box-shadow: 0 6px 18px rgba(108, 76, 241, 0.35);
+    transform: translateY(-1px);
+}
+
+.it-cat-tab.active i {
+    color: #fff;
+}
+
+.it-form-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px;
+    margin-top: 28px;
+}
+
+.it-btn-submit,
+.it-btn-cancel {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-height: 48px;
+    padding: 12px 32px;
+    font-size: 15px;
+    font-weight: 600;
+    font-family: inherit;
+    line-height: 1.2;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background 0.2s, box-shadow 0.2s, border-color 0.2s, color 0.2s;
+    white-space: nowrap;
+}
+
+.it-btn-submit {
+    color: #fff;
+    background: var(--it-primary);
+    border: none;
+    box-shadow: 0 4px 14px rgba(108, 76, 241, 0.35);
+}
+
+.it-btn-submit:hover:not(:disabled) {
+    background: var(--it-secondary);
+    box-shadow: 0 6px 20px rgba(108, 76, 241, 0.42);
+}
+
+.it-btn-submit:disabled {
+    opacity: 0.75;
+    cursor: not-allowed;
+}
+
+.it-btn-cancel {
+    color: #475569;
+    background: #f8fafc;
+    border: 1px solid var(--it-border);
+    box-shadow: 0 2px 8px rgba(15, 23, 42, 0.05);
+}
+
+.it-btn-cancel:hover {
+    background: #f1f5f9;
+    border-color: #cbd5e1;
+    box-shadow: 0 4px 12px rgba(15, 23, 42, 0.08);
 }
 
 .it-form-group {
@@ -469,12 +551,34 @@
     color: #2d3436;
 }
 
-.it-form-group input, 
-.it-form-group textarea {
+.it-form-group input,
+.it-form-group textarea,
+.it-create-ticket-view .form-control {
     width: 100%;
     padding: 12px 15px;
     border: 1px solid var(--it-border);
     border-radius: 10px;
+    outline: none;
+    font-family: inherit;
+    font-size: 14px;
+    color: var(--text-dark, #0f172a);
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.it-form-group input:focus,
+.it-form-group input:focus-visible,
+.it-form-group textarea:focus,
+.it-form-group textarea:focus-visible,
+.it-create-ticket-view .form-control:focus,
+.it-create-ticket-view .form-control:focus-visible {
+    outline: none;
+    border-color: var(--it-primary);
+    box-shadow: 0 0 0 4px rgba(108, 76, 241, 0.12);
+}
+
+.it-create-ticket-view textarea.form-control {
+    min-height: 140px;
+    height: auto;
 }
 
 /* --- Chat System (New Addition for HRM) --- */
@@ -554,12 +658,15 @@
     min-width: 200px;
     max-height: 120px;
     font-family: inherit;
-    transition: border-color 0.2s;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
 }
 
-.it-chat-input-area textarea:focus {
+.it-chat-input-area textarea:focus,
+.it-chat-input-area textarea:focus-visible {
     outline: none;
     border-color: var(--it-primary);
+    box-shadow: 0 0 0 3px rgba(108, 76, 241, 0.12);
 }
 
 .it-chat-send-btn {

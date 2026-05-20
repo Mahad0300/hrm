@@ -31,7 +31,7 @@ require_once '../includes/payroll_config.php';
 <?php include 'includes/sidebar.php'; ?>
 
 <?php
-$current_month = $_GET['month'] ?? date('Y-m');
+$current_month = $_GET['month'] ?? getCurrentPayrollMonth();
 $range = getPayrollRange($current_month);
 // The table and calendar are loaded via JS, so we just need the title and range info for PHP
 $month_display = date('F Y', strtotime($current_month . '-01'));

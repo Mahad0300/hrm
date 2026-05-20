@@ -69,7 +69,7 @@ if (!$employee) {
 
 // Format Name
 $emp_id = (int) $employee['id'];
-$full_name = getEmployeeProfileFullName($employee);
+$full_name = htmlspecialchars(getEmployeeProfileFullName($employee), ENT_QUOTES, 'UTF-8');
 $page_title = $full_name . ' - Employee Profile - HRM';
 
 include 'includes/header.php';
@@ -153,7 +153,7 @@ try {
                         <?php echo displayValue($employee['job_title'], 'Employee'); ?></p>
                     <div
                         class="badge <?php echo strtolower($employee['status']) === 'active' ? 'badge-success' : 'badge-light'; ?> px-15 py-6">
-                        <?php echo $employee['status']; ?> Employee
+                        <?php echo displayValue($employee['status']); ?> Employee
                     </div>
                 </div>
 
@@ -164,7 +164,7 @@ try {
                     </h3>
                     <div class="mb-20">
                         <label class="admin-form-label">Email</label>
-                        <span class="font-14 font-500 block"><?php echo $employee['email']; ?></span>
+                        <span class="font-14 font-500 block"><?php echo displayValue($employee['email']); ?></span>
                     </div>
                     <div class="mb-20">
                         <label class="admin-form-label">Phone Number</label>
@@ -275,7 +275,7 @@ try {
                         <div class="form-grid-3 mb-30">
                             <div>
                                 <label class="admin-form-label">First Name</label>
-                                <span class="font-14 font-500 block"><?php echo $employee['first_name']; ?></span>
+                                <span class="font-14 font-500 block"><?php echo displayValue($employee['first_name']); ?></span>
                             </div>
                             <div>
                                 <label class="admin-form-label">Middle Name</label>
@@ -284,7 +284,7 @@ try {
                             </div>
                             <div>
                                 <label class="admin-form-label">Last Name</label>
-                                <span class="font-14 font-500 block"><?php echo $employee['last_name']; ?></span>
+                                <span class="font-14 font-500 block"><?php echo displayValue($employee['last_name']); ?></span>
                             </div>
                         </div>
                         <div class="form-grid-3 mb-30">
@@ -473,7 +473,7 @@ try {
                                                 <i data-lucide="file-text" size="20"></i>
                                             </div>
                                             <div class="overflow-hidden">
-                                                <span class="font-13 font-600 block truncate"><?php echo basename($employee['resume_path']); ?></span>
+                                                <span class="font-13 font-600 block truncate"><?php echo htmlspecialchars(basename($employee['resume_path'])); ?></span>
                                             </div>
                                         </div>
                                     </a>
@@ -489,7 +489,7 @@ try {
                                                 <i data-lucide="image" size="20"></i>
                                             </div>
                                             <div class="overflow-hidden">
-                                                <span class="font-13 font-600 block truncate"><?php echo basename($employee['id_card_path']); ?></span>
+                                                <span class="font-13 font-600 block truncate"><?php echo htmlspecialchars(basename($employee['id_card_path'])); ?></span>
                                             </div>
                                         </div>
                                     </a>
@@ -509,7 +509,7 @@ try {
                                                     <i data-lucide="files" size="20"></i>
                                                 </div>
                                                 <div class="overflow-hidden">
-                                                    <span class="font-13 font-600 block truncate"><?php echo basename($doc_path); ?></span>
+                                                    <span class="font-13 font-600 block truncate"><?php echo htmlspecialchars(basename($doc_path)); ?></span>
                                                 </div>
                                             </div>
                                         </a>

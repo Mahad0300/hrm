@@ -122,7 +122,7 @@ try {
             $approved_days = $stmt->fetchColumn() ?: 0;
             
             // 2. My Attendance this payroll month
-            $current_month = date('Y-m');
+            $current_month = getCurrentPayrollMonth();
             $range = getPayrollRange($current_month);
             $start_date = $range['start'];
             $end_date = $range['end'];
@@ -271,7 +271,7 @@ try {
             }
 
             // 2. Monthly Mix (Current Payroll Month - Accurate)
-            $current_month = date('Y-m');
+            $current_month = getCurrentPayrollMonth();
             $range = getPayrollRange($current_month);
             $start = new DateTime($range['start']);
             $end = new DateTime($range['end']);

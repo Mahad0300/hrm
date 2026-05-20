@@ -16,12 +16,16 @@ include 'includes/header.php';
 
 <div class="card p-24 mb-24">
     <div class="filter-grid">
-        <div class="search-bar-wrap">
-            <i data-lucide="search" size="18"></i>
-            <input type="text" class="search-input" id="jobSearch" placeholder="Search postings...">
+        <div class="filter-item">
+            <label class="admin-form-label font-12">Search Postings</label>
+            <div class="search-box w-full">
+                <i data-lucide="search" size="16"></i>
+                <input type="text" id="jobSearch" class="form-control" placeholder="Search postings...">
+            </div>
         </div>
         <div class="filter-item">
-            <select id="filterDept" class="form-control font-13">
+            <label class="admin-form-label font-12">Department</label>
+            <select id="filterDept" class="form-control">
                 <option value="">All Departments</option>
                 <?php
                 try {
@@ -46,7 +50,8 @@ include 'includes/header.php';
             </select>
         </div>
         <div class="filter-item">
-            <select id="sortBy" class="form-control font-13">
+            <label class="admin-form-label font-12">Sort By</label>
+            <select id="sortBy" class="form-control">
                 <option value="newest">Sort by: Newest</option>
                 <option value="oldest">Sort by: Oldest</option>
             </select>

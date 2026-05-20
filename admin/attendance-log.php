@@ -48,7 +48,7 @@ if (!$emp_id) {
                 </button>
             </div>
             <div class="filter-item">
-                <input type="month" id="monthFilter" class="form-control" value="<?= date('Y-m') ?>">
+                <input type="month" id="monthFilter" class="form-control" value="<?= htmlspecialchars(getCurrentPayrollMonth(), ENT_QUOTES, 'UTF-8') ?>">
             </div>
         </div>
     </div>

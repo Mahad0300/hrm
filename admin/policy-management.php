@@ -15,15 +15,17 @@ include 'includes/header.php';
 
 <!-- Filters -->
 <div class="card p-24 mb-24">
-    <div class="policy-mgmt-filters">
-        <div class="modal-search">
-            <i data-lucide="search" class="input-icon"></i>
-            <input type="text" id="policyFilterSearch" class="form-control bg-white-input"
-                placeholder="Search by title...">
+    <div class="filter-grid-3">
+        <div class="filter-item">
+            <label class="admin-form-label font-12" for="policyFilterSearch">Search</label>
+            <div class="search-box w-full">
+                <i data-lucide="search" size="16"></i>
+                <input type="text" id="policyFilterSearch" class="form-control" placeholder="Search by title...">
+            </div>
         </div>
         <div class="filter-item">
-            <label class="admin-form-label policy-mgmt-sr-only" for="policyFilterStatus">Status</label>
-            <select id="policyFilterStatus" class="form-control bg-white-input">
+            <label class="admin-form-label font-12" for="policyFilterStatus">Status</label>
+            <select id="policyFilterStatus" class="form-control">
                 <option value="">All statuses</option>
                 <option>Draft</option>
                 <option>Active</option>

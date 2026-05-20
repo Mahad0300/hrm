@@ -41,17 +41,22 @@ include 'includes/header.php';
     <!-- Filters Card -->
     <div class="card p-24 mb-24">
         <div class="filter-grid" id="kpiFilters">
-            <div class="search-box">
-                <i data-lucide="search" size="18"></i>
-                <input type="text" id="searchEmployee" placeholder="Search by employee name or ID...">
+            <div class="filter-item">
+                <label class="admin-form-label font-12">Search Employee</label>
+                <div class="search-box w-full">
+                    <i data-lucide="search" size="16"></i>
+                    <input type="text" id="searchEmployee" class="form-control" placeholder="Search by employee name or ID...">
+                </div>
             </div>
             <div class="filter-item">
+                <label class="admin-form-label font-12">Department</label>
                 <select class="form-control" id="filterDept">
                     <option value="">All Departments</option>
                     <!-- Departments load dynamically -->
                 </select>
             </div>
             <div class="filter-item">
+                <label class="admin-form-label font-12">Period</label>
                 <select class="form-control" id="filterMonth">
                     <option value="">Any Time</option>
                     <option value="<?= date('Y-m') ?>">This Month</option>
@@ -59,6 +64,7 @@ include 'includes/header.php';
                 </select>
             </div>
             <div class="filter-item">
+                <label class="admin-form-label font-12">Performance</label>
                 <select class="form-control" id="filterStatus">
                     <option value="">Performance (All)</option>
                     <option value="Excelling">Excelling</option>

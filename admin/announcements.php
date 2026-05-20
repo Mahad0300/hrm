@@ -16,13 +16,16 @@ include 'includes/header.php';
 <!-- Filters Card -->
 <div class="card p-24 mb-24">
     <div class="filter-grid-3">
-        <div class="modal-search">
-            <i data-lucide="search" class="input-icon"></i>
-            <input type="text" id="searchTitle" class="form-control bg-white-input"
-                placeholder="Search announcements...">
+        <div class="filter-item">
+            <label class="admin-form-label font-12">Search</label>
+            <div class="search-box w-full">
+                <i data-lucide="search" size="16"></i>
+                <input type="text" id="searchTitle" class="form-control" placeholder="Search announcements...">
+            </div>
         </div>
         <div class="filter-item">
-            <select class="form-control bg-white-input" id="filterCategory">
+            <label class="admin-form-label font-12">Category</label>
+            <select class="form-control" id="filterCategory">
                 <option value="">Category (All)</option>
                 <option value="IMPORTANT">Important</option>
                 <option value="CELEBRATION">Celebration</option>
@@ -31,7 +34,8 @@ include 'includes/header.php';
             </select>
         </div>
         <div class="filter-item">
-            <select class="form-control bg-white-input" id="filterStatus">
+            <label class="admin-form-label font-12">Status</label>
+            <select class="form-control" id="filterStatus">
                 <option value="">Status (All)</option>
                 <option value="ACTIVE">Active</option>
                 <option value="SCHEDULED">Scheduled</option>

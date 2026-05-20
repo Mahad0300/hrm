@@ -194,6 +194,16 @@ document.addEventListener('DOMContentLoaded', () => {
                                (statusClass === 'onleave' ? 'badge-warning' : 
                                (statusClass === 'terminated' || statusClass === 'exit' ? 'badge-danger' : 'badge-light'));
             const profileUrl = getEmployeeProfileUrl(emp);
+            const actionsHtml = isExitOnly
+                ? `
+                            <button class="action-btn action-btn-view" title="View Details" onclick="window.location.href='${profileUrl}'"><i data-lucide="eye" size="14"></i></button>
+                            <button class="action-btn action-btn-restore" title="Restore to active directory" onclick="restoreEmployee('${emp.id}')"><i data-lucide="rotate-ccw" size="14"></i></button>
+                `
+                : `
+                            <button class="action-btn action-btn-view" title="View Details" onclick="window.location.href='${profileUrl}'"><i data-lucide="eye" size="14"></i></button>
+                            <button class="action-btn action-btn-edit" title="Edit" onclick="openEditEmployeeModal('${emp.id}')"><i data-lucide="user-pen" size="14"></i></button>
+                            <button class="action-btn action-btn-delete" title="Move to exit list" onclick="deleteEmployee('${emp.id}')"><i data-lucide="trash-2" size="14"></i></button>
+                `;
 
             return `
                 <tr data-emp-id="${emp.id}">
@@ -213,14 +223,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     <td>${emp.job_title || 'Employee'}</td>
                     <td><span class="badge ${badgeClass}">${emp.status}</span></td>
                     <td class="text-right px-30">
-                        <div class="btn-group justify-end">
-                            <button class="action-btn action-btn-view" title="View Details" onclick="window.location.href='${profileUrl}'"><i data-lucide="eye"
-                                    size="14"></i></button>
-                            <button class="action-btn action-btn-edit" title="Edit"
-                                onclick="openEditEmployeeModal('${emp.id}')"><i data-lucide="user-pen"
-                                    size="14"></i></button>
-                            <button class="action-btn action-btn-delete" title="Delete" onclick="deleteEmployee('${emp.id}')"><i data-lucide="trash-2"
-                                    size="14"></i></button>
+                        <div class="btn-group justify-end">${actionsHtml}
                         </div>
                     </td>
                 </tr>
@@ -297,16 +300,24 @@ document.addEventListener('DOMContentLoaded', () => {
     if (btnExitEmployees) {
         btnExitEmployees.onclick = () => {
             isExitOnly = !isExitOnly;
-            btnExitEmployees.classList.toggle('btn-active', isExitOnly);
+            // Use is-exit-filter-active (not btn-active — btn-active has pointer-events:none)
+            btnExitEmployees.classList.toggle('is-exit-filter-active', isExitOnly);
+            btnExitEmployees.classList.remove('btn-active');
+            btnExitEmployees.setAttribute('aria-pressed', isExitOnly ? 'true' : 'false');
+
             const label = btnExitEmployees.querySelector('span');
-            const icon = btnExitEmployees.querySelector('[data-lucide]');
-            
+            const icon = btnExitEmployees.querySelector('[data-lucide]') || btnExitEmployees.querySelector('svg');
+
             if (isExitOnly) {
-                if (label) label.textContent = "Back to All";
-                if (icon) icon.setAttribute('data-lucide', 'arrow-left');
+                if (label) label.textContent = 'Back to All';
+                if (icon && icon.hasAttribute('data-lucide')) {
+                    icon.setAttribute('data-lucide', 'arrow-left');
+                }
             } else {
-                if (label) label.textContent = "Exit Employees";
-                if (icon) icon.setAttribute('data-lucide', 'log-out');
+                if (label) label.textContent = 'Exit Employees';
+                if (icon && icon.hasAttribute('data-lucide')) {
+                    icon.setAttribute('data-lucide', 'log-out');
+                }
             }
             lucide.createIcons();
             currentPage = 1;
@@ -614,6 +625,38 @@ document.addEventListener('DOMContentLoaded', () => {
     ['add_phone', 'add_emergency_phone', 'edit_phone', 'edit_emergency_phone'].forEach(id => applyMask(id, 'phone'));
     ['add_cnic', 'edit_cnic'].forEach(id => applyMask(id, 'cnic'));
 
+    window.restoreEmployee = async (id) => {
+        const result = await Swal.fire({
+            title: 'Restore employee?',
+            text: 'This employee will return to the active directory with Active status.',
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonColor: '#6c4cf1',
+            cancelButtonColor: '#94a3b8',
+            confirmButtonText: 'Yes, restore'
+        });
+
+        if (!result.isConfirmed) return;
+
+        try {
+            const formData = new FormData();
+            formData.append('id', id);
+            const response = await fetch('assets/api/employee_handler.php?action=restore', {
+                method: 'POST',
+                body: formData
+            });
+            const data = await response.json();
+            if (data.status === 'success') {
+                Swal.fire('Restored!', data.message || 'Employee is active again.', 'success');
+                fetchEmployees();
+            } else {
+                Swal.fire('Error', data.message || 'Restore failed.', 'error');
+            }
+        } catch (error) {
+            Swal.fire('Error', 'Unable to restore employee.', 'error');
+        }
+    };
+
     // Initial Fetch
     fetchEmployees();
     loadRequirementData();
@@ -655,7 +698,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
-// Finalize delete function
 window.deleteEmployee = async (id) => {
     const result = await Swal.fire({
         title: 'Are you sure?',

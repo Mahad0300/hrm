@@ -27,6 +27,7 @@ require_once '../includes/payroll_config.php';
                         <i data-lucide="info" class="text-primary-color mt-4" size="20"></i>
                         <p class="font-13 text-dark leading-relaxed">
                             Currently, your payroll cycle is set from the <strong><?= PAYROLL_START_DAY ?>th</strong> of the previous month to the <strong><?= PAYROLL_END_DAY ?>th</strong> of the current month.
+                            After the end date, the active calendar month stays on that cycle until the latest shift end time plus <strong>4 hours</strong> (for overnight shifts).
                         </p>
                     </div>
                 </div>

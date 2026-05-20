@@ -189,10 +189,12 @@ function handleCheckOut($pdo, $user_id) {
 }
 
 function handleFetchLogs($pdo, $user_id) {
-    $month = $_GET['month'] ?? date('Y-m');
+    $month = $_GET['month'] ?? getCurrentPayrollMonth();
     $range = getPayrollRange($month);
     $start_date = $range['start'];
     $end_date = $range['end'];
+
+    cleanupWeekendLeaveInRange($pdo, (int) $user_id, $start_date, $end_date);
 
     $stmt = $pdo->prepare("
         SELECT a.*, s.name as shift_name, s.start_time as shift_start, s.end_time as shift_end 

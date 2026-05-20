@@ -54,8 +54,9 @@ include 'includes/header.php';
     <div class="calendar-sidebar">
         <div class="filter-card">
             <h4 class="filter-title"><i data-lucide="search" size="18"></i> Search Events</h4>
-            <div class="search-box">
-                <input type="text" id="eventSearch" placeholder="Search by title..." class="form-control">
+            <div class="search-box w-full">
+                <i data-lucide="search" size="16"></i>
+                <input type="text" id="eventSearch" class="form-control" placeholder="Search by title...">
             </div>
         </div>
 

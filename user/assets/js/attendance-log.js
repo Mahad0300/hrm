@@ -16,6 +16,9 @@ function getAttendanceStatusClass(status) {
 
 document.addEventListener('DOMContentLoaded', function () {
     const monthFilter = document.getElementById('monthFilter');
+    if (monthFilter && window.HRM_CONFIG?.current_payroll_month && !new URLSearchParams(window.location.search).has('month')) {
+        monthFilter.value = window.HRM_CONFIG.current_payroll_month;
+    }
     const tableBody = document.getElementById('attendanceTableBody');
     const perPageSelect = document.getElementById('perPageSelect');
     
@@ -117,7 +120,8 @@ document.addEventListener('DOMContentLoaded', function () {
         // Month Title
         const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
         const titleEl = document.getElementById('calendarMonthTitle');
-        if (titleEl) titleEl.textContent = `Payroll: ${monthNames[month - 1]} ${year}`;
+        const rangeLabel = `${startDate.getDate()} ${monthNames[startDate.getMonth()]} – ${endDate.getDate()} ${monthNames[endDate.getMonth()]} ${endDate.getFullYear()}`;
+        if (titleEl) titleEl.textContent = `Payroll: ${monthNames[month - 1]} ${year} (${rangeLabel})`;
 
         // Empty cells
         for (let i = 0; i < firstDay; i++) {
@@ -145,7 +149,10 @@ document.addEventListener('DOMContentLoaded', function () {
             const isWeekend = (dw === 0 || dw === 6);
 
             let status = log ? (log.status || '').trim() : (isWeekend ? 'WEEKEND' : '');
-            let statusClass = log && log.status_class ? log.status_class : getAttendanceStatusClass(status);
+            if (isWeekend && status === 'LEAVE') {
+                status = 'WEEKEND';
+            }
+            let statusClass = getAttendanceStatusClass(status);
 
             let contentHtml = '';
             if (status === 'WEEKEND') {

@@ -995,9 +995,9 @@ const ITSupport = (() => {
                         <textarea name="description" class="form-control" rows="5" required placeholder="Provide detailed information about the problem"></textarea>
                     </div>
                     
-                    <div class="mt-4">
-                        <button type="button" class="btn btn-lg px-5" id="btn-submit-ticket" style="background: var(--it-primary); color: white; border: none; border-radius: 8px;">Submit Ticket</button>
-                        <button type="button" class="btn btn-light btn-lg px-5 ml-2" id="btn-cancel-create" style="border-radius: 8px;">Cancel</button>
+                    <div class="it-form-actions">
+                        <button type="button" class="it-btn-submit" id="btn-submit-ticket">Submit Ticket</button>
+                        <button type="button" class="it-btn-cancel" id="btn-cancel-create">Cancel</button>
                     </div>
                 </form>
             </div>

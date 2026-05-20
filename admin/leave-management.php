@@ -59,11 +59,15 @@ $all_requests = $req_stmt->fetchAll(PDO::FETCH_ASSOC);
 <!-- Filters Card -->
 <div class="card p-24 mb-24">
     <div class="filter-grid">
-        <div class="search-box">
-            <i data-lucide="search" size="18"></i>
-            <input type="text" placeholder="Search by employee name...">
+        <div class="filter-item">
+            <label class="admin-form-label font-12">Search Employee</label>
+            <div class="search-box w-full">
+                <i data-lucide="search" size="16"></i>
+                <input type="text" id="leaveFilterSearch" class="form-control" placeholder="Search by employee name...">
+            </div>
         </div>
         <div class="filter-item">
+            <label class="admin-form-label font-12">Leave Type</label>
             <select class="form-control">
                 <option value="">Leave Type (All)</option>
                 <option value="sick">Sick Leave</option>
@@ -72,6 +76,7 @@ $all_requests = $req_stmt->fetchAll(PDO::FETCH_ASSOC);
             </select>
         </div>
         <div class="filter-item">
+            <label class="admin-form-label font-12">Status</label>
             <select class="form-control">
                 <option value="">Status (All)</option>
                 <option value="pending">Pending</option>
@@ -80,6 +85,7 @@ $all_requests = $req_stmt->fetchAll(PDO::FETCH_ASSOC);
             </select>
         </div>
         <div class="filter-item">
+            <label class="admin-form-label font-12">Month</label>
             <input type="month" class="form-control" value="<?= date('Y-m') ?>">
         </div>
     </div>

@@ -234,17 +234,20 @@ switch ($action) {
                 // Other Documents (Multi-upload)
                 $other_docs_paths = [];
                 if (!empty($_FILES['other_documents']['name'][0])) {
+                    $allowed_exts = ['pdf', 'jpg', 'jpeg', 'png', 'webp', 'doc', 'docx'];
                     $files = $_FILES['other_documents'];
                     foreach ($files['name'] as $key => $name) {
                         if ($files['error'][$key] === 0) {
-                            $tmp_name = $files['tmp_name'][$key];
-                            $ext = pathinfo($name, PATHINFO_EXTENSION);
-                            $new_name = uniqid('doc_') . '.' . $ext;
-                            $target_dir = '../../../uploads/employees/others/';
-                            if (!is_dir($target_dir)) mkdir($target_dir, 0777, true);
-                            
-                            if (move_uploaded_file($tmp_name, $target_dir . $new_name)) {
-                                $other_docs_paths[] = 'uploads/employees/others/' . $new_name;
+                            $ext = strtolower(pathinfo($name, PATHINFO_EXTENSION));
+                            if (in_array($ext, $allowed_exts)) {
+                                $tmp_name = $files['tmp_name'][$key];
+                                $new_name = uniqid('doc_') . '.' . $ext;
+                                $target_dir = '../../../uploads/employees/others/';
+                                if (!is_dir($target_dir)) mkdir($target_dir, 0777, true);
+                                
+                                if (move_uploaded_file($tmp_name, $target_dir . $new_name)) {
+                                    $other_docs_paths[] = 'uploads/employees/others/' . $new_name;
+                                }
                             }
                         }
                     }
@@ -402,16 +405,19 @@ switch ($action) {
             // Handle Other Documents (Append to existing)
             $new_other_docs = [];
             if (!empty($_FILES['other_documents']['name'][0])) {
+                $allowed_exts = ['pdf', 'jpg', 'jpeg', 'png', 'webp', 'doc', 'docx'];
                 $files = $_FILES['other_documents'];
                 foreach ($files['name'] as $key => $name) {
                     if ($files['error'][$key] === 0) {
-                        $tmp_name = $files['tmp_name'][$key];
-                        $ext = pathinfo($name, PATHINFO_EXTENSION);
-                        $new_name = uniqid('doc_') . '.' . $ext;
-                        $target_dir = '../../../uploads/employees/others/';
-                        if (!is_dir($target_dir)) mkdir($target_dir, 0777, true);
-                        if (move_uploaded_file($tmp_name, $target_dir . $new_name)) {
-                            $new_other_docs[] = 'uploads/employees/others/' . $new_name;
+                        $ext = strtolower(pathinfo($name, PATHINFO_EXTENSION));
+                        if (in_array($ext, $allowed_exts)) {
+                            $tmp_name = $files['tmp_name'][$key];
+                            $new_name = uniqid('doc_') . '.' . $ext;
+                            $target_dir = '../../../uploads/employees/others/';
+                            if (!is_dir($target_dir)) mkdir($target_dir, 0777, true);
+                            if (move_uploaded_file($tmp_name, $target_dir . $new_name)) {
+                                $new_other_docs[] = 'uploads/employees/others/' . $new_name;
+                            }
                         }
                     }
                 }
@@ -546,6 +552,40 @@ switch ($action) {
             header('Content-Type: application/json');
             echo json_encode(['status' => 'error', 'message' => 'A server error occurred. Please try again.']);
             exit;
+        }
+        break;
+
+    case 'restore':
+        $id = $_POST['id'] ?? '';
+        if (!$id) {
+            echo json_encode(['status' => 'error', 'message' => 'Employee ID required.']);
+            exit;
+        }
+
+        try {
+            $chk = $pdo->prepare("SELECT id, first_name, last_name, deleted_at FROM employees WHERE id = ?");
+            $chk->execute([$id]);
+            $row = $chk->fetch(PDO::FETCH_ASSOC);
+
+            if (!$row || empty($row['deleted_at'])) {
+                echo json_encode(['status' => 'error', 'message' => 'Employee is not in the exit list or was already restored.']);
+                exit;
+            }
+
+            $stmt = $pdo->prepare("UPDATE employees SET status = 'Active', deleted_at = NULL WHERE id = ?");
+            $stmt->execute([$id]);
+
+            if ($stmt->rowCount() > 0) {
+                $admin_id = $_SESSION['user_id'] ?? 0;
+                $e_name = trim(($row['first_name'] ?? '') . ' ' . ($row['last_name'] ?? ''));
+                logActivity($admin_id, "Restored Employee Profile", "Employees", "Reactivated team member: $e_name");
+
+                echo json_encode(['status' => 'success', 'message' => 'Employee restored to active directory.']);
+            } else {
+                echo json_encode(['status' => 'error', 'message' => 'Unable to restore employee.']);
+            }
+        } catch (PDOException $e) {
+            echo json_encode(['status' => 'error', 'message' => 'A server error occurred. Please try again.']);
         }
         break;
 

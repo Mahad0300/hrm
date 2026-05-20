@@ -56,7 +56,7 @@ $user_role = $_SESSION['user_role'] ?? 'Employee';
                 <div class="it-sidebar-header">
                     <h5><?php echo $is_it_staff ? 'Support Queue' : 'My Tickets'; ?></h5>
                     <?php if (!$is_it_staff): ?>
-                        <button class="btn btn-sm" id="btn-create-ticket" style="background: var(--it-primary); color: white; border: none; padding: 5px 12px; border-radius: 5px;">
+                        <button class="btn btn-sm" id="btn-create-ticket" style="background: var(--it-primary); color: white; border: none; padding: 10px 12px; border-radius: 5px;">
                             <i class="fas fa-plus"></i> Create Ticket
                         </button>
                     <?php endif; ?>

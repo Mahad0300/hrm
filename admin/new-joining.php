@@ -11,9 +11,12 @@ include 'includes/header.php';
 
 <!-- Page Action Area -->
 <div class="page-action-area">
-    <div class="search-bar-wrap w-full-mobile">
-        <i data-lucide="search" size="18"></i>
-        <input type="text" class="search-input" placeholder="Search new joinings...">
+    <div class="filter-item w-full-mobile" style="flex:1;max-width:420px;margin-right:auto;">
+        <label class="admin-form-label font-12">Search</label>
+        <div class="search-box w-full">
+            <i data-lucide="search" size="16"></i>
+            <input type="text" id="njSearch" class="form-control" placeholder="Search new joinings...">
+        </div>
     </div>
     <div class="header-actions">
         <button class="btn-primary" type="button">
