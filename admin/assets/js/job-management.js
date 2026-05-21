@@ -19,6 +19,26 @@ document.addEventListener('DOMContentLoaded', function() {
             .replace(/^-+|-+$/g, '');
     }
 
+    function parseJobPostedDate(dateStr) {
+        if (!dateStr) return null;
+        const raw = String(dateStr).trim();
+        const dateOnly = raw.match(/^(\d{4})-(\d{2})-(\d{2})/);
+        if (dateOnly && raw.length <= 10) {
+            return new Date(Number(dateOnly[1]), Number(dateOnly[2]) - 1, Number(dateOnly[3]));
+        }
+        const parsed = new Date(raw);
+        return Number.isNaN(parsed.getTime()) ? null : parsed;
+    }
+
+    function formatJobPostedLabel(dateStr) {
+        const posted = parseJobPostedDate(dateStr);
+        if (!posted) return '—';
+        const day = posted.getDate();
+        const month = posted.toLocaleDateString('en-GB', { month: 'short' });
+        const year = posted.getFullYear();
+        return day + ' ' + month + ', ' + year;
+    }
+
     // --- Loading Jobs from DB ---
     async function loadJobs() {
         try {
@@ -159,26 +179,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
     let jobStatusTab = '';
 
-    function parseJobPostedDate(dateStr) {
-        if (!dateStr) return null;
-        const raw = String(dateStr).trim();
-        const dateOnly = raw.match(/^(\d{4})-(\d{2})-(\d{2})/);
-        if (dateOnly && raw.length <= 10) {
-            return new Date(Number(dateOnly[1]), Number(dateOnly[2]) - 1, Number(dateOnly[3]));
-        }
-        const parsed = new Date(raw);
-        return Number.isNaN(parsed.getTime()) ? null : parsed;
-    }
-
-    function formatJobPostedLabel(dateStr) {
-        const posted = parseJobPostedDate(dateStr);
-        if (!posted) return '—';
-        const day = posted.getDate();
-        const month = posted.toLocaleDateString('en-GB', { month: 'short' });
-        const year = posted.getFullYear();
-        return day + ' ' + month + ', ' + year;
-    }
-
     function getJobStatusBadge(job) {
         const status = job.status || 'Active';
         if (status === 'Active') {
@@ -290,7 +290,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 
                 const questions = job.questions || [];
 
-                const standardOffset = 5;
+                const standardOffset = 4;
                 let questionsHtml = '';
                 if (questions.length) {
                     questionsHtml = '<div class="job-detail-q-list job-detail-q-list--custom">';
@@ -625,17 +625,23 @@ document.addEventListener('DOMContentLoaded', function() {
             }
 
             setText('applyJobTitle', title);
-            setText('applyJobTitleMeta', title);
             setText('applyJobDept', dept);
+            setText('applyJobPostedDate', formatJobPostedLabel(job.posted_date || job.created_at));
             setText('applyJobLocation', loc);
             setText('applyJobDesc', desc);
 
-            // Close status check
             if (job.status === 'Close') {
                 var form = document.getElementById('jobApplyForm');
+                var formSection = document.getElementById('jaFormSection');
                 if (form) form.style.display = 'none';
-                var intro = document.querySelector('.ja-intro');
-                if (intro) intro.innerHTML = '<div class="alert alert-danger" style="background: #fee2e2; border: 1px solid #ef4444; color: #b91c1c; padding: 16px; border-radius: 10px; font-weight: 600; text-align: center;">This job position is currently closed and no longer accepting applications.</div>';
+                if (formSection) formSection.style.display = 'none';
+                var intro = document.getElementById('jaIntro');
+                if (intro) {
+                    intro.className = 'ja-closed-notice';
+                    intro.innerHTML =
+                        '<i data-lucide="ban" size="20"></i><span>This position is closed and is no longer accepting applications.</span>';
+                    if (typeof lucide !== 'undefined') lucide.createIcons();
+                }
             }
         }
 

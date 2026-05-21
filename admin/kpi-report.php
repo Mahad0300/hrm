@@ -1,18 +1,21 @@
 <?php
 $page_title = "Employee KPI Scorecard";
-$page_subtitle = "Detailed performance indicators and historical feedback.";
 include 'includes/header.php';
 ?>
 <?php include 'includes/sidebar.php'; ?>
 
 <div id="kpiReportPage">
-    <div class="flex-between mb-24">
-        <a href="kpi-management.php"
-            class="btn-outline-primary py-8 px-16 flex-center gap-8 font-13 text-decoration-none">
-            <i data-lucide="arrow-left" size="16"></i>
-            <span>Back to Management</span>
-        </a>
-        <button class="btn-primary py-8 px-16 flex-center gap-8 font-13" onclick="openReviewModal()">
+    <div class="flex-between align-start mb-24">
+        <div class="greeting-area">
+            <div class="flex-center gap-12 mb-8">
+                <a href="kpi-management.php" class="action-btn no-bg border" title="Back to Management">
+                    <i data-lucide="arrow-left" size="18"></i>
+                </a>
+                <h1 class="font-24 font-700 ls-05 m-0">Employee KPI Scorecard</h1>
+            </div>
+            <p class="text-light font-14 m-0">Detailed performance indicators and historical feedback.</p>
+        </div>
+        <button type="button" class="btn-primary py-8 px-16 flex-center gap-8 font-13" onclick="openReviewModal()">
             <i data-lucide="plus-circle" size="16"></i>
             <span>Add New Review</span>
         </button>
@@ -22,16 +25,16 @@ include 'includes/header.php';
         <!-- Left: Detailed Scorecard -->
         <div class="flex-column gap-24">
             <div class="card p-30">
-                <div class="flex-center justify-start gap-20 mb-30">
+                <div class="flex-center justify-start gap-10 mb-30">
                     <img id="detailAvatar" src="../images/profile-image/default-avatar.svg"
-                        class="w-80 h-80 rounded-full border-4-white shadow-sm" alt="Avatar">
+                        class="w-80 h-80 rounded-full border-4-white" alt="Avatar">
                     <div>
                         <h3 class="font-24 font-700" id="detailName">Loading...</h3>
                         <p class="font-14 text-light mt-4" id="detailDept">---</p>
                         <div class="flex-center justify-start gap-8 mt-12">
                             <span class="badge badge-success font-11 uppercase ls-05" id="detailStatus">---</span>
                             <span class="text-light opacity-50">|</span>
-                            <div class="flex-center gap-4">
+                            <div class="flex-center gap-8">
                                 <i data-lucide="star" class="text-warning fill-warning" size="14"></i>
                                 <span class="font-14 font-700" id="detailScore">0.0</span>
                             </div>

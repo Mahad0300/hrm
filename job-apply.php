@@ -51,22 +51,15 @@ $safePageTitle = htmlspecialchars($pageTitle, ENT_QUOTES, 'UTF-8');
     <link rel="stylesheet" href="admin/assets/css/style.css">
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
-        /* Public apply — full-width friendly: tinted edges + wide content sheet */
-        html {
+        /* Public apply — plain page background */
+        html,
+        body.ja-body {
             min-height: 100%;
-            background: #e2e8f0;
-            background-image:
-                radial-gradient(ellipse 100% 70% at 50% -15%, rgba(var(--primary-rgb, 108, 76, 241), 0.18), transparent 50%),
-                radial-gradient(ellipse 55% 45% at 0% 40%, rgba(var(--primary-rgb, 108, 76, 241), 0.08), transparent 50%),
-                radial-gradient(ellipse 55% 45% at 100% 60%, rgba(var(--primary-rgb, 108, 76, 241), 0.08), transparent 50%),
-                linear-gradient(165deg, #eef2ff 0%, #f5f6fa 42%, #f1f5f9 100%);
-            background-attachment: fixed;
+            background: #fff;
         }
 
         body.ja-body {
             margin: 0;
-            min-height: 100%;
-            background: transparent;
             color: var(--text-dark, #2b2b2b);
             font-family: 'Inter', system-ui, sans-serif;
             font-size: 15px;
@@ -79,7 +72,7 @@ $safePageTitle = htmlspecialchars($pageTitle, ENT_QUOTES, 'UTF-8');
             margin: clamp(16px, 3vw, 32px) auto clamp(32px, 5vw, 56px);
             padding: clamp(28px, 4vw, 48px) clamp(20px, 4vw, 44px) clamp(40px, 5vw, 64px);
             background: #ffffff;
-            border-radius: 16px;
+            border-radius: 10px;
             border: 1px solid rgba(236, 236, 243, 0.95);
             box-shadow:
                 0 4px 6px -1px rgba(15, 23, 42, 0.05),
@@ -108,110 +101,232 @@ $safePageTitle = htmlspecialchars($pageTitle, ENT_QUOTES, 'UTF-8');
             color: var(--primary-dark, #5839d6);
         }
 
-        .ja-title-banner {
-            text-align: center;
-            padding: 16px 20px;
-            margin-bottom: 26px;
-            background: rgba(var(--primary-rgb, 108, 76, 241), 0.06);
-            border: 1px solid rgba(var(--primary-rgb, 108, 76, 241), 0.18);
-            border-radius: 10px;
-        }
-
-        .ja-title-banner h1 {
-            margin: 0;
-            font-size: 1.4rem;
-            font-weight: 700;
-            color: var(--primary-dark, #5839d6);
-            letter-spacing: -0.02em;
-        }
-
-        .ja-intro {
-            margin: 0 0 28px;
-            font-size: 15px;
-            color: var(--text-dark, #2b2b2b);
-            line-height: 1.75;
-        }
-
-        .ja-role-head {
-            margin-bottom: 10px;
+        .ja-page-header {
+            margin-bottom: 28px;
+            padding-bottom: 24px;
             border-bottom: 1px solid var(--border-color, #ececf3);
         }
 
-        .ja-role-head h2 {
-            margin: 0 0 10px;
-            font-size: 1.35rem;
-            font-weight: 700;
-            color: var(--text-dark, #2b2b2b);
-            letter-spacing: -0.02em;
+        .ja-page-header__inner {
+            display: flex;
+            align-items: flex-start;
+            gap: clamp(18px, 3vw, 32px);
         }
 
-        .ja-section-title {
-            font-size: 11px;
-            font-weight: 700;
-            letter-spacing: 0.08em;
-            text-transform: uppercase;
-            color: var(--text-light, #64748b);
-            margin: 0 0 14px;
+        .ja-page-header__brand {
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            line-height: 0;
         }
 
-        .job-posting-card {
-            background: var(--card-bg, #fff);
-            border: 1px solid var(--border-color, #ececf3);
-            border-radius: 12px;
-            padding: 22px 24px;
-            margin-bottom: 32px;
-            box-shadow: var(--shadow-soft, 0 4px 15px rgba(0, 0, 0, 0.05));
+        .ja-page-header__logo {
+            display: block;
+            width: auto;
+            max-width: 148px;
+            height: auto;
+            max-height: 80px;
+            object-fit: contain;
         }
 
-        .job-meta-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 16px 28px;
-            margin-bottom: 18px;
+        .ja-page-header__content {
+            flex: 1;
+            min-width: 0;
         }
 
         @media (max-width: 560px) {
-            .job-meta-grid {
-                grid-template-columns: 1fr;
+            .ja-page-header__inner {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .ja-page-header__logo {
+                max-width: 128px;
+                max-height: 44px;
             }
         }
 
-        .job-meta-item dt {
+        .ja-page-header__eyebrow {
+            margin: 0px;
             font-size: 11px;
             font-weight: 700;
+            letter-spacing: 0.12em;
             text-transform: uppercase;
-            letter-spacing: 0.06em;
             color: var(--text-light, #64748b);
-            margin-bottom: 6px;
         }
 
-        .job-meta-item dd {
+        .ja-page-header__title {
+            margin: 0px;
+            font-size: clamp(1.5rem, 3vw, 1.85rem);
+            font-weight: 700;
+            color: var(--text-dark, #0f172a);
+            letter-spacing: -0.03em;
+            line-height: 1.2;
+        }
+
+        .ja-intro {
             margin: 0;
-            font-size: 15px;
-            font-weight: 600;
-            color: var(--text-dark, #2b2b2b);
+            font-size: 14px;
+            color: var(--text-light, #64748b);
+            line-height: 1.65;
         }
 
-        .job-desc-block .job-desc-label {
+        .ja-role-block {
+            margin: 28px 0 24px;
+        }
+
+        .ja-role-title {
+            margin: 0;
+            font-size: clamp(1.35rem, 2.5vw, 1.65rem);
+            font-weight: 700;
+            color: var(--text-dark, #0f172a);
+            letter-spacing: -0.03em;
+            line-height: 1.25;
+        }
+
+        .ja-section-head {
+            margin-bottom: 16px;
+        }
+
+        .ja-section-head--form {
+            margin-top: 36px;
+            padding-top: 28px;
+            border-top: 1px solid var(--border-color, #ececf3);
+        }
+
+        .ja-section-head--form .ja-section-head__title {
+            color: #475569;
+        }
+
+        .ja-section-head--form .ja-section-head__sub {
+            color: #334155;
+        }
+
+        .ja-section-head__title {
+            margin: 0;
             font-size: 11px;
             font-weight: 700;
+            letter-spacing: 0.1em;
             text-transform: uppercase;
-            letter-spacing: 0.06em;
             color: var(--text-light, #64748b);
-            display: block;
+        }
+
+        .ja-section-head__sub {
+            margin: 8px 0 0;
+            font-size: 14px;
+            color: var(--text-light, #64748b);
+            line-height: 1.5;
+        }
+
+        .ja-posting-panel {
             margin-bottom: 8px;
         }
 
-        .job-desc-body {
-            font-size: 14px;
-            line-height: 1.65;
-            color: var(--text-dark);
-            margin: 0;
-            white-space: pre-wrap;
-            padding: 16px 18px;
-            background: #f8fafc;
-            border: 1px solid var(--border-color, #ececf3);
+        .ja-details-stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+
+        .ja-stat {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 14px 14px;
+            background: #fafafa;
+            border: 1px solid #f1f5f9;
+            border-radius: 14px;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .ja-stat:hover {
+            border-color: rgba(108, 76, 241, 0.15);
+            box-shadow: 0 4px 14px rgba(15, 23, 42, 0.04);
+        }
+
+        .ja-stat--full {
+            grid-column: 1 / -1;
+        }
+
+        .ja-stat--desc {
+            margin-bottom: 4px;
+        }
+
+        .ja-stat__icon {
+            width: 36px;
+            height: 36px;
             border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            background: rgba(108, 76, 241, 0.08);
+            color: var(--primary-color, #6c4cf1);
+        }
+
+        .ja-stat__icon svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        .ja-stat__body {
+            min-width: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .ja-stat__label {
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: var(--text-light, #64748b);
+        }
+
+        .ja-stat__value {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-dark, #0f172a);
+            line-height: 1.35;
+        }
+
+        .ja-stat__value--desc {
+            font-weight: 500;
+            line-height: 1.65;
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+
+        .ja-closed-notice {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin: 0 0 24px;
+            padding: 14px 18px;
+            border-radius: 12px;
+            background: #fef2f2;
+            border: 1px solid #fecaca;
+            color: #b91c1c;
+            font-size: 14px;
+            font-weight: 600;
+            text-align: center;
+            line-height: 1.5;
+        }
+
+        .ja-closed-notice svg {
+            flex-shrink: 0;
+        }
+
+        @media (max-width: 560px) {
+            .ja-details-stats {
+                grid-template-columns: 1fr;
+            }
+
+            .ja-stat--full {
+                grid-column: 1;
+            }
         }
 
         .ja-form-grid-2 {
@@ -392,13 +507,6 @@ $safePageTitle = htmlspecialchars($pageTitle, ENT_QUOTES, 'UTF-8');
             transform: translateY(1px);
         }
 
-        .ja-help {
-            font-size: 14px;
-            color: var(--text-dark);
-            margin: 0 0 22px;
-            line-height: 1.6;
-        }
-
         #dynamicQuestions .apply-section-label {
             color: var(--text-light, #64748b);
         }
@@ -416,62 +524,67 @@ $safePageTitle = htmlspecialchars($pageTitle, ENT_QUOTES, 'UTF-8');
             </div>
         </div>
 
-        <div class="ja-title-banner">
-            <h1>Job Application</h1>
-        </div>
-
-        <p class="ja-intro">
-            Are you someone who stays organized under pressure, enjoys working with people across teams, and takes pride
-            in getting the details right?
-            Do you want to grow with a company that values clarity, respect, and steady improvement?
-            If so, you should consider applying for the role below.
-        </p>
-
-        <div class="ja-role-head">
-            <h2 id="applyJobTitle">Operations Executive</h2>
-        </div>
-
-        <p class="ja-section-title">Job posting details</p>
-        <section class="job-posting-card" aria-label="Job posting summary">
-            <div class="job-meta-grid">
-                <div class="job-meta-item">
-                    <dt>Job title *</dt>
-                    <dd id="applyJobTitleMeta">Operations Executive</dd>
+        <header class="ja-page-header">
+            <div class="ja-page-header__inner">
+                <div class="ja-page-header__brand">
+                    <img src="images/loginimage/logo.png" alt="Richmond Tech Group" class="ja-page-header__logo"
+                        width="160" height="48">
                 </div>
-                <div class="job-meta-item">
-                    <dt>Department *</dt>
-                    <dd id="applyJobDept">Operations</dd>
-                </div>
-                <div class="job-meta-item">
-                    <dt>Location *</dt>
-                    <dd id="applyJobLocation">North Nazimabad, Karachi (on-site)</dd>
+                <div class="ja-page-header__content">
+                    <p class="ja-page-header__eyebrow">Careers</p>
+                    <h1 class="ja-page-header__title">Job Application</h1>
+                    <p class="ja-intro" id="jaIntro">
+                        Complete the form below to apply for this role. Our hiring team reviews every submission and will
+                        contact shortlisted candidates.
+                    </p>
                 </div>
             </div>
-            <div class="job-desc-block">
-                <span class="job-desc-label">Job description *</span>
-                <p id="applyJobDesc" class="job-desc-body">We are looking for an Operations Executive to keep our
-                    day-to-day work organized and efficient. You will track tasks, liaise with internal teams, prepare
-                    simple reports, and follow up on action items from leadership.
+        </header>
 
-                    Key responsibilities:
-                    • Support scheduling, documentation, and operational follow-ups.
-                    • Coordinate with HR, IT, and department heads on routine requests.
-                    • Maintain accurate records and help improve our internal checklists.
-                    • Communicate clearly in English and Urdu with staff and vendors.
+        <div class="ja-role-block">
+            <h2 class="ja-role-title" id="applyJobTitle">—</h2>
+        </div>
 
-                    What we expect:
-                    • Bachelor’s degree or equivalent experience in operations / admin / business.
-                    • 1–3 years in a similar coordination or operations role (fresh grads with strong organization
-                    skills may apply).
-                    • Strong attention to detail, MS Office comfort, and a professional attitude.
-
-                    We are an equal-opportunity employer. We review every application carefully.</p>
+        <div class="ja-section-head">
+            <h3 class="ja-section-head__title">Job posting details</h3>
+        </div>
+        <section class="ja-posting-panel" aria-label="Job posting summary">
+            <div class="ja-details-stats">
+                <div class="ja-stat">
+                    <div class="ja-stat__icon"><i data-lucide="building-2" size="18"></i></div>
+                    <div class="ja-stat__body">
+                        <span class="ja-stat__label">Department</span>
+                        <span class="ja-stat__value" id="applyJobDept">—</span>
+                    </div>
+                </div>
+                <div class="ja-stat">
+                    <div class="ja-stat__icon"><i data-lucide="calendar" size="18"></i></div>
+                    <div class="ja-stat__body">
+                        <span class="ja-stat__label">Posted date</span>
+                        <span class="ja-stat__value" id="applyJobPostedDate">—</span>
+                    </div>
+                </div>
+                <div class="ja-stat ja-stat--full">
+                    <div class="ja-stat__icon"><i data-lucide="map-pin" size="18"></i></div>
+                    <div class="ja-stat__body">
+                        <span class="ja-stat__label">Location</span>
+                        <span class="ja-stat__value allow-wrap" id="applyJobLocation">—</span>
+                    </div>
+                </div>
+                <div class="ja-stat ja-stat--full ja-stat--desc">
+                    <div class="ja-stat__icon"><i data-lucide="file-text" size="18"></i></div>
+                    <div class="ja-stat__body">
+                        <span class="ja-stat__label">Job description</span>
+                        <span class="ja-stat__value ja-stat__value--desc allow-wrap" id="applyJobDesc">—</span>
+                    </div>
+                </div>
             </div>
         </section>
 
-        <p class="ja-section-title">Your application</p>
-        <p class="ja-help">Required fields are marked with *. Please answer honestly; the hiring team may use this
-            information to follow up with you.</p>
+        <div class="ja-section-head ja-section-head--form" id="jaFormSection">
+            <h3 class="ja-section-head__title">Your application</h3>
+            <p class="ja-section-head__sub">Required fields are marked with *. Please provide accurate information.</p>
+        </div>
 
             <form id="jobApplyForm">
             <div class="ja-form-grid-2">

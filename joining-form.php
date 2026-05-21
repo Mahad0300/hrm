@@ -12,21 +12,14 @@
     <script src="https://unpkg.com/lucide@latest"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <style>
-        html {
+        html,
+        body.nj-body {
             min-height: 100%;
-            background: #e2e8f0;
-            background-image:
-                radial-gradient(ellipse 100% 70% at 50% -15%, rgba(var(--primary-rgb, 108, 76, 241), 0.18), transparent 50%),
-                radial-gradient(ellipse 55% 45% at 0% 40%, rgba(var(--primary-rgb, 108, 76, 241), 0.08), transparent 50%),
-                radial-gradient(ellipse 55% 45% at 100% 60%, rgba(var(--primary-rgb, 108, 76, 241), 0.08), transparent 50%),
-                linear-gradient(165deg, #eef2ff 0%, #f5f6fa 42%, #f1f5f9 100%);
-            background-attachment: fixed;
+            background: #fff;
         }
 
         body.nj-body {
             margin: 0;
-            min-height: 100%;
-            background: transparent;
             color: var(--text-dark, #2b2b2b);
             font-family: 'Inter', system-ui, sans-serif;
             font-size: 15px;
@@ -38,36 +31,83 @@
             max-width: min(1120px, 96vw);
             margin: clamp(16px, 3vw, 32px) auto clamp(32px, 5vw, 56px);
             padding: clamp(28px, 4vw, 48px) clamp(20px, 4vw, 44px) clamp(40px, 5vw, 64px);
+            background: #fff;
             background: #ffffff;
-            border-radius: 16px;
+            border-radius: 10px;
             border: 1px solid rgba(236, 236, 243, 0.95);
             box-shadow:
                 0 4px 6px -1px rgba(15, 23, 42, 0.05),
                 0 24px 48px -12px rgba(15, 23, 42, 0.1);
         }
 
-        .nj-title-banner {
-            text-align: center;
-            padding: 16px 20px;
-            margin-bottom: 26px;
-            background: rgba(var(--primary-rgb, 108, 76, 241), 0.06);
-            border: 1px solid rgba(var(--primary-rgb, 108, 76, 241), 0.18);
-            border-radius: 10px;
+        .nj-page-header {
+            margin-bottom: 28px;
+            padding-bottom: 24px;
+            border-bottom: 1px solid var(--border-color, #ececf3);
         }
 
-        .nj-title-banner h1 {
-            margin: 0;
-            font-size: 1.4rem;
+        .nj-page-header__inner {
+            display: flex;
+            align-items: center;
+            gap: clamp(18px, 3vw, 32px);
+        }
+
+        .nj-page-header__brand {
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            line-height: 0;
+        }
+
+        .nj-page-header__logo {
+            display: block;
+            width: auto;
+            max-width: 148px;
+            height: auto;
+            max-height: 80px;
+            object-fit: contain;
+        }
+
+        .nj-page-header__content {
+            flex: 1;
+            min-width: 0;
+        }
+
+        @media (max-width: 560px) {
+            .nj-page-header__inner {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .nj-page-header__logo {
+                max-width: 128px;
+                max-height: 44px;
+            }
+        }
+
+        .nj-page-header__eyebrow {
+            margin: 0px;
+            font-size: 11px;
             font-weight: 700;
-            color: var(--primary-dark, #5839d6);
-            letter-spacing: -0.02em;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--text-light, #64748b);
+        }
+
+        .nj-page-header__title {
+            margin: 0px;
+            font-size: clamp(1.5rem, 3vw, 1.85rem);
+            font-weight: 700;
+            color: var(--text-dark, #0f172a);
+            letter-spacing: -0.03em;
+            line-height: 1.2;
         }
 
         .nj-intro {
-            margin: 0 0 28px;
-            font-size: 15px;
-            color: var(--text-dark, #2b2b2b);
-            line-height: 1.75;
+            margin: 0;
+            font-size: 14px;
+            color: var(--text-light, #64748b);
+            line-height: 1.65;
         }
 
         .nj-section-head {
@@ -312,14 +352,22 @@
             </div>
         </div>
 
-        <div class="nj-title-banner">
-            <h1>Joining Form</h1>
-        </div>
-
-        <p class="nj-intro">
-            Please complete all sections below. Fields marked with * are required.
-            Attachments should be clear PDF or image files unless your HR team specifies otherwise.
-        </p>
+        <header class="nj-page-header">
+            <div class="nj-page-header__inner">
+                <div class="nj-page-header__brand">
+                    <img src="images/loginimage/logo.png" alt="Richmond Tech Group" class="nj-page-header__logo"
+                        width="160" height="48">
+                </div>
+                <div class="nj-page-header__content">
+                    <p class="nj-page-header__eyebrow">Onboarding</p>
+                    <h1 class="nj-page-header__title">Joining Form</h1>
+                    <p class="nj-intro">
+                        Please complete all sections below. Fields marked with * are required.
+                        Attachments should be clear PDF or image files unless your HR team specifies otherwise.
+                    </p>
+                </div>
+            </div>
+        </header>
 
         <form id="njHireForm" method="post" enctype="multipart/form-data">
             <input type="hidden" name="source" value="joining_form">

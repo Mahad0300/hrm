@@ -3090,7 +3090,7 @@ a.activity-view-all {
     align-items: center;
     gap: 12px;
     padding: 11px 16px;
-    border-radius: 12px;
+    border-radius: 7px;
     color: #64748b;
     font-weight: 500;
     font-size: 14px;
@@ -3728,7 +3728,7 @@ a.stat-card.stat-card--link:focus-visible {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    border-radius: 8px;
+    border-radius: 10px;
     border: 1px solid var(--border-color);
     background: #fff;
     color: var(--text-light);
@@ -5132,10 +5132,19 @@ a.stat-card.stat-card--link:focus-visible {
     margin-bottom: 24px;
 }
 
-@media (min-width: 640px) {
-    #jobDetailModal .job-detail-stats {
-        grid-template-columns: repeat(2, 1fr);
-    }
+#jobDetailModal .job-detail-stat--full {
+    grid-column: 1 / -1;
+}
+
+#jobDetailModal .job-detail-stat--desc {
+    margin-bottom: 22px;
+}
+
+#jobDetailModal .job-detail-stat--desc .job-detail-stat__value {
+    font-weight: 600;
+    line-height: 1.65;
+    white-space: pre-wrap;
+    word-break: break-word;
 }
 
 #jobDetailModal .job-detail-stat {

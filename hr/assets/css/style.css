@@ -3704,10 +3704,19 @@ a.action-btn {
     margin-bottom: 24px;
 }
 
-@media (min-width: 640px) {
-    #jobDetailModal .job-detail-stats {
-        grid-template-columns: repeat(2, 1fr);
-    }
+#jobDetailModal .job-detail-stat--full {
+    grid-column: 1 / -1;
+}
+
+#jobDetailModal .job-detail-stat--desc {
+    margin-bottom: 22px;
+}
+
+#jobDetailModal .job-detail-stat--desc .job-detail-stat__value {
+    font-weight: 600;
+    line-height: 1.65;
+    white-space: pre-wrap;
+    word-break: break-word;
 }
 
 #jobDetailModal .job-detail-stat {

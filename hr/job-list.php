@@ -119,25 +119,28 @@ include 'includes/header.php';
                     </div>
                 </div>
                 <div class="job-detail-stat">
-                    <div class="job-detail-stat__icon"><i data-lucide="map-pin" size="18"></i></div>
-                    <div class="job-detail-stat__text">
-                        <span class="job-detail-stat__label">Location</span>
-                        <span class="job-detail-stat__value allow-wrap" id="detailLocation">—</span>
-                    </div>
-                </div>
-                <div class="job-detail-stat">
                     <div class="job-detail-stat__icon"><i data-lucide="calendar" size="18"></i></div>
                     <div class="job-detail-stat__text">
                         <span class="job-detail-stat__label">Posted Date</span>
                         <span class="job-detail-stat__value" id="detailPostedDate">—</span>
                     </div>
                 </div>
+                <div class="job-detail-stat job-detail-stat--full">
+                    <div class="job-detail-stat__icon"><i data-lucide="map-pin" size="18"></i></div>
+                    <div class="job-detail-stat__text">
+                        <span class="job-detail-stat__label">Location</span>
+                        <span class="job-detail-stat__value allow-wrap" id="detailLocation">—</span>
+                    </div>
+                </div>
             </div>
 
-            <section class="job-detail-section">
-                <h4 class="job-detail-section__title">Job Description</h4>
-                <div class="job-detail-desc" id="detailDesc"></div>
-            </section>
+            <div class="job-detail-stat job-detail-stat--full job-detail-stat--desc">
+                <div class="job-detail-stat__icon"><i data-lucide="file-text" size="18"></i></div>
+                <div class="job-detail-stat__text">
+                    <span class="job-detail-stat__label">Job Description</span>
+                    <span class="job-detail-stat__value allow-wrap" id="detailDesc">—</span>
+                </div>
+            </div>
 
             <section class="job-detail-section job-detail-section--bordered">
                 <h4 class="job-detail-section__title">Requirements &amp; Questions</h4>
