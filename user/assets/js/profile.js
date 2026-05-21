@@ -212,7 +212,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     card.target = '_blank';
                     card.className = 'doc-card border rounded-16 p-20 hover-bg-light transition block no-underline';
                     card.innerHTML = `
-                        <label class="admin-form-label cursor-pointer">Other Document</label>
+                        <label class="admin-form-label cursor-pointer">Other Documents</label>
                         <div class="flex-center gap-12">
                             <div class="icon-square-40 bg-light-soft text-light">
                                 <i data-lucide="files" size="20"></i>

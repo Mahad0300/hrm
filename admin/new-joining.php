@@ -49,9 +49,12 @@ include 'includes/header.php';
         <form id="hireCandidateForm" method="POST" enctype="multipart/form-data">
             <input type="hidden" id="cand_id_hidden" name="employee_id_hidden" value="">
             <div class="modal-body p-30">
-                <h4 class="font-13 font-600 mb-15 text-primary-color flex-center gap-8">
-                    <i data-lucide="clipboard-list" size="16"></i> Personal Details
-                </h4>
+                <div class="nj-section-head">
+                    <div class="nj-section-icon" aria-hidden="true">
+                        <i data-lucide="user-round" width="22" height="22"></i>
+                    </div>
+                    <h2>Personal Details</h2>
+                </div>
 
                 <div class="form-grid-3">
                     <div class="form-group">
@@ -81,8 +84,8 @@ include 'includes/header.php';
                         </select>
                     </div>
                     <div class="form-group">
-                        <label class="admin-form-label">Date of Birth</label>
-                        <input type="date" id="cand_dob" name="dob" class="form-control bg-white-input" value="" />
+                        <label class="admin-form-label">Date of Birth *</label>
+                        <input type="date" id="cand_dob" name="dob" class="form-control bg-white-input" value="" required />
                     </div>
                 </div>
 
@@ -94,16 +97,16 @@ include 'includes/header.php';
                             title="Please enter exactly 11 digits" />
                     </div>
                     <div class="form-group">
-                        <label class="admin-form-label">ID card Number</label>
+                        <label class="admin-form-label">ID Card Number *</label>
                         <input type="text" id="cand_cnic" name="cnic_number" class="form-control bg-white-input"
-                            value="" placeholder="00000-0000000-0" maxlength="15" inputmode="numeric" />
+                            value="" placeholder="00000-0000000-0" maxlength="15" inputmode="numeric" required />
                     </div>
                 </div>
 
                 <div class="form-group mt-10">
-                    <label class="admin-form-label">Address</label>
+                    <label class="admin-form-label">Address *</label>
                     <textarea id="cand_address" name="address" class="form-control bg-white-input" rows="2"
-                        placeholder="Enter full address"></textarea>
+                        placeholder="Enter full address" required></textarea>
                 </div>
 
                 <div class="form-grid-2 mt-10">
@@ -114,9 +117,9 @@ include 'includes/header.php';
                             maxlength="12" required title="Please enter exactly 11 digits" />
                     </div>
                     <div class="form-group">
-                        <label class="admin-form-label">Emergency Contact Relation</label>
+                        <label class="admin-form-label">Emergency Contact Relation *</label>
                         <input type="text" id="cand_emergency_relation" name="emergency_relation"
-                            class="form-control bg-white-input" value="" placeholder="e.g. Father, Spouse" />
+                            class="form-control bg-white-input" value="" placeholder="e.g. Father, Spouse" required />
                     </div>
                 </div>
 
@@ -128,20 +131,23 @@ include 'includes/header.php';
                     </div>
                 </div>
 
-                <h4 class="font-13 font-600 mb-15 text-primary-color flex-center gap-8 mt-20">
-                    <i data-lucide="building" size="16"></i> Job & Banking
-                </h4>
+                <div class="nj-section-head">
+                    <div class="nj-section-icon" aria-hidden="true">
+                        <i data-lucide="landmark" width="22" height="22"></i>
+                    </div>
+                    <h2>Job & Banking</h2>
+                </div>
 
                 <div class="form-grid-3">
                     <div class="form-group">
-                        <label class="admin-form-label">Job Title</label>
+                        <label class="admin-form-label">Job Title *</label>
                         <input type="text" id="cand_job_title" name="job_title" class="form-control bg-white-input"
-                            value="" placeholder="e.g. Software Engineer" />
+                            value="" placeholder="e.g. Software Engineer" required />
                     </div>
 
                     <div class="form-group">
-                        <label class="admin-form-label">Bank Name</label>
-                        <select id="cand_bank_name" name="bank_name" class="form-control bg-white-input">
+                        <label class="admin-form-label">Bank Name *</label>
+                        <select id="cand_bank_name" name="bank_name" class="form-control bg-white-input" required>
                             <option value="">Select Bank</option>
                             <option value="HBL">HBL</option>
                             <option value="ALHabib">AL Habib</option>
@@ -161,8 +167,8 @@ include 'includes/header.php';
                     </div>
 
                     <div class="form-group">
-                        <label class="admin-form-label">Account Type</label>
-                        <select id="cand_account_type" name="account_type" class="form-control bg-white-input">
+                        <label class="admin-form-label">Account Type *</label>
+                        <select id="cand_account_type" name="account_type" class="form-control bg-white-input" required>
                             <option value="" selected disabled>Select Type</option>
                             <option value="IBN">IBN</option>
                             <option value="IBFT">IBFT</option>
@@ -172,63 +178,66 @@ include 'includes/header.php';
 
                 <div class="form-grid-2 mt-10">
                     <div class="form-group">
-                        <label class="admin-form-label">Account Title</label>
+                        <label class="admin-form-label">Account Title *</label>
                         <input type="text" id="cand_account_title" name="account_title"
-                            class="form-control bg-white-input" value="" placeholder="Account title" />
+                            class="form-control bg-white-input" value="" placeholder="Account title" required />
                     </div>
                     <div class="form-group">
-                        <label class="admin-form-label">Account Number</label>
+                        <label class="admin-form-label">Account Number *</label>
                         <input type="text" id="cand_account_number" name="account_number"
-                            class="form-control bg-white-input" value="" placeholder="0000 0000 0000 0000" />
+                            class="form-control bg-white-input" value="" placeholder="0000 0000 0000 0000" required />
                     </div>
                 </div>
 
                 <div class="form-group mt-10">
-                    <label class="admin-form-label">Bank Branch</label>
+                    <label class="admin-form-label">Bank Branch *</label>
                     <input type="text" id="cand_branch_info" name="branch_info" class="form-control bg-white-input"
-                        value="" placeholder="Branch Code / City" />
+                        value="" placeholder="Branch Code / City" required />
                 </div>
 
-                <h4 class="font-13 font-600 mb-15 text-primary-color flex-center gap-8 mt-20">
-                    <i data-lucide="graduation-cap"></i> Education & Docs
-                </h4>
+                <div class="nj-section-head">
+                    <div class="nj-section-icon" aria-hidden="true">
+                        <i data-lucide="graduation-cap" width="22" height="22"></i>
+                    </div>
+                    <h2>Education & Experience</h2>
+                </div>
 
                 <div class="form-grid-2">
                     <div class="form-group">
-                        <label class="admin-form-label">Qualification</label>
+                        <label class="admin-form-label">Qualification *</label>
                         <input type="text" id="cand_qualification" name="qualification"
-                            class="form-control bg-white-input" value="" placeholder="e.g. BS Computer Science" />
+                            class="form-control bg-white-input" value="" placeholder="e.g. BS Computer Science" required />
                     </div>
                     <div class="form-group">
-                        <label class="admin-form-label">Degree / Certification</label>
+                        <label class="admin-form-label">Degree / Certification *</label>
                         <input type="text" id="cand_degree" name="degree_certification"
-                            class="form-control bg-white-input" value="" placeholder="e.g. Bachelor's / Diploma" />
+                            class="form-control bg-white-input" value="" placeholder="e.g. Bachelor's / Diploma" required />
                     </div>
                 </div>
 
                 <div class="form-grid-2 mt-10">
                     <div class="form-group">
-                        <label class="admin-form-label">College / University</label>
+                        <label class="admin-form-label">College / University *</label>
                         <input type="text" id="cand_college" name="college_university"
-                            class="form-control bg-white-input" value="" placeholder="e.g. University of Karachi" />
+                            class="form-control bg-white-input" value="" placeholder="e.g. University of Karachi" required />
                     </div>
                     <div class="form-group">
-                        <label class="admin-form-label">Professional Expertise</label>
+                        <label class="admin-form-label">Professional Expertise *</label>
                         <input type="text" id="cand_expertise" name="professional_expertise"
-                            class="form-control bg-white-input" value="" placeholder="e.g. Node.js, React, APIs" />
+                            class="form-control bg-white-input" value="" placeholder="e.g. Node.js, React, APIs" required />
                     </div>
                 </div>
 
                 <div class="form-grid-2 mt-10">
                     <div class="form-group">
-                        <label class="admin-form-label">Last Employer</label>
+                        <label class="admin-form-label">Last Employer *</label>
                         <input type="text" id="cand_last_employer" name="last_employer"
-                            class="form-control bg-white-input" value="" placeholder="Company name" />
+                            class="form-control bg-white-input" value="" placeholder="Company name" required />
                     </div>
                     <div class="form-group">
-                        <label class="admin-form-label">Last Job Title</label>
+                        <label class="admin-form-label">Last Job Title *</label>
                         <input type="text" id="cand_last_designation" name="last_designation"
-                            class="form-control bg-white-input" value="" placeholder="Job title" />
+                            class="form-control bg-white-input" value="" placeholder="Job title" required />
                     </div>
                 </div>
 
@@ -245,9 +254,16 @@ include 'includes/header.php';
                     </div>
                 </div>
 
-                <div class="form-grid-3 mt-10">
+                <div class="nj-section-head">
+                    <div class="nj-section-icon" aria-hidden="true">
+                        <i data-lucide="paperclip" width="22" height="22"></i>
+                    </div>
+                    <h2>Document Attachments</h2>
+                </div>
+
+                <div class="form-grid-3">
                     <div class="form-group">
-                        <label class="admin-form-label">Resume Attachment</label>
+                        <label class="admin-form-label">Resume Attachment *</label>
                         <div class="custom-file-upload">
                             <label for="cand_resume_upload" class="file-upload-wrapper" id="cand_resume_wrapper">
                                 <i data-lucide="file-text" size="20"></i>
@@ -287,10 +303,13 @@ include 'includes/header.php';
                     </div>
                 </div>
 
-                <div class="p-15 rounded-12 mt-20 mb-10 border">
-                    <h4 class="font-13 font-600 mb-15 text-primary-color flex-center gap-8">
-                        <i data-lucide="shield-check"></i> Administrative Access
-                    </h4>
+                <div class="p-15 rounded-12 mt-20 mb-10 border onboard-admin-block">
+                    <div class="nj-section-head">
+                        <div class="nj-section-icon" aria-hidden="true">
+                            <i data-lucide="shield-check" width="22" height="22"></i>
+                        </div>
+                        <h2>Administrative Access</h2>
+                    </div>
 
                     <div class="form-grid-3">
                         <div class="form-group">

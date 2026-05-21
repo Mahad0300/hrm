@@ -43,12 +43,15 @@ $employeeSelectSql = "
 try {
     if ($employee_param !== '') {
         $targetSlug = createEmployeeProfileSlug($employee_param);
-        $stmt = $pdo->query($employeeSelectSql . " WHERE e.deleted_at IS NULL ORDER BY e.created_at DESC, e.id DESC");
+        $stmt = $pdo->query($employeeSelectSql . " ORDER BY e.created_at DESC, e.id DESC");
         $employees = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         foreach ($employees as $row) {
             $rowSlug = createEmployeeProfileSlug($row['first_name'], $row['middle_name'] ?? '', $row['last_name']);
             if ($rowSlug === $targetSlug) {
+                if ($id_param !== '' && (string) $row['id'] !== $id_param) {
+                    continue;
+                }
                 $employee = $row;
                 break;
             }
@@ -65,6 +68,19 @@ try {
 if (!$employee) {
     header('Location: employees.php');
     exit;
+}
+
+// Canonical URL: name slug only (no id in address bar)
+if ($employee_param === '' && $id_param !== '') {
+    $canonicalSlug = createEmployeeProfileSlug(
+        $employee['first_name'],
+        $employee['middle_name'] ?? '',
+        $employee['last_name']
+    );
+    if ($canonicalSlug !== '') {
+        header('Location: employee-profile.php?name=' . rawurlencode($canonicalSlug));
+        exit;
+    }
 }
 
 // Format Name
@@ -167,7 +183,7 @@ try {
                         <span class="font-14 font-500 block"><?php echo displayValue($employee['email']); ?></span>
                     </div>
                     <div class="mb-20">
-                        <label class="admin-form-label">Phone Number</label>
+                        <label class="admin-form-label">Phone</label>
                         <span class="font-14 font-500 block"><?php echo displayValue($employee['phone']); ?></span>
                     </div>
                 </div>
@@ -299,13 +315,13 @@ try {
                                     class="font-14 font-500 block"><?php echo !empty($employee['dob']) ? date("F j, Y", strtotime($employee['dob'])) : '-'; ?></span>
                             </div>
                             <div>
-                                <label class="admin-form-label">ID card Number</label>
+                                <label class="admin-form-label">ID Card Number</label>
                                 <span
                                     class="font-14 font-500 block"><?php echo displayValue($employee['cnic_number']); ?></span>
                             </div>
                         </div>
                         <div class="mb-0">
-                            <label class="admin-form-label">Residential Address</label>
+                            <label class="admin-form-label">Address</label>
                             <span
                                 class="font-14 font-500 block"><?php echo displayValue($employee['address']); ?></span>
                         </div>
@@ -317,7 +333,7 @@ try {
                     <div class="card-header p-24 border-bottom">
                         <h3 class="font-16 font-700 flex-center gap-10">
                             <i data-lucide="briefcase" size="20" class="text-primary-color"></i>
-                            Job & Banking Profile
+                            Job & Banking
                         </h3>
                     </div>
                     <div class="card-body p-24">
@@ -341,12 +357,12 @@ try {
                         </div>
                         <div class="form-grid-3 mb-10">
                             <div>
-                                <label class="admin-form-label">Employment Type</label>
+                                <label class="admin-form-label">Job Type</label>
                                 <span
                                     class="font-14 font-500 block"><?php echo displayValue($employee['job_type']); ?></span>
                             </div>
                             <div>
-                                <label class="admin-form-label">Monthly Salary</label>
+                                <label class="admin-form-label">Salary</label>
                                 <span
                                     class="font-14 font-600 block"><?php echo $employee['salary'] ? number_format($employee['salary']) : '-'; ?></span>
                             </div>
@@ -381,7 +397,7 @@ try {
                             </div>
                             <div class="form-grid-2">
                                 <div>
-                                    <label class="admin-form-label">Account number</label>
+                                    <label class="admin-form-label">Account Number</label>
                                     <span
                                         class="font-13 font-600 block ls-05"><?php echo displayValue($employee['account_number']); ?></span>
                                 </div>
@@ -395,7 +411,7 @@ try {
                     </div>
                 </div>
 
-                <!-- Education & Docs -->
+                <!-- Education & Experience -->
                 <div class="premium-card">
                     <div class="card-header p-24 border-bottom">
                         <h3 class="font-16 font-700 flex-center gap-10">
@@ -418,13 +434,12 @@ try {
                         </div>
                         <div class="form-grid-2 mb-30">
                             <div>
-                                <label class="admin-form-label">University / Institute</label>
+                                <label class="admin-form-label">College / University</label>
                                 <span
                                     class="font-14 font-500 block"><?php echo displayValue($employee['college_university']); ?></span>
                             </div>
                             <div>
-                                <label class="admin-form-label">Professional
-                                    Expertise</label>
+                                <label class="admin-form-label">Professional Expertise</label>
                                 <span
                                     class="font-14 font-500 block"><?php echo displayValue($employee['professional_expertise']); ?></span>
                             </div>
@@ -436,7 +451,7 @@ try {
                                     class="font-14 font-500 block"><?php echo displayValue($employee['last_employer']); ?></span>
                             </div>
                             <div>
-                                <label class="admin-form-label">Last Designation</label>
+                                <label class="admin-form-label">Last Job Title</label>
                                 <span
                                     class="font-14 font-500 block"><?php echo displayValue($employee['last_designation']); ?></span>
                             </div>
@@ -457,7 +472,7 @@ try {
 
                         <!-- Documents Section -->
                         <div class="border-top pt-30 mt-30">
-                            <h3 class="font-15 font-700 flex-center gap-10 mb-20 text-primary-color">
+                            <h3 class="font-15 font-700 flex-center gap-10 mb-20 ">
                                 <i data-lucide="paperclip" size="18"></i>
                                 Document Attachments
                             </h3>
@@ -467,7 +482,7 @@ try {
                                 <?php if ($employee['resume_path']): ?>
                                     <a href="../<?php echo $employee['resume_path']; ?>" target="_blank"
                                         class="doc-card border rounded-16 p-20 hover-bg-light transition block no-underline text-dark">
-                                        <label class="admin-form-label cursor-pointer uppercase font-11">Resume Attachment</label>
+                                        <label class="admin-form-label">Resume Attachment</label>
                                         <div class="flex-center gap-12 mt-4">
                                             <div class="icon-square-40 bg-primary-soft text-primary-color flex-shrink-0">
                                                 <i data-lucide="file-text" size="20"></i>
@@ -483,7 +498,7 @@ try {
                                 <?php if ($employee['id_card_path']): ?>
                                     <a href="../<?php echo $employee['id_card_path']; ?>" target="_blank"
                                         class="doc-card border rounded-16 p-20 hover-bg-light transition block no-underline text-dark">
-                                        <label class="admin-form-label cursor-pointer uppercase font-11">ID Card Attachment</label>
+                                        <label class="admin-form-label">ID Card Attachment</label>
                                         <div class="flex-center gap-12 mt-4">
                                             <div class="icon-square-40 bg-success-soft text-success-color flex-shrink-0">
                                                 <i data-lucide="image" size="20"></i>
@@ -503,7 +518,7 @@ try {
                                         ?>
                                         <a href="../<?php echo $doc_path; ?>" target="_blank"
                                             class="doc-card border rounded-16 p-20 hover-bg-light transition block no-underline text-dark">
-                                            <label class="admin-form-label cursor-pointer uppercase font-11">Other Document</label>
+                                            <label class="admin-form-label">Other Documents</label>
                                             <div class="flex-center gap-12 mt-4">
                                                 <div class="icon-square-40 bg-warning-soft text-warning-color flex-shrink-0">
                                                     <i data-lucide="files" size="20"></i>

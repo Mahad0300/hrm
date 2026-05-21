@@ -59,7 +59,7 @@ include 'includes/sidebar.php';
                         <span class="font-14 font-500 block" id="pf_email">-</span>
                     </div>
                     <div class="mb-20">
-                        <label class="admin-form-label">Phone Number</label>
+                        <label class="admin-form-label">Phone</label>
                         <span class="font-14 font-500 block" id="pf_phone">-</span>
                     </div>
                 </div>
@@ -74,8 +74,7 @@ include 'includes/sidebar.php';
                         <span class="font-14 font-500 block" id="pf_emergencyPhone">-</span>
                     </div>
                     <div>
-                        <label class="admin-form-label">Emergency Contact
-                            Relation</label>
+                        <label class="admin-form-label">Emergency Contact Relation</label>
                         <span class="font-14 font-500 block" id="pf_emergencyRelation">-</span>
                     </div>
                 </div>
@@ -142,7 +141,7 @@ include 'includes/sidebar.php';
                                 <span class="font-14 font-500" id="pf_middleName">-</span>
                             </div>
                             <div>
-                                <label class="admin-form-label">Last Name *</label>
+                                <label class="admin-form-label">Last Name</label>
                                 <span class="font-14 font-500" id="pf_lastName">-</span>
                             </div>
                         </div>
@@ -156,7 +155,7 @@ include 'includes/sidebar.php';
                                 <span class="font-14 font-500" id="pf_dob">-</span>
                             </div>
                             <div>
-                                <label class="admin-form-label">ID card Number</label>
+                                <label class="admin-form-label">ID Card Number</label>
                                 <span class="font-14 font-500" id="pf_idCard">-</span>
                             </div>
                         </div>
@@ -209,7 +208,7 @@ include 'includes/sidebar.php';
                         <div class="border-top pt-30 mt-30">
                             <h3 class="font-16 font-700 flex-center gap-10 mb-24">
                                 <i data-lucide="building" size="20" class="text-primary-color"></i>
-                                Banking Information
+                                Bank Information
                             </h3>
 
                             <div class="form-grid-3 mb-24">
@@ -222,15 +221,13 @@ include 'includes/sidebar.php';
                                     <span class="font-13 font-500 block" id="pf_accountType">-</span>
                                 </div>
                                 <div>
-                                    <label class="admin-form-label">Account
-                                        Title</label>
+                                    <label class="admin-form-label">Account Title</label>
                                     <span class="font-13 font-500 block" id="pf_accountTitle">-</span>
                                 </div>
                             </div>
                             <div class="form-grid-2">
                                 <div>
-                                    <label class="admin-form-label">Account
-                                        Number</label>
+                                    <label class="admin-form-label">Account Number</label>
                                     <span class="font-13 font-500 block ls-05" id="pf_accountNumber">-</span>
                                 </div>
                                 <div>
@@ -242,7 +239,7 @@ include 'includes/sidebar.php';
                     </div>
                 </div>
 
-                <!-- Step 3: Education & Docs -->
+                <!-- Step 3: Education & Experience -->
                 <div class="premium-card mb-24">
                     <div class="card-header p-24 border-bottom">
                         <h3 class="font-16 font-700 flex-center gap-10">
@@ -258,20 +255,17 @@ include 'includes/sidebar.php';
                                 <span class="font-14 font-500" id="pf_qualification">-</span>
                             </div>
                             <div>
-                                <label class="admin-form-label">Degree /
-                                    Certification</label>
+                                <label class="admin-form-label">Degree / Certification</label>
                                 <span class="font-14 font-500" id="pf_degreeCert">-</span>
                             </div>
                         </div>
                         <div class="form-grid-2 mb-30">
                             <div>
-                                <label class="admin-form-label">College /
-                                    University</label>
+                                <label class="admin-form-label">College / University</label>
                                 <span class="font-14 font-500" id="pf_college">-</span>
                             </div>
                             <div>
-                                <label class="admin-form-label">Professional
-                                    Expertise</label>
+                                <label class="admin-form-label">Professional Expertise</label>
                                 <span class="font-14 font-500" id="pf_expertise">-</span>
                             </div>
                         </div>
@@ -287,13 +281,11 @@ include 'includes/sidebar.php';
                         </div>
                         <div class="form-grid-2 mb-40">
                             <div>
-                                <label class="admin-form-label">Experience From
-                                    Date</label>
+                                <label class="admin-form-label">Experience From Date</label>
                                 <span class="font-14 font-500" id="pf_expFrom">-</span>
                             </div>
                             <div>
-                                <label class="admin-form-label">Experience To
-                                    Date</label>
+                                <label class="admin-form-label">Experience To Date</label>
                                 <span class="font-14 font-500" id="pf_expTo">-</span>
                             </div>
                         </div>
@@ -302,8 +294,7 @@ include 'includes/sidebar.php';
                             <a href="#" target="_blank"
                                 class="doc-card border rounded-16 p-20 hover-bg-light transition block no-underline"
                                 id="pf_resumeLink">
-                                <label class="admin-form-label cursor-pointer">Resume
-                                    Attachment</label>
+                                <label class="admin-form-label cursor-pointer">Resume Attachment</label>
                                 <div class="flex-center gap-12">
                                     <div class="icon-square-40 bg-primary-soft text-primary-color">
                                         <i data-lucide="file-text" size="20"></i>
@@ -316,8 +307,7 @@ include 'includes/sidebar.php';
                             <a href="#" target="_blank"
                                 class="doc-card border rounded-16 p-20 hover-bg-light transition block no-underline"
                                 id="pf_idDocLink">
-                                <label class="admin-form-label cursor-pointer">ID Card Attachment
-                                    *</label>
+                                <label class="admin-form-label cursor-pointer">ID Card Attachment</label>
                                 <div class="flex-center gap-12">
                                     <div class="icon-square-40 bg-success-soft text-success-color">
                                         <i data-lucide="image" size="20"></i>
@@ -360,17 +350,17 @@ include 'includes/sidebar.php';
                     </div>
                     <div class="form-grid-3">
                         <div class="form-group">
-                            <label class="admin-form-label" for="ep_firstName">First name *</label>
+                            <label class="admin-form-label" for="ep_firstName">First Name *</label>
                             <input type="text" class="form-control bg-white-input" id="ep_firstName" name="firstName"
                                 required maxlength="80">
                         </div>
                         <div class="form-group">
-                            <label class="admin-form-label" for="ep_middleName">Middle name</label>
+                            <label class="admin-form-label" for="ep_middleName">Middle Name</label>
                             <input type="text" class="form-control bg-white-input" id="ep_middleName" name="middleName"
                                 maxlength="80" placeholder="-">
                         </div>
                         <div class="form-group">
-                            <label class="admin-form-label" for="ep_lastName">Last name</label>
+                            <label class="admin-form-label" for="ep_lastName">Last Name *</label>
                             <input type="text" class="form-control bg-white-input" id="ep_lastName" name="lastName"
                                 required maxlength="80">
                         </div>
@@ -385,7 +375,7 @@ include 'includes/sidebar.php';
                             </select>
                         </div>
                         <div class="form-group">
-                            <label class="admin-form-label" for="ep_dob">Date of birth</label>
+                            <label class="admin-form-label" for="ep_dob">Date of Birth</label>
                             <input type="date" class="form-control bg-white-input" id="ep_dob" name="dob">
                         </div>
                     </div>
@@ -396,7 +386,7 @@ include 'includes/sidebar.php';
                                 maxlength="12" placeholder="0000-0000000">
                         </div>
                         <div class="form-group">
-                            <label class="admin-form-label" for="ep_idCard">ID card number</label>
+                            <label class="admin-form-label" for="ep_idCard">ID Card Number</label>
                             <input type="text" class="form-control bg-white-input" id="ep_idCard" name="idCard"
                                 maxlength="15" placeholder="00000-0000000-0">
                         </div>
@@ -413,7 +403,7 @@ include 'includes/sidebar.php';
                                 maxlength="120" autocomplete="email" readonly>
                         </div>
                         <div class="form-group">
-                            <label class="admin-form-label" for="ep_jobTitle">Job title (shown on profile)</label>
+                            <label class="admin-form-label" for="ep_jobTitle">Job Title</label>
                             <input type="text" class="form-control bg-white-input" id="ep_jobTitle" name="jobTitle"
                                 maxlength="80" readonly>
                         </div>
@@ -428,12 +418,12 @@ include 'includes/sidebar.php';
                     </div>
                     <div class="form-grid-2">
                         <div class="form-group mb-0">
-                            <label class="admin-form-label" for="ep_emergencyPhone">Emergency phone</label>
+                            <label class="admin-form-label" for="ep_emergencyPhone">Emergency Contact</label>
                             <input type="text" class="form-control bg-white-input" id="ep_emergencyPhone"
                                 name="emergencyPhone" maxlength="12" placeholder="0000-0000000">
                         </div>
                         <div class="form-group mb-0">
-                            <label class="admin-form-label" for="ep_emergencyRelation">Relation</label>
+                            <label class="admin-form-label" for="ep_emergencyRelation">Emergency Contact Relation</label>
                             <input type="text" class="form-control bg-white-input" id="ep_emergencyRelation"
                                 name="emergencyRelation" maxlength="60">
                         </div>
@@ -444,11 +434,11 @@ include 'includes/sidebar.php';
                     <div class="profile-edit-section__head">
                         <span class="icon-box-32 primary" aria-hidden="true"><i data-lucide="building-2"
                                 size="18"></i></span>
-                        <h4 class="profile-edit-section__title">Banking Information</h4>
+                        <h4 class="profile-edit-section__title">Bank Information</h4>
                     </div>
                     <div class="form-grid-3">
                         <div class="form-group">
-                            <label class="admin-form-label" for="ep_bankName">Bank name</label>
+                            <label class="admin-form-label" for="ep_bankName">Bank Name</label>
                             <select class="form-control bg-white-input" id="ep_bankName" name="bankName">
                                 <option value="">Select Bank</option>
                                 <option value="HBL">HBL</option>
@@ -468,7 +458,7 @@ include 'includes/sidebar.php';
                             </select>
                         </div>
                         <div class="form-group">
-                            <label class="admin-form-label" for="ep_accountType">Account type</label>
+                            <label class="admin-form-label" for="ep_accountType">Account Type</label>
                             <select class="form-control bg-white-input" id="ep_accountType" name="accountType">
                                 <option value="">Select Type</option>
                                 <option value="IBN">IBN</option>
@@ -476,19 +466,19 @@ include 'includes/sidebar.php';
                             </select>
                         </div>
                         <div class="form-group">
-                            <label class="admin-form-label" for="ep_accountTitle">Account title</label>
+                            <label class="admin-form-label" for="ep_accountTitle">Account Title</label>
                             <input type="text" class="form-control bg-white-input" id="ep_accountTitle"
                                 name="accountTitle" maxlength="120">
                         </div>
                     </div>
                     <div class="form-grid-2">
                         <div class="form-group mb-0">
-                            <label class="admin-form-label" for="ep_accountNumber">Account number</label>
+                            <label class="admin-form-label" for="ep_accountNumber">Account Number</label>
                             <input type="text" class="form-control bg-white-input" id="ep_accountNumber"
                                 name="accountNumber" maxlength="80">
                         </div>
                         <div class="form-group mb-0">
-                            <label class="admin-form-label" for="ep_bankBranch">Bank branch</label>
+                            <label class="admin-form-label" for="ep_bankBranch">Bank Branch</label>
                             <input type="text" class="form-control bg-white-input" id="ep_bankBranch" name="bankBranch"
                                 maxlength="120">
                         </div>
@@ -499,7 +489,7 @@ include 'includes/sidebar.php';
                     <div class="profile-edit-section__head">
                         <span class="icon-box-32 primary" aria-hidden="true"><i data-lucide="graduation-cap"
                                 size="18"></i></span>
-                        <h4 class="profile-edit-section__title">Education &amp; Docs</h4>
+                        <h4 class="profile-edit-section__title">Education &amp; Experience</h4>
                     </div>
                     <div class="form-grid-2">
                         <div class="form-group">
@@ -508,48 +498,48 @@ include 'includes/sidebar.php';
                                 name="qualification" maxlength="120">
                         </div>
                         <div class="form-group">
-                            <label class="admin-form-label" for="ep_degreeCert">Degree / certification</label>
+                            <label class="admin-form-label" for="ep_degreeCert">Degree / Certification</label>
                             <input type="text" class="form-control bg-white-input" id="ep_degreeCert" name="degreeCert"
                                 maxlength="200">
                         </div>
                     </div>
                     <div class="form-grid-2">
                         <div class="form-group">
-                            <label class="admin-form-label" for="ep_college">College / university</label>
+                            <label class="admin-form-label" for="ep_college">College / University</label>
                             <input type="text" class="form-control bg-white-input" id="ep_college" name="college"
                                 maxlength="120">
                         </div>
                         <div class="form-group">
-                            <label class="admin-form-label" for="ep_expertise">Professional expertise</label>
+                            <label class="admin-form-label" for="ep_expertise">Professional Expertise</label>
                             <input type="text" class="form-control bg-white-input" id="ep_expertise" name="expertise"
                                 maxlength="200">
                         </div>
                     </div>
                     <div class="form-grid-2">
                         <div class="form-group">
-                            <label class="admin-form-label" for="ep_lastEmployer">Last employer</label>
+                            <label class="admin-form-label" for="ep_lastEmployer">Last Employer</label>
                             <input type="text" class="form-control bg-white-input" id="ep_lastEmployer"
                                 name="lastEmployer" maxlength="120">
                         </div>
                         <div class="form-group">
-                            <label class="admin-form-label" for="ep_prevJobTitle">Last job title</label>
+                            <label class="admin-form-label" for="ep_prevJobTitle">Last Job Title</label>
                             <input type="text" class="form-control bg-white-input" id="ep_prevJobTitle"
                                 name="prevJobTitle" maxlength="120">
                         </div>
                     </div>
                     <div class="form-grid-2">
                         <div class="form-group">
-                            <label class="admin-form-label" for="ep_expFrom">Experience from</label>
+                            <label class="admin-form-label" for="ep_expFrom">Experience From Date</label>
                             <input type="date" class="form-control bg-white-input" id="ep_expFrom" name="expFrom">
                         </div>
                         <div class="form-group">
-                            <label class="admin-form-label" for="ep_expTo">Experience to</label>
+                            <label class="admin-form-label" for="ep_expTo">Experience To Date</label>
                             <input type="date" class="form-control bg-white-input" id="ep_expTo" name="expTo">
                         </div>
                     </div>
                     <div class="form-grid-3">
                         <div class="form-group mb-0">
-                            <label class="font-11 font-600 text-light mb-1 block uppercase">Resume Attachment</label>
+                            <label class="admin-form-label">Resume Attachment</label>
                             <div class="custom-file-upload">
                                 <label for="ep_resumeFile" class="file-upload-wrapper" id="ep_resume_wrapper">
                                     <i data-lucide="file-text" size="20"></i>
@@ -563,11 +553,11 @@ include 'includes/sidebar.php';
                             <input type="hidden" id="ep_resumeLabel" name="resumeLabel" value="">
                         </div>
                         <div class="form-group mb-0">
-                            <label class="font-11 font-600 text-light mb-1 block uppercase">ID Card Attachment</label>
+                            <label class="admin-form-label">ID Card Attachment</label>
                             <div class="custom-file-upload">
                                 <label for="ep_idFile" class="file-upload-wrapper" id="ep_id_wrapper">
                                     <i data-lucide="image" size="20"></i>
-                                    <span class="file-upload-label">Upload ID card</span>
+                                    <span class="file-upload-label">Upload ID Card</span>
                                     <span class="file-upload-info" id="ep_id_filename">PNG, JPG or PDF</span>
                                 </label>
                                 <input type="file" id="ep_idFile" name="id_file" class="hidden-file-input"
@@ -577,7 +567,7 @@ include 'includes/sidebar.php';
                             <input type="hidden" id="ep_idDocLabel" name="idDocLabel" value="">
                         </div>
                         <div class="form-group mb-0">
-                            <label class="font-11 font-600 text-light mb-1 block uppercase">Other documents</label>
+                            <label class="admin-form-label">Other Documents</label>
                             <div class="custom-file-upload">
                                 <label for="ep_otherFile" class="file-upload-wrapper" id="ep_other_wrapper">
                                     <i data-lucide="files" size="20"></i>

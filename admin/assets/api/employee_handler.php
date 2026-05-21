@@ -49,6 +49,147 @@ function uploadFile($file, $targetDir) {
     return null;
 }
 
+/**
+ * Email availability: active row blocks use; exited row still holds UNIQUE email.
+ *
+ * @return array{code: 'available'|'active'|'exited', employee_id?: int, employee_name?: string}
+ */
+function resolveEmployeeEmailAvailability(PDO $pdo, string $email, ?int $excludeId = null): array
+{
+    $email = trim($email);
+    $activeSql = "SELECT id, first_name, last_name FROM employees WHERE email = ? AND deleted_at IS NULL";
+    $activeParams = [$email];
+    if ($excludeId) {
+        $activeSql .= " AND id != ?";
+        $activeParams[] = $excludeId;
+    }
+    $stmt = $pdo->prepare($activeSql);
+    $stmt->execute($activeParams);
+    $active = $stmt->fetch(PDO::FETCH_ASSOC);
+    if ($active) {
+        return [
+            'code' => 'active',
+            'employee_id' => (int) $active['id'],
+            'employee_name' => trim($active['first_name'] . ' ' . $active['last_name']),
+        ];
+    }
+
+    $exitedSql = "SELECT id, first_name, last_name FROM employees WHERE email = ? AND deleted_at IS NOT NULL";
+    $exitedParams = [$email];
+    if ($excludeId) {
+        $exitedSql .= " AND id != ?";
+        $exitedParams[] = $excludeId;
+    }
+    $exitedStmt = $pdo->prepare($exitedSql);
+    $exitedStmt->execute($exitedParams);
+    $exited = $exitedStmt->fetch(PDO::FETCH_ASSOC);
+    if ($exited) {
+        return [
+            'code' => 'exited',
+            'employee_id' => (int) $exited['id'],
+            'employee_name' => trim($exited['first_name'] . ' ' . $exited['last_name']),
+        ];
+    }
+
+    return ['code' => 'available'];
+}
+
+function employeeEmailAvailabilityMessage(array $availability): string
+{
+    if ($availability['code'] === 'active') {
+        return 'This email is already registered to an active employee.';
+    }
+    if ($availability['code'] === 'exited') {
+        $name = $availability['employee_name'] ?: 'a former employee';
+        $empId = $availability['employee_id'];
+        return "This email belongs to an exited employee ({$name}, EMP-{$empId}). Restore them from the Exit list or use a different email.";
+    }
+    return 'Email is available.';
+}
+
+function assertEmployeeEmailAvailable(PDO $pdo, string $email, ?int $excludeId = null): void
+{
+    $availability = resolveEmployeeEmailAvailability($pdo, $email, $excludeId);
+    if ($availability['code'] !== 'available') {
+        throw new Exception(employeeEmailAvailabilityMessage($availability));
+    }
+}
+
+/** Required-field rules: optional = experience dates, other docs, middle_name. */
+function validateEmployeeProfilePayload(array $post, array $files, string $context, ?array $existing = null): void
+{
+    $optional = array_flip(['middle_name', 'experience_from', 'experience_to', 'other_documents']);
+    $adminOnly = array_flip(['department_id', 'shift_id', 'job_type', 'salary', 'joining_date']);
+    $labels = [
+        'first_name' => 'First Name', 'last_name' => 'Last Name', 'gender' => 'Gender', 'phone' => 'Phone',
+        'email' => 'Email', 'dob' => 'Date of Birth', 'cnic_number' => 'ID Card Number', 'address' => 'Address',
+        'emergency_contact' => 'Emergency Contact', 'emergency_relation' => 'Emergency Contact Relation',
+        'job_title' => 'Job Title', 'bank_name' => 'Bank Name', 'account_type' => 'Account Type',
+        'account_title' => 'Account Title', 'account_number' => 'Account Number', 'branch_info' => 'Bank Branch',
+        'qualification' => 'Qualification', 'degree_certification' => 'Degree / Certification',
+        'college_university' => 'College / University', 'professional_expertise' => 'Professional Expertise',
+        'last_employer' => 'Last Employer', 'last_designation' => 'Last Job Title',
+        'department_id' => 'Department', 'shift_id' => 'Shift Timing', 'job_type' => 'Job Type',
+        'salary' => 'Salary', 'joining_date' => 'Joining Date',
+    ];
+
+    $textFields = [
+        'first_name', 'last_name', 'gender', 'phone', 'email', 'dob', 'cnic_number', 'address',
+        'emergency_contact', 'emergency_relation', 'job_title',
+        'bank_name', 'account_type', 'account_title', 'account_number', 'branch_info',
+        'qualification', 'degree_certification', 'college_university', 'professional_expertise',
+        'last_employer', 'last_designation',
+    ];
+
+    if (in_array($context, ['admin_create', 'admin_finalize', 'admin_update'], true)) {
+        $textFields = array_merge($textFields, ['department_id', 'shift_id', 'job_type', 'salary', 'joining_date']);
+    }
+
+    foreach ($textFields as $field) {
+        if (isset($optional[$field]) || ($context === 'onboard' && isset($adminOnly[$field]))) {
+            continue;
+        }
+        if (trim((string) ($post[$field] ?? '')) === '') {
+            throw new Exception(($labels[$field] ?? $field) . ' is required.');
+        }
+    }
+
+    if (!filter_var(trim($post['email'] ?? ''), FILTER_VALIDATE_EMAIL)) {
+        throw new Exception('Invalid email format.');
+    }
+    if (strlen(preg_replace('/\D/', '', (string) ($post['phone'] ?? ''))) !== 11) {
+        throw new Exception('Phone number must be exactly 11 digits.');
+    }
+    if (strlen(preg_replace('/\D/', '', (string) ($post['emergency_contact'] ?? ''))) !== 11) {
+        throw new Exception('Emergency contact must be exactly 11 digits.');
+    }
+    if (strlen(preg_replace('/\D/', '', (string) ($post['cnic_number'] ?? ''))) < 13) {
+        throw new Exception('ID card number must be at least 13 digits.');
+    }
+
+    if (in_array($context, ['admin_create', 'admin_finalize'], true)) {
+        $pwd = trim($post[$context === 'admin_finalize' ? 'candidate_admin_password' : 'password'] ?? '');
+        if ($pwd === '') {
+            throw new Exception('Login password is required.');
+        }
+        if (strlen($pwd) < 6) {
+            throw new Exception('Login password must be at least 6 characters.');
+        }
+    }
+
+    $hasResume = (!empty($files['resume']['name']) && ($files['resume']['error'] ?? UPLOAD_ERR_NO_FILE) === UPLOAD_ERR_OK)
+        || !empty($existing['resume_path']);
+    $hasId = (!empty($files['id_card']['name']) && ($files['id_card']['error'] ?? UPLOAD_ERR_NO_FILE) === UPLOAD_ERR_OK)
+        || !empty($existing['id_card_path']);
+
+    if (!$hasResume) {
+        throw new Exception('Resume attachment is required.');
+    }
+    if (!$hasId) {
+        throw new Exception('ID card attachment is required.');
+    }
+}
+
 switch ($action) {
         case 'fetch_pending':
         try {
@@ -176,12 +317,20 @@ switch ($action) {
         }
 
         try {
-            $stmt = $pdo->prepare("SELECT id FROM employees WHERE email = ? AND deleted_at IS NULL");
-            $stmt->execute([$email]);
-            if ($stmt->rowCount() > 0) {
-                echo json_encode(['status' => 'error', 'message' => 'This email is already registered.']);
-            } else {
+            $excludeId = isset($_GET['exclude_id']) ? (int) $_GET['exclude_id'] : null;
+            $availability = resolveEmployeeEmailAvailability($pdo, $email, $excludeId ?: null);
+            if ($availability['code'] === 'available') {
                 echo json_encode(['status' => 'success', 'message' => 'Email is available.']);
+            } elseif ($availability['code'] === 'exited') {
+                echo json_encode([
+                    'status' => 'exited',
+                    'code' => 'exit_employee',
+                    'message' => employeeEmailAvailabilityMessage($availability),
+                    'employee_id' => $availability['employee_id'],
+                    'employee_name' => $availability['employee_name'] ?? null,
+                ]);
+            } else {
+                echo json_encode(['status' => 'error', 'message' => employeeEmailAvailabilityMessage($availability)]);
             }
         } catch (PDOException $e) {
             echo json_encode(['status' => 'error', 'message' => 'Database error.']);
@@ -206,26 +355,18 @@ switch ($action) {
                 $candidate_id = $_POST['candidate_id'] ?? null;
                 $job_title = trim($_POST['job_title'] ?? '');
 
-                // Enterprise Validations (Clean non-digits for validation)
-                if (empty($f_name) || empty($l_name) || empty($email)) {
+                $validationContext = ($action === 'onboard') ? 'onboard' : (($action === 'add') ? 'admin_create' : null);
+                if ($validationContext) {
+                    validateEmployeeProfilePayload($_POST, $_FILES, $validationContext, null);
+                } elseif (empty($f_name) || empty($l_name) || empty($email)) {
                     throw new Exception("First Name, Last Name, and Email are mandatory.");
                 }
+
                 if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
                     throw new Exception("Invalid email format.");
                 }
 
-                // Check for duplicate email
-                $emailCheck = $pdo->prepare("SELECT id FROM employees WHERE email = ? AND deleted_at IS NULL");
-                $emailCheck->execute([$email]);
-                if ($emailCheck->rowCount() > 0) {
-                    throw new Exception("This email is already registered. Please use a different email or contact HR.");
-                }
-
-                // Clean and Validate Phone
-                $clean_phone = preg_replace('/\D/', '', $phone);
-                if (!empty($phone) && !validatePhone($clean_phone)) {
-                    throw new Exception("Phone number must be exactly 11 digits.");
-                }
+                assertEmployeeEmailAvailable($pdo, $email);
 
                 // File Uploads
                 $id_card_path = uploadFile($_FILES['id_card'] ?? null, 'uploads/employees/id_cards/');
@@ -254,12 +395,20 @@ switch ($action) {
                 }
                 $other_docs_json = !empty($other_docs_paths) ? json_encode($other_docs_paths) : null;
 
-                if ($action === 'onboard' && !$id_card_path) {
-                    throw new Exception("ID Card Attachment is required for onboarding.");
+                if ($validationContext && !$id_card_path) {
+                    throw new Exception("ID card attachment is required.");
+                }
+                if ($validationContext && !$resume_path) {
+                    throw new Exception("Resume attachment is required.");
                 }
 
-                // Temporary Password for new employees
-                $password = ($action === 'onboard') ? '' : password_hash('Emp123@#', PASSWORD_DEFAULT);
+                if ($action === 'onboard') {
+                    $password = '';
+                } elseif ($action === 'add') {
+                    $password = password_hash(trim($_POST['password']), PASSWORD_DEFAULT);
+                } else {
+                    $password = password_hash('Emp123@#', PASSWORD_DEFAULT);
+                }
 
                 // Determine initial status
                 $initialStatus = 'Pending';
@@ -298,8 +447,30 @@ switch ($action) {
                 ]);
                 $employee_id = $pdo->lastInsertId();
 
-                // 2. Banking Info (If provided)
-                if (!empty($_POST['bank_name'])) {
+                if ($validationContext) {
+                    $b_stmt = $pdo->prepare("INSERT INTO banking_info (employee_id, bank_name, account_type, account_title, account_number, branch_info) VALUES (?, ?, ?, ?, ?, ?)");
+                    $b_stmt->execute([
+                        $employee_id,
+                        $_POST['bank_name'],
+                        $_POST['account_type'] ?? 'IBN',
+                        $_POST['account_title'] ?? '',
+                        $_POST['account_number'] ?? '',
+                        $_POST['branch_info'] ?? ''
+                    ]);
+
+                    $e_stmt = $pdo->prepare("INSERT INTO education_experience (employee_id, qualification, degree_cert, university, expertise, last_employer, last_job_title, exp_from, exp_to) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
+                    $e_stmt->execute([
+                        $employee_id,
+                        $_POST['qualification'] ?? '',
+                        $_POST['degree_certification'] ?? '',
+                        $_POST['college_university'] ?? '',
+                        $_POST['professional_expertise'] ?? '',
+                        $_POST['last_employer'] ?? '',
+                        $_POST['last_designation'] ?? '',
+                        !empty($_POST['experience_from']) ? $_POST['experience_from'] : null,
+                        !empty($_POST['experience_to']) ? $_POST['experience_to'] : null
+                    ]);
+                } elseif (!empty($_POST['bank_name'])) {
                     $b_stmt = $pdo->prepare("INSERT INTO banking_info (employee_id, bank_name, account_type, account_title, account_number, branch_info) VALUES (?, ?, ?, ?, ?, ?)");
                     $b_stmt->execute([
                         $employee_id,
@@ -311,8 +482,7 @@ switch ($action) {
                     ]);
                 }
 
-                // 3. Education & Experience (If provided)
-                if (!empty($_POST['qualification']) || !empty($_POST['last_employer'])) {
+                if (!$validationContext && (!empty($_POST['qualification']) || !empty($_POST['last_employer']))) {
                     $e_stmt = $pdo->prepare("INSERT INTO education_experience (employee_id, qualification, degree_cert, university, expertise, last_employer, last_job_title, exp_from, exp_to) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
                     $e_stmt->execute([
                         $employee_id,
@@ -344,9 +514,16 @@ switch ($action) {
 
                 echo json_encode(['status' => 'success', 'message' => 'Employee record created successfully.', 'id' => $employee_id]);
 
+            } catch (PDOException $e) {
+                if ($pdo->inTransaction()) $pdo->rollBack();
+                $message = 'A server error occurred. Please try again.';
+                if (strpos($e->getMessage(), '1062') !== false && stripos($e->getMessage(), 'email') !== false) {
+                    $message = 'This email is already in use. If the employee previously exited, restore them from the Exit list or use a different email.';
+                }
+                echo json_encode(['status' => 'error', 'message' => $message]);
             } catch (Exception $e) {
                 if ($pdo->inTransaction()) $pdo->rollBack();
-                echo json_encode(['status' => 'error', 'message' => 'A server error occurred. Please try again.']);
+                echo json_encode(['status' => 'error', 'message' => $e->getMessage()]);
             }
         }
         break;
@@ -392,10 +569,24 @@ switch ($action) {
         try {
             $pdo->beginTransaction();
 
+            $existingStmt = $pdo->prepare("SELECT * FROM employees WHERE id = ? AND deleted_at IS NULL");
+            $existingStmt->execute([$id]);
+            $existingRow = $existingStmt->fetch(PDO::FETCH_ASSOC);
+            if (!$existingRow) {
+                throw new Exception('Employee not found.');
+            }
+
+            $updateContext = array_key_exists('candidate_admin_password', $_POST) ? 'admin_finalize' : 'admin_update';
+            validateEmployeeProfilePayload($_POST, $_FILES, $updateContext, $existingRow);
+
+            $newEmail = trim($_POST['email'] ?? '');
+            if (!filter_var($newEmail, FILTER_VALIDATE_EMAIL)) {
+                throw new Exception('Invalid email format.');
+            }
+            assertEmployeeEmailAvailable($pdo, $newEmail, (int) $id);
+
             // 0. Fetch current salary to check for Increments/Decrements
-            $chk_stmt = $pdo->prepare("SELECT salary FROM employees WHERE id = ?");
-            $chk_stmt->execute([$id]);
-            $old_salary = (float)$chk_stmt->fetchColumn() ?: 0;
+            $old_salary = (float)($existingRow['salary'] ?? 0);
             $new_salary = (float)($_POST['salary'] ?? 0);
 
             // 0. Handle File Uploads for Edit
@@ -475,6 +666,13 @@ switch ($action) {
             if (!empty($_POST['candidate_admin_password'])) {
                 $sql .= ", password = ?";
                 $params[] = password_hash($_POST['candidate_admin_password'], PASSWORD_DEFAULT);
+            } elseif (!empty($_POST['password'])) {
+                $editPwd = trim($_POST['password']);
+                if (strlen($editPwd) < 6) {
+                    throw new Exception('Login password must be at least 6 characters.');
+                }
+                $sql .= ", password = ?";
+                $params[] = password_hash($editPwd, PASSWORD_DEFAULT);
             }
 
             $sql .= " WHERE id = ?";
@@ -545,12 +743,23 @@ switch ($action) {
             header('Content-Type: application/json');
             echo json_encode(['status' => 'success', 'message' => 'Employee record finalized successfully.']);
             exit;
+        } catch (PDOException $e) {
+            if ($pdo->inTransaction()) {
+                $pdo->rollBack();
+            }
+            $message = 'A server error occurred. Please try again.';
+            if (strpos($e->getMessage(), '1062') !== false && stripos($e->getMessage(), 'email') !== false) {
+                $message = 'This email is already in use. If the employee previously exited, restore them from the Exit list or use a different email.';
+            }
+            header('Content-Type: application/json');
+            echo json_encode(['status' => 'error', 'message' => $message]);
+            exit;
         } catch (Exception $e) {
             if ($pdo->inTransaction()) {
                 $pdo->rollBack();
             }
             header('Content-Type: application/json');
-            echo json_encode(['status' => 'error', 'message' => 'A server error occurred. Please try again.']);
+            echo json_encode(['status' => 'error', 'message' => $e->getMessage()]);
             exit;
         }
         break;

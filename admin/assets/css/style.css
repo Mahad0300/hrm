@@ -3862,6 +3862,16 @@ a.stat-card.stat-card--link:focus-visible {
     }
 }
 
+/* SweetAlert2 above app modals (modal-overlay z-index: 2000) */
+.swal2-container {
+    z-index: 10000 !important;
+}
+
+.file-upload-wrapper.file-upload-error {
+    border-color: #ef4444 !important;
+    background: rgba(239, 68, 68, 0.06) !important;
+}
+
 /* Modal Overlay */
 .modal-overlay {
     position: fixed;
@@ -4644,17 +4654,18 @@ a.stat-card.stat-card--link:focus-visible {
 .step-indicators {
     display: flex;
     justify-content: space-between;
+    margin-top: 5px;
     margin-bottom: 40px;
     position: relative;
-    padding: 0 10px;
+    padding: 0 60px;
 }
 
 .step-indicators::before {
     content: '';
     position: absolute;
     top: 18px;
-    left: 20px;
-    right: 20px;
+    left: 65px;
+    right: 65px;
     height: 2px;
     background: #f1f5f9;
     z-index: 1;
@@ -5301,11 +5312,70 @@ a.stat-card.stat-card--link:focus-visible {
     color: var(--primary-color);
 }
 
-/* Candidates modal icon theme (override Lucide defaults) */
-#candidateEmployeeModal i,
-#candidateEmployeeModal svg {
+/* Candidates modal: purple icons in body/close — not on solid primary submit button */
+#candidateEmployeeModal .modal-body i,
+#candidateEmployeeModal .modal-body svg,
+#candidateEmployeeModal .modal-header i,
+#candidateEmployeeModal .modal-header svg,
+#candidateEmployeeModal .custom-file-upload i,
+#candidateEmployeeModal .custom-file-upload svg,
+#candidateEmployeeModal #togglePasswordBtn i,
+#candidateEmployeeModal #togglePasswordBtn svg {
     color: var(--primary-color) !important;
     stroke: var(--primary-color) !important;
+}
+
+#candidateEmployeeModal .modal-footer .btn-primary:not(.no-bg) i,
+#candidateEmployeeModal .modal-footer .btn-primary:not(.no-bg) svg {
+    color: #fff !important;
+    stroke: #fff !important;
+}
+
+/* Administrative Onboarding — section headings (joining-form style) */
+#candidateEmployeeModal .nj-section-head {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin: 28px 0 18px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid var(--border-color, #ececf3);
+}
+
+#candidateEmployeeModal .nj-section-head:first-child {
+    margin-top: 0;
+}
+
+#candidateEmployeeModal .nj-section-icon {
+    flex-shrink: 0;
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(var(--primary-rgb, 108, 76, 241), 0.1);
+    color: var(--primary-color, #6c4cf1);
+    border: 1px solid rgba(var(--primary-rgb, 108, 76, 241), 0.22);
+    box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+}
+
+#candidateEmployeeModal .nj-section-head h2 {
+    margin: 0;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--text-dark, #0f172a);
+    letter-spacing: -0.02em;
+    line-height: 1.3;
+}
+
+#candidateEmployeeModal .onboard-admin-block {
+    margin-top: 8px;
+}
+
+#candidateEmployeeModal .onboard-admin-block .nj-section-head {
+    margin-top: 0;
+    margin-bottom: 16px;
+    padding-bottom: 12px;
 }
 
 /* Employee profile heading icons theme (match --primary-color) */

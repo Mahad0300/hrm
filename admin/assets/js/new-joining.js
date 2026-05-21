@@ -18,7 +18,19 @@ document.addEventListener('DOMContentLoaded', () => {
             // Prevent multiple submissions
             if (submitBtn.disabled) return;
 
-            // Basic Validation
+            const hasResume = document.getElementById('cand_resume_wrapper')?.classList.contains('has-file')
+                || (document.getElementById('cand_resume_upload')?.files?.length > 0);
+            const hasIdCard = document.getElementById('cand_id_wrapper')?.classList.contains('has-file')
+                || (document.getElementById('cand_id_upload')?.files?.length > 0);
+            if (!hasResume) {
+                Swal.fire('Attachment Required', 'Resume attachment is required.', 'warning');
+                return;
+            }
+            if (!hasIdCard) {
+                Swal.fire('Attachment Required', 'ID Card Attachment is required.', 'warning');
+                return;
+            }
+
             if (!this.checkValidity()) {
                 this.reportValidity();
                 return;
@@ -151,6 +163,10 @@ document.addEventListener('DOMContentLoaded', () => {
                     candEmailFeedback.textContent = '✅ ' + result.message;
                     candEmailFeedback.style.color = '#10b981';
                     candEmail.style.borderColor = '#10b981';
+                } else if (result.status === 'exited') {
+                    candEmailFeedback.textContent = '⚠️ ' + result.message;
+                    candEmailFeedback.style.color = '#d97706';
+                    candEmail.style.borderColor = '#f59e0b';
                 } else {
                     candEmailFeedback.textContent = '⚠️ ' + result.message;
                     candEmailFeedback.style.color = '#ef4444';

@@ -40,7 +40,7 @@ include 'includes/sidebar.php';
                         Primary Contact
                     </h3>
                     <div class="mb-20">
-                        <label class="admin-form-label">Email *</label>
+                        <label class="admin-form-label">Email</label>
                         <span class="font-14 font-500 block">emma.w@rtg.com</span>
                     </div>
                     <div class="mb-20">
@@ -59,8 +59,7 @@ include 'includes/sidebar.php';
                         <span class="font-14 font-500 block">+1 (555) 902-1122</span>
                     </div>
                     <div>
-                        <label class="admin-form-label">Emergency Contact
-                            Relation</label>
+                        <label class="admin-form-label">Emergency Contact Relation</label>
                         <span class="font-14 font-500 block">Spouse</span>
                     </div>
                 </div>
@@ -138,7 +137,7 @@ include 'includes/sidebar.php';
                     <div class="card-body p-24">
                         <div class="form-grid-3 mb-30">
                             <div>
-                                <label class="admin-form-label">First Name *</label>
+                                <label class="admin-form-label">First Name</label>
                                 <span class="font-14 font-500">Emma</span>
                             </div>
                             <div>
@@ -146,13 +145,13 @@ include 'includes/sidebar.php';
                                 <span class="font-14 font-500">-</span>
                             </div>
                             <div>
-                                <label class="admin-form-label">Last Name *</label>
+                                <label class="admin-form-label">Last Name</label>
                                 <span class="font-14 font-500">Williams</span>
                             </div>
                         </div>
                         <div class="form-grid-3 mb-30">
                             <div>
-                                <label class="admin-form-label">Gender *</label>
+                                <label class="admin-form-label">Gender</label>
                                 <span class="font-14 font-500">Female</span>
                             </div>
                             <div>
@@ -160,7 +159,7 @@ include 'includes/sidebar.php';
                                 <span class="font-14 font-500">June 15, 1995</span>
                             </div>
                             <div>
-                                <label class="admin-form-label">ID card Number</label>
+                                <label class="admin-form-label">ID Card Number</label>
                                 <span class="font-14 font-500">42101-5829102-1</span>
                             </div>
                         </div>
@@ -214,7 +213,7 @@ include 'includes/sidebar.php';
                         <div class="border-top pt-30 mt-30">
                             <h3 class="font-16 font-700 flex-center gap-10 mb-24">
                                 <i data-lucide="building" size="20" class="text-primary-color"></i>
-                                Banking Information
+                                Bank Information
                             </h3>
 
                             <div class="form-grid-3 mb-24">
@@ -227,15 +226,13 @@ include 'includes/sidebar.php';
                                     <span class="font-13 font-500 block">Savings</span>
                                 </div>
                                 <div>
-                                    <label class="admin-form-label">Account
-                                        Title</label>
+                                    <label class="admin-form-label">Account Title</label>
                                     <span class="font-13 font-500 block">Emma Williams</span>
                                 </div>
                             </div>
                             <div class="form-grid-2">
                                 <div>
-                                    <label class="admin-form-label">Account
-                                        Number</label>
+                                    <label class="admin-form-label">Account Number</label>
                                     <span class="font-13 font-500 block ls-05">SCB-5829-1029-4821</span>
                                 </div>
                                 <div>
@@ -247,12 +244,12 @@ include 'includes/sidebar.php';
                     </div>
                 </div>
 
-                <!-- Step 3: Education & Docs -->
+                <!-- Step 3: Education & Experience -->
                 <div class="premium-card mb-24">
                     <div class="card-header p-24 border-bottom">
                         <h3 class="font-16 font-700 flex-center gap-10">
                             <i data-lucide="graduation-cap" size="20" class="text-primary-color"></i>
-                            Education & Docs
+                            Education & Experience
                         </h3>
                     </div>
                     <div class="card-body p-24">
@@ -262,20 +259,17 @@ include 'includes/sidebar.php';
                                 <span class="font-14 font-500">Master's in CS</span>
                             </div>
                             <div>
-                                <label class="admin-form-label">Degree /
-                                    Certification</label>
+                                <label class="admin-form-label">Degree / Certification</label>
                                 <span class="font-14 font-500">PMP, AWS Solutions Architect</span>
                             </div>
                         </div>
                         <div class="form-grid-2 mb-30">
                             <div>
-                                <label class="admin-form-label">College /
-                                    University</label>
+                                <label class="admin-form-label">College / University</label>
                                 <span class="font-14 font-500">Texas State University</span>
                             </div>
                             <div>
-                                <label class="admin-form-label">Professional
-                                    Expertise</label>
+                                <label class="admin-form-label">Professional Expertise</label>
                                 <span class="font-14 font-500">React, Node.js, UI/UX</span>
                             </div>
                         </div>
@@ -291,21 +285,18 @@ include 'includes/sidebar.php';
                         </div>
                         <div class="form-grid-2 mb-40">
                             <div>
-                                <label class="admin-form-label">Experience From
-                                    Date</label>
+                                <label class="admin-form-label">Experience From Date</label>
                                 <span class="font-14 font-500">Jan 2020</span>
                             </div>
                             <div>
-                                <label class="admin-form-label">Experience To
-                                    Date</label>
+                                <label class="admin-form-label">Experience To Date</label>
                                 <span class="font-14 font-500">Feb 2022</span>
                             </div>
                         </div>
 
                         <div class="form-grid-3 gap-24">
                             <div class="doc-card border rounded-16 p-20 hover-bg-light transition">
-                                <label class="admin-form-label">Resume
-                                    Attachment</label>
+                                <label class="admin-form-label">Resume Attachment</label>
                                 <div class="flex-center gap-12">
                                     <div class="icon-square-40 bg-primary-soft text-primary-color">
                                         <i data-lucide="file-text" size="20"></i>
@@ -317,8 +308,7 @@ include 'includes/sidebar.php';
                                 </div>
                             </div>
                             <div class="doc-card border rounded-16 p-20 hover-bg-light transition">
-                                <label class="admin-form-label">ID Card Attachment
-                                    *</label>
+                                <label class="admin-form-label">ID Card Attachment</label>
                                 <div class="flex-center gap-12">
                                     <div class="icon-square-40 bg-success-soft text-success-color">
                                         <i data-lucide="image" size="20"></i>

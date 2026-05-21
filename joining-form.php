@@ -261,7 +261,20 @@
         }
 
         .hidden {
-            display: none !important;
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
+        }
+
+        .nj-file-zone--error {
+            border-color: #ef4444 !important;
+            background: rgba(239, 68, 68, 0.06);
         }
 
         .nj-success-banner {
@@ -304,7 +317,7 @@
         </div>
 
         <p class="nj-intro">
-            Please complete all sections below. Fields marked with <span class="req">*</span> are required.
+            Please complete all sections below. Fields marked with * are required.
             Attachments should be clear PDF or image files unless your HR team specifies otherwise.
         </p>
 
@@ -315,36 +328,36 @@
                 <div class="nj-section-icon" aria-hidden="true">
                     <i data-lucide="user-round" width="22" height="22"></i>
                 </div>
-                <h2 id="nj-sec-personal">Personal information</h2>
+                <h2 id="nj-sec-personal">Personal Details</h2>
             </div>
             <div class="nj-form-grid-2">
                 <div class="form-group">
-                    <label class="admin-form-label" for="nj_first_name">First name <span class="req">*</span></label>
+                    <label class="admin-form-label" for="nj_first_name">First Name *</label>
                     <input type="text" id="nj_first_name" name="first_name" class="form-control"
                         placeholder="First name" required autocomplete="given-name">
                 </div>
                 <div class="form-group">
-                    <label class="admin-form-label" for="nj_middle_name">Middle name</label>
+                    <label class="admin-form-label" for="nj_middle_name">Middle Name</label>
                     <input type="text" id="nj_middle_name" name="middle_name" class="form-control"
-                        placeholder="Middle name" autocomplete="additional-name">
+                        placeholder="Middle Name" autocomplete="additional-name">
                 </div>
                 <div class="form-group">
-                    <label class="admin-form-label" for="nj_last_name">Last name <span class="req">*</span></label>
+                    <label class="admin-form-label" for="nj_last_name">Last Name *</label>
                     <input type="text" id="nj_last_name" name="last_name" class="form-control" placeholder="Last name"
                         required autocomplete="family-name">
                 </div>
                 <div class="form-group">
-                    <label class="admin-form-label" for="nj_dob">Date of birth</label>
-                    <input type="date" id="nj_dob" name="dob" class="form-control">
+                    <label class="admin-form-label" for="nj_dob">Date of Birth *</label>
+                    <input type="date" id="nj_dob" name="dob" class="form-control" required>
                 </div>
                 <div class="form-group">
-                    <label class="admin-form-label" for="nj_cnic">ID Card Number <span class="req">*</span></label>
+                    <label class="admin-form-label" for="nj_cnic">ID Card Number *</label>
                     <input type="text" id="nj_cnic" name="cnic_number" class="form-control"
                         placeholder="00000-0000000-0" maxlength="15" required
                         title="Please enter a valid 13-digit CNIC (12345-1234567-1)" inputmode="numeric">
                 </div>
                 <div class="form-group">
-                    <label class="admin-form-label" for="nj_gender">Gender <span class="req">*</span></label>
+                    <label class="admin-form-label" for="nj_gender">Gender *</label>
                     <select id="nj_gender" name="gender" class="form-control" required>
                         <option value="">Select gender</option>
                         <option value="Male">Male</option>
@@ -352,38 +365,37 @@
                     </select>
                 </div>
                 <div class="form-group">
-                    <label class="admin-form-label" for="nj_phone">Phone <span class="req">*</span></label>
+                    <label class="admin-form-label" for="nj_phone">Phone *</label>
                     <input type="tel" id="nj_phone" name="phone" class="form-control" placeholder="03XXXXXXXXX"
                         autocomplete="tel" inputmode="numeric" maxlength="12" required
                         title="Please enter a valid 11-digit phone number">
                 </div>
                 <div class="form-group">
-                    <label class="admin-form-label" for="nj_email">Email <span class="req">*</span></label>
+                    <label class="admin-form-label" for="nj_email">Email *</label>
                     <input type="email" id="nj_email" name="email" class="form-control" placeholder="you@email.com"
                         required autocomplete="email">
                     <div id="email_feedback" class="nj-file-sub" style="margin-top: 6px; min-height: 18px; font-weight: 500;"></div>
                 </div>
                 <div class="form-group">
-                    <label class="admin-form-label" for="nj_address">Address</label>
+                    <label class="admin-form-label" for="nj_address">Address *</label>
                     <input type="text" id="nj_address" name="address" class="form-control" placeholder="Your address"
-                        autocomplete="street-address">
+                        autocomplete="street-address" required>
                 </div>
                 <div class="form-group">
-                    <label class="admin-form-label" for="nj_job_title">Job title</label>
+                    <label class="admin-form-label" for="nj_job_title">Job Title *</label>
                     <input type="text" id="nj_job_title" name="job_title" class="form-control"
-                        placeholder="Your job title">
+                        placeholder="Your job title" required>
                 </div>
                 <div class="form-group">
-                    <label class="admin-form-label" for="nj_emergency_phone">Emergency contact <span
-                            class="req">*</span></label>
+                    <label class="admin-form-label" for="nj_emergency_phone">Emergency Contact *</label>
                     <input type="tel" id="nj_emergency_phone" name="emergency_contact" class="form-control"
                         placeholder="03XXXXXXXXX" autocomplete="tel" inputmode="numeric" maxlength="12" required
                         title="Please enter a valid 11-digit phone number">
                 </div>
-                <div class="form-group nj-span-2">
-                    <label class="admin-form-label" for="nj_emergency_relation">Emergency contact relation</label>
+                <div class="form-group">
+                    <label class="admin-form-label" for="nj_emergency_relation">Emergency Contact Relation *</label>
                     <input type="text" id="nj_emergency_relation" name="emergency_relation" class="form-control"
-                        placeholder="Father, mother, brother, sister, spouse, etc.">
+                        placeholder="Father, mother, brother, sister, spouse, etc." required>
                 </div>
             </div>
 
@@ -391,12 +403,12 @@
                 <div class="nj-section-icon" aria-hidden="true">
                     <i data-lucide="landmark" width="22" height="22"></i>
                 </div>
-                <h2 id="nj-sec-bank">Bank details</h2>
+                <h2 id="nj-sec-bank">Job & Banking</h2>
             </div>
             <div class="nj-form-grid-2">
                 <div class="form-group">
-                    <label class="admin-form-label" for="nj_bank_name">Bank name</label>
-                    <select id="nj_bank_name" name="bank_name" class="form-control">
+                    <label class="admin-form-label" for="nj_bank_name">Bank Name *</label>
+                    <select id="nj_bank_name" name="bank_name" class="form-control" required>
                         <option value="">Select Bank</option>
                         <option value="HBL">HBL</option>
                         <option value="ALHabib">AL Habib</option>
@@ -415,28 +427,28 @@
                     </select>
                 </div>
                 <div class="form-group">
-                    <label class="admin-form-label" for="nj_account_type">Account type</label>
-                    <select id="nj_account_type" name="account_type" class="form-control">
+                    <label class="admin-form-label" for="nj_account_type">Account Type *</label>
+                    <select id="nj_account_type" name="account_type" class="form-control" required>
                         <option value="">Select account type</option>
                         <option value="IBN">IBN</option>
                         <option value="IBFT">IBFT</option>
                     </select>
                 </div>
                 <div class="form-group">
-                    <label class="admin-form-label" for="nj_account_title">Account title</label>
+                    <label class="admin-form-label" for="nj_account_title">Account Title *</label>
                     <input type="text" id="nj_account_title" name="account_title" class="form-control"
-                        placeholder="Account title">
+                        placeholder="Account title" required>
                 </div>
                 <div class="form-group">
-                    <label class="admin-form-label" for="nj_account_number">Account number</label>
+                    <label class="admin-form-label" for="nj_account_number">Account Number *</label>
                     <input type="text" id="nj_account_number" name="account_number"
                         class="form-control form-control--muted" placeholder="Account number" inputmode="numeric"
-                        autocomplete="off">
+                        autocomplete="off" required>
                 </div>
                 <div class="form-group nj-span-2">
-                    <label class="admin-form-label" for="nj_bank_branch">Bank branch</label>
+                    <label class="admin-form-label" for="nj_bank_branch">Bank Branch *</label>
                     <input type="text" id="nj_bank_branch" name="branch_info" class="form-control"
-                        placeholder="Bank branch">
+                        placeholder="Bank branch" required>
                 </div>
             </div>
 
@@ -444,28 +456,28 @@
                 <div class="nj-section-icon" aria-hidden="true">
                     <i data-lucide="graduation-cap" width="22" height="22"></i>
                 </div>
-                <h2 id="nj-sec-education">Education</h2>
+                <h2 id="nj-sec-education">Education & Experience</h2>
             </div>
             <div class="nj-form-grid-2">
                 <div class="form-group">
-                    <label class="admin-form-label" for="nj_qualification">Qualification</label>
+                    <label class="admin-form-label" for="nj_qualification">Qualification *</label>
                     <input type="text" id="nj_qualification" name="qualification" class="form-control"
-                        placeholder="Qualification">
+                        placeholder="Qualification" required>
                 </div>
                 <div class="form-group">
-                    <label class="admin-form-label" for="nj_degree">Degree / certification</label>
+                    <label class="admin-form-label" for="nj_degree">Degree / Certification *</label>
                     <input type="text" id="nj_degree" name="degree_certification" class="form-control"
-                        placeholder="Degree or certification">
+                        placeholder="Degree or certification" required>
                 </div>
                 <div class="form-group">
-                    <label class="admin-form-label" for="nj_expertise">Professional expertise</label>
+                    <label class="admin-form-label" for="nj_expertise">Professional Expertise *</label>
                     <input type="text" id="nj_expertise" name="professional_expertise" class="form-control"
-                        placeholder="Professional expertise">
+                        placeholder="Professional expertise" required>
                 </div>
                 <div class="form-group">
-                    <label class="admin-form-label" for="nj_college">College / university</label>
+                    <label class="admin-form-label" for="nj_college">College / University *</label>
                     <input type="text" id="nj_college" name="college_university" class="form-control"
-                        placeholder="College / university">
+                        placeholder="College / university" required>
                 </div>
             </div>
 
@@ -473,25 +485,24 @@
                 <div class="nj-section-icon" aria-hidden="true">
                     <i data-lucide="briefcase" width="22" height="22"></i>
                 </div>
-                <h2 id="nj-sec-experience">Experience</h2>
             </div>
             <div class="nj-form-grid-2">
                 <div class="form-group">
-                    <label class="admin-form-label" for="nj_last_employer">Last employer <span class="req">*</span></label>
+                    <label class="admin-form-label" for="nj_last_employer">Last Employer *</label>
                     <input type="text" id="nj_last_employer" name="last_employer" class="form-control"
                         placeholder="Last employer" required>
                 </div>
                 <div class="form-group">
-                    <label class="admin-form-label" for="nj_last_designation">Last designation <span class="req">*</span></label>
+                    <label class="admin-form-label" for="nj_last_designation">Last Job Title *</label>
                     <input type="text" id="nj_last_designation" name="last_designation" class="form-control"
-                        placeholder="Last designation" required>
+                        placeholder="Last job title" required>
                 </div>
                 <div class="form-group">
-                    <label class="admin-form-label" for="nj_exp_from">Experience from date</label>
+                    <label class="admin-form-label" for="nj_exp_from">Experience From Date</label>
                     <input type="date" id="nj_exp_from" name="experience_from" class="form-control">
                 </div>
                 <div class="form-group">
-                    <label class="admin-form-label" for="nj_exp_to">Experience to date</label>
+                    <label class="admin-form-label" for="nj_exp_to">Experience To Date</label>
                     <input type="date" id="nj_exp_to" name="experience_to" class="form-control">
                 </div>
             </div>
@@ -500,11 +511,11 @@
                 <div class="nj-section-icon" aria-hidden="true">
                     <i data-lucide="paperclip" width="22" height="22"></i>
                 </div>
-                <h2 id="nj-sec-docs">Document attachments</h2>
+                <h2 id="nj-sec-docs">Document Attachments</h2>
             </div>
             <div class="nj-form-grid-2">
                 <div class="form-group">
-                    <label class="admin-form-label" for="nj_resume">Resume attachment <span class="req">*</span></label>
+                    <label class="admin-form-label" for="nj_resume">Resume Attachment *</label>
                     <div class="nj-file-zone flex-center flex-column gap-12"
                         onclick="document.getElementById('nj_resume').click()">
                         <i data-lucide="upload-cloud" width="30" height="30" class="nj-upload-icon"></i>
@@ -513,13 +524,12 @@
                             <div class="nj-file-sub">PDF or DOCX, up to 10MB</div>
                         </div>
                         <input type="file" id="nj_resume" name="resume" class="hidden"
-                            accept=".pdf,.doc,.docx,application/pdf" required>
+                            accept=".pdf,.doc,.docx,application/pdf" aria-required="true">
                     </div>
                     <div id="nj_resume_label" class="nj-file-name" aria-live="polite"></div>
                 </div>
                 <div class="form-group">
-                    <label class="admin-form-label" for="nj_id_card">ID card attachment <span
-                            class="req">*</span></label>
+                    <label class="admin-form-label" for="nj_id_card">ID Card Attachment *</label>
                     <div class="nj-file-zone flex-center flex-column gap-12"
                         onclick="document.getElementById('nj_id_card').click()">
                         <i data-lucide="id-card" width="30" height="30" class="nj-upload-icon"></i>
@@ -528,12 +538,12 @@
                             <div class="nj-file-sub">PDF, PNG, JPG (Mandatory)</div>
                         </div>
                         <input type="file" id="nj_id_card" name="id_card" class="hidden"
-                            accept=".pdf,.png,.jpg,.jpeg,.webp,image/*,application/pdf">
+                            accept=".pdf,.png,.jpg,.jpeg,.webp,image/*,application/pdf" aria-required="true">
                     </div>
                     <div id="nj_id_card_label" class="nj-file-name" aria-live="polite"></div>
                 </div>
                 <div class="form-group nj-span-2">
-                    <label class="admin-form-label" for="nj_other_docs">Other documents</label>
+                    <label class="admin-form-label" for="nj_other_docs">Other Documents</label>
                     <div class="nj-file-zone flex-center flex-column gap-12"
                         onclick="document.getElementById('nj_other_docs').click()">
                         <i data-lucide="files" width="30" height="30" class="nj-upload-icon"></i>
@@ -630,6 +640,10 @@
                     emailFeedback.textContent = '✅ ' + result.message;
                     emailFeedback.style.color = '#10b981';
                     emailInput.style.borderColor = '#10b981';
+                } else if (result.status === 'exited') {
+                    emailFeedback.textContent = '⚠️ ' + result.message;
+                    emailFeedback.style.color = '#d97706';
+                    emailInput.style.borderColor = '#f59e0b';
                 } else {
                     emailFeedback.textContent = '⚠️ ' + result.message;
                     emailFeedback.style.color = '#ef4444';
@@ -653,32 +667,75 @@
 
         document.getElementById('nj_resume').addEventListener('change', function () {
             njFileLabel(this, 'nj_resume_label');
+            var zone = this.closest('.form-group') && this.closest('.form-group').querySelector('.nj-file-zone');
+            if (zone) zone.classList.remove('nj-file-zone--error');
         });
         document.getElementById('nj_id_card').addEventListener('change', function () {
             njFileLabel(this, 'nj_id_card_label');
+            var zone = this.closest('.form-group') && this.closest('.form-group').querySelector('.nj-file-zone');
+            if (zone) zone.classList.remove('nj-file-zone--error');
         });
         document.getElementById('nj_other_docs').addEventListener('change', function () {
             njFileLabel(this, 'nj_other_docs_label');
         });
 
+        function njClearFileErrors() {
+            document.querySelectorAll('.nj-file-zone--error').forEach(function (el) {
+                el.classList.remove('nj-file-zone--error');
+            });
+        }
+
+        function njValidateVisibleFields(form) {
+            var skip = { file: 1, hidden: 1, button: 1, submit: 1, reset: 1 };
+            var fields = form.querySelectorAll('input, select, textarea');
+            for (var i = 0; i < fields.length; i++) {
+                var field = fields[i];
+                if (skip[field.type]) continue;
+                if (!field.checkValidity()) {
+                    field.reportValidity();
+                    field.focus();
+                    field.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        function njValidateFileAttachment(inputId, message) {
+            var input = document.getElementById(inputId);
+            var zone = input && input.closest('.form-group')
+                ? input.closest('.form-group').querySelector('.nj-file-zone')
+                : null;
+            if (input && input.files && input.files.length > 0) {
+                if (zone) zone.classList.remove('nj-file-zone--error');
+                return true;
+            }
+            njClearFileErrors();
+            if (zone) {
+                zone.classList.add('nj-file-zone--error');
+                zone.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+            Swal.fire({
+                title: 'Required Field',
+                text: message,
+                icon: 'warning',
+                confirmButtonColor: '#6c4cf1'
+            });
+            return false;
+        }
+
         document.getElementById('njHireForm').addEventListener('submit', async function (e) {
             e.preventDefault();
+            njClearFileErrors();
 
-            // Manual validation for hidden file inputs
-            const idCardInput = document.getElementById('nj_id_card');
-            if (!idCardInput.files || idCardInput.files.length === 0) {
-                Swal.fire({
-                    title: 'Attachment Required',
-                    text: 'Please upload your ID Card / CNIC attachment to proceed.',
-                    icon: 'warning',
-                    confirmButtonColor: '#6c4cf1',
-                    borderRadius: '16px'
-                });
+            if (!njValidateVisibleFields(this)) {
                 return;
             }
 
-            if (!this.checkValidity()) {
-                this.reportValidity();
+            if (!njValidateFileAttachment('nj_resume', 'Please upload your Resume Attachment to continue.')) {
+                return;
+            }
+            if (!njValidateFileAttachment('nj_id_card', 'Please upload your ID Card Attachment to continue.')) {
                 return;
             }
 

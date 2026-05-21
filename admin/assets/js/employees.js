@@ -1,29 +1,34 @@
 // Password Visibility Toggle
 function togglePassword(inputId, btn) {
     const input = document.getElementById(inputId);
-    const icon = btn.querySelector('i');
-    
+    if (!input || !btn) return;
+
+    const icon = btn.querySelector('i') || btn.querySelector('svg');
     if (input.type === 'password') {
         input.type = 'text';
-        icon.setAttribute('data-lucide', 'eye-off');
+        if (icon) icon.setAttribute('data-lucide', 'eye-off');
     } else {
         input.type = 'password';
-        icon.setAttribute('data-lucide', 'eye');
+        if (icon) icon.setAttribute('data-lucide', 'eye');
     }
-    
-    lucide.createIcons({
-        attrs: { size: 18 },
-        nameAttr: 'data-lucide'
-    });
+
+    if (typeof lucide !== 'undefined') {
+        lucide.createIcons({
+            attrs: { size: 18 },
+            nameAttr: 'data-lucide'
+        });
+    }
 }
 
 // File selection feedback
 function handleFileSelect(input, wrapperId, filenameId) {
     const wrapper = document.getElementById(wrapperId);
     const filenameLabel = document.getElementById(filenameId);
-    
+    if (!wrapper || !filenameLabel) return;
+
     if (input.files && input.files.length > 0) {
         wrapper.classList.add('has-file');
+        wrapper.classList.remove('file-upload-error');
         if (input.files.length === 1) {
             filenameLabel.textContent = input.files[0].name;
             filenameLabel.classList.add('text-success');
@@ -59,7 +64,9 @@ function createEmployeeProfileSlug(name) {
 
 function getEmployeeProfileUrl(emp) {
     const slug = createEmployeeProfileSlug(getEmployeeFullName(emp));
-    return slug ? `employee-profile.php?employee=${encodeURIComponent(slug)}` : `employee-profile.php?id=${encodeURIComponent(emp.id)}`;
+    return slug
+        ? `employee-profile.php?name=${encodeURIComponent(slug)}`
+        : `employee-profile.php?id=${encodeURIComponent(emp.id)}`;
 }
 
 async function loadRequirementData() {
@@ -337,6 +344,79 @@ document.addEventListener('DOMContentLoaded', () => {
     let addCurrentStep = 1;
     let editCurrentStep = 1;
 
+    function validateWizardStep(form, stepIndex) {
+        const pane = form?.querySelectorAll('.step-pane')[stepIndex - 1];
+        if (!pane) return true;
+        const fields = pane.querySelectorAll('input, select, textarea');
+        for (const field of fields) {
+            if (field.type === 'file' || field.type === 'hidden') continue;
+            if (!field.checkValidity()) {
+                field.reportValidity();
+                return false;
+            }
+        }
+        return true;
+    }
+
+    function employeeAttachmentOk(resumeWrapperId, resumeInputId, idWrapperId, idInputId) {
+        const hasResume = document.getElementById(resumeWrapperId)?.classList.contains('has-file')
+            || (document.getElementById(resumeInputId)?.files?.length > 0);
+        const hasId = document.getElementById(idWrapperId)?.classList.contains('has-file')
+            || (document.getElementById(idInputId)?.files?.length > 0);
+        return { hasResume, hasId };
+    }
+
+    function clearEmployeeFileErrors(wrapperIds) {
+        wrapperIds.forEach((id) => {
+            document.getElementById(id)?.classList.remove('file-upload-error');
+        });
+    }
+
+    function employeesFormAlert(title, text, icon = 'warning') {
+        return Swal.fire({
+            title,
+            text,
+            icon,
+            confirmButtonColor: '#6c4cf1'
+        });
+    }
+
+    function validateAllWizardSteps(form, modalId, setStep) {
+        for (let step = 1; step <= 3; step++) {
+            if (!validateWizardStep(form, step)) {
+                setStep(step);
+                updateWizardUI(modalId, step);
+                return false;
+            }
+        }
+        return true;
+    }
+
+    function requireEmployeeAttachments(modalId, setStep, resumeWrapperId, resumeInputId, idWrapperId, idInputId) {
+        const files = employeeAttachmentOk(resumeWrapperId, resumeInputId, idWrapperId, idInputId);
+        clearEmployeeFileErrors([resumeWrapperId, idWrapperId]);
+
+        if (!files.hasResume) {
+            setStep(3);
+            updateWizardUI(modalId, 3);
+            const wrapper = document.getElementById(resumeWrapperId);
+            wrapper?.classList.add('file-upload-error');
+            wrapper?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            employeesFormAlert('Required Field', 'Please upload Resume Attachment to continue.');
+            return false;
+        }
+        if (!files.hasId) {
+            setStep(3);
+            updateWizardUI(modalId, 3);
+            const wrapper = document.getElementById(idWrapperId);
+            wrapper?.classList.add('file-upload-error');
+            wrapper?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            employeesFormAlert('Required Field', 'Please upload ID Card Attachment to continue.');
+            return false;
+        }
+        return true;
+    }
+
     function updateWizardUI(modalId, step) {
         const modal = document.getElementById(modalId);
         if (!modal) return;
@@ -391,13 +471,18 @@ document.addEventListener('DOMContentLoaded', () => {
         // Reset file status
         ['resume', 'id', 'other'].forEach(type => {
             const wrapper = document.getElementById(`${type}_wrapper`);
-            if (wrapper) wrapper.classList.remove('has-file');
+            if (wrapper) {
+                wrapper.classList.remove('has-file');
+                wrapper.classList.remove('file-upload-error');
+            }
         });
     };
 
     // Add Modal Nav
     document.getElementById('nextStepBtn')?.addEventListener('click', () => {
+        const form = document.getElementById('addEmployeeForm');
         if (addCurrentStep < 3) {
+            if (!validateWizardStep(form, addCurrentStep)) return;
             addCurrentStep++;
             updateWizardUI('addEmployeeModal', addCurrentStep);
         }
@@ -413,7 +498,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Edit Modal Nav
     document.getElementById('editNextStepBtn')?.addEventListener('click', () => {
+        const form = document.getElementById('editEmployeeForm');
         if (editCurrentStep < 3) {
+            if (!validateWizardStep(form, editCurrentStep)) return;
             editCurrentStep++;
             updateWizardUI('editEmployeeModal', editCurrentStep);
         }
@@ -532,6 +619,23 @@ document.addEventListener('DOMContentLoaded', () => {
     // Edit Form Submission
     document.getElementById('editEmployeeForm')?.addEventListener('submit', async (e) => {
         e.preventDefault();
+        if (!e.target.checkValidity()) {
+            e.target.reportValidity();
+            return;
+        }
+        if (!validateAllWizardSteps(e.target, 'editEmployeeModal', (s) => { editCurrentStep = s; })) {
+            return;
+        }
+        if (!requireEmployeeAttachments(
+            'editEmployeeModal',
+            (s) => { editCurrentStep = s; },
+            'edit_resume_wrapper',
+            'edit_resume_upload',
+            'edit_id_wrapper',
+            'edit_id_upload'
+        )) {
+            return;
+        }
         const submitBtn = document.getElementById('editSubmitBtn');
         const originalText = submitBtn.innerHTML;
         
@@ -569,6 +673,19 @@ document.addEventListener('DOMContentLoaded', () => {
     // Add Form Submission
     document.getElementById('addEmployeeForm')?.addEventListener('submit', async (e) => {
         e.preventDefault();
+        if (!validateAllWizardSteps(e.target, 'addEmployeeModal', (s) => { addCurrentStep = s; })) {
+            return;
+        }
+        if (!requireEmployeeAttachments(
+            'addEmployeeModal',
+            (s) => { addCurrentStep = s; },
+            'resume_wrapper',
+            'resume_upload',
+            'id_wrapper',
+            'id_upload'
+        )) {
+            return;
+        }
         const submitBtn = document.getElementById('submitEmployeeBtn');
         const originalText = submitBtn.innerHTML;
         
@@ -680,14 +797,18 @@ document.addEventListener('DOMContentLoaded', () => {
                 const response = await fetch(`assets/api/employee_handler.php?action=check_email&email=${encodeURIComponent(email)}`);
                 const result = await response.json();
                 
-                if (result.status === 'error') {
-                    emailMsg.textContent = '⚠️ ' + result.message;
-                    emailMsg.className = 'font-11 mt-4 block text-danger';
-                    addEmail.style.borderColor = '#ef4444';
-                } else {
+                if (result.status === 'success') {
                     emailMsg.textContent = '✅ ' + result.message;
                     emailMsg.className = 'font-11 mt-4 block text-success';
                     addEmail.style.borderColor = '#10b981';
+                } else if (result.status === 'exited') {
+                    emailMsg.textContent = '⚠️ ' + result.message;
+                    emailMsg.className = 'font-11 mt-4 block text-warning';
+                    addEmail.style.borderColor = '#f59e0b';
+                } else {
+                    emailMsg.textContent = '⚠️ ' + result.message;
+                    emailMsg.className = 'font-11 mt-4 block text-danger';
+                    addEmail.style.borderColor = '#ef4444';
                 }
             } catch (error) {
                 console.error('Email Verification Error:', error);
