@@ -12,6 +12,16 @@
     const params = new URLSearchParams(window.location.search);
     const candidateId = params.get('id');
     let currentInterview = null;
+    let currentCandidateStatus = '';
+
+    function syncBanCandidateButton(statusKey) {
+        const banBtn = document.getElementById('banCandidateBtn');
+        if (!banBtn) return;
+        const isBanned = statusKey === 'banned';
+        banBtn.style.display = isBanned ? 'none' : '';
+        banBtn.disabled = isBanned;
+        banBtn.setAttribute('aria-hidden', isBanned ? 'true' : 'false');
+    }
 
     function openScheduleInterviewModal() {
         var modal = document.getElementById('scheduleInterviewModal');
@@ -95,6 +105,8 @@
                 // Use standardized lowercase status as class
                 const s = rawStatus.toLowerCase().replace(' ', '-');
                 statusBadge.className = `cand-v2-status-badge ${s}`;
+                currentCandidateStatus = s;
+                syncBanCandidateButton(s);
 
                 // --- Pipeline Action Button ---
                 const pipelineBtn = document.getElementById('primaryPipelineBtn');
@@ -111,14 +123,13 @@
                         pipelineBtn.style.cursor = 'pointer';
                         pipelineBtn.onclick = () => openScheduleInterviewModal();
                     } else if (s === 'interview') {
-                        pipelineBtn.textContent = 'Move to Offer';
+                        pipelineBtn.textContent = 'Move to Shortlisted';
                         pipelineBtn.disabled = false;
                         pipelineBtn.style.display = 'block';
                         pipelineBtn.style.opacity = '1';
                         pipelineBtn.style.cursor = 'pointer';
-                        pipelineBtn.onclick = () => openStatusModal('Offer');
-                        
-                        // Show Reschedule button
+                        pipelineBtn.onclick = () => openStatusModal('Shortlisted');
+
                         if (rescheduleBtn) {
                             rescheduleBtn.classList.remove('hidden');
                             rescheduleBtn.style.display = 'flex';
@@ -131,6 +142,13 @@
                                 openScheduleInterviewModal();
                             };
                         }
+                    } else if (s === 'shortlisted') {
+                        pipelineBtn.textContent = 'Move to Offer';
+                        pipelineBtn.disabled = false;
+                        pipelineBtn.style.display = 'block';
+                        pipelineBtn.style.opacity = '1';
+                        pipelineBtn.style.cursor = 'pointer';
+                        pipelineBtn.onclick = () => openStatusModal('Offer');
                     } else if (s === 'offer') {
                         pipelineBtn.textContent = 'Confirm Hiring';
                         pipelineBtn.disabled = false;
@@ -210,7 +228,7 @@
                             timelineHtml += `
                                 <div class="cand-v2-timeline-item">
                                     <div class="cand-v2-timeline-dot"></div>
-                                    <div class="font-10 text-light uppercase font-700 ls-05 mb-4">${eventDate.toUpperCase()}, ${eventTime}</div>
+                                    <div class="font-11 text-light uppercase font-700 ls-05 mb-4">${eventDate.toUpperCase()}, ${eventTime}</div>
                                     <div class="font-14 font-700 text-dark">
                                         Candidate moved to <span style="color: var(--primary-dark);">${item.status_to}</span>
                                     </div>
@@ -221,7 +239,7 @@
                                             <i data-lucide="message-square" size="14" class="text-light mt-2"></i>
                                             <div>
                                                 <div class="font-10 text-light uppercase font-700 ls-05 mb-4">Recruiter Feedback</div>
-                                                <div class="font-12 text-dark" style="white-space: pre-line;">${item.feedback}</div>
+                                                <div class="font-12 text-dark" style="white-space: pre-line; font-weight: 500;">${item.feedback}</div>
                                             </div>
                                         </div>
                                     ` : ''}
@@ -340,6 +358,9 @@
 
         if (banBtn) {
             banBtn.addEventListener('click', () => {
+                if (currentCandidateStatus === 'banned') {
+                    return;
+                }
                 Swal.fire({
                     title: 'Are you sure?',
                     text: "You want to ban this candidate?",

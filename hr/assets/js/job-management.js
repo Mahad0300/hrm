@@ -102,7 +102,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 title: document.getElementById('jobTitle').value,
                 department: document.getElementById('jobDept').value,
                 location: document.getElementById('jobLocation').value,
-                type: document.getElementById('jobType').value,
                 description: document.getElementById('jobDesc').value,
                 status: 'Active',
                 postedDate: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
@@ -169,13 +168,12 @@ document.addEventListener('DOMContentLoaded', function() {
                 <tr>
                     <td>
                         <div class="text-dark font-14 font-600">${job.title}</div>
-                        <div class="font-11 text-light mt-1">${job.type}</div>
                     </td>
                     <td class="font-14">${job.department}</td>
                     <td class="font-14 allow-wrap">${job.location}</td>
                     <td class="font-14">${job.postedDate}</td>
                     <td class="font-14">${appCount} Applicants</td>
-                    <td><span class="badge ${job.status === 'Active' ? 'badge-success' : job.status === 'Draft' ? 'badge-info' : 'badge-warning'}">${job.status}</span></td>
+                    <td><span class="badge ${job.status === 'Active' ? 'badge-success' : 'badge-warning'}">${job.status === 'Close' ? 'Closed' : job.status}</span></td>
                     <td class="text-right px-30">
                         <div class="flex-center gap-8 justify-end">
                             <button class="action-btn" title="View Details" onclick="viewJobDetails('${job.id}')"><i data-lucide="eye" size="14"></i></button>
@@ -204,14 +202,13 @@ document.addEventListener('DOMContentLoaded', function() {
             const appCount = candidates.filter(c => c.jobId === job.id).length || job.applicants || 0;
 
             document.getElementById('detailJobTitle').textContent = job.title;
-            const statusClass = job.status === 'Active' ? 'job-detail-pill--success' : job.status === 'Draft' ? 'job-detail-pill--info' : 'job-detail-pill--neutral';
+            const statusClass = job.status === 'Active' ? 'job-detail-pill--success' : 'job-detail-pill--danger';
             document.getElementById('detailJobAppCount').innerHTML = `
                 <span class="job-detail-pill"><i data-lucide="users" size="14"></i> ${appCount} Applicants</span>
                 <span class="job-detail-pill ${statusClass}">${job.status}</span>`;
             
             document.getElementById('detailDept').textContent = job.department;
             document.getElementById('detailLocation').textContent = job.location;
-            document.getElementById('detailType').textContent = job.type || 'Full-time';
             document.getElementById('detailPostedDate').textContent = job.postedDate;
 
             // Description
@@ -532,7 +529,6 @@ document.addEventListener('DOMContentLoaded', function() {
             var title = job.title || 'Open role';
             var dept = job.department || '—';
             var loc = job.location || '—';
-            var type = job.type || 'Full-time';
             var desc;
             if (String(job.description || '').trim()) {
                 desc = String(job.description).trim();
@@ -545,7 +541,6 @@ document.addEventListener('DOMContentLoaded', function() {
             setText('applyJobTitleMeta', title);
             setText('applyJobDept', dept);
             setText('applyJobLocation', loc);
-            setText('applyJobType', type);
             setText('applyJobDesc', desc);
         }
 

@@ -18,7 +18,7 @@ include 'includes/header.php';
                     <input type="text" id="jobTitle" class="form-control bg-white-input font-15" placeholder="e.g. Senior Frontend Developer" required>
                 </div>
 
-                <div class="form-grid-3 mb-24">
+                <div class="form-grid-2 mb-24">
                     <div class="form-group">
                         <label class="admin-form-label" for="jobDept">Department *</label>
                         <select id="jobDept" class="form-control bg-white-input" required>
@@ -33,16 +33,6 @@ include 'includes/header.php';
                     <div class="form-group">
                         <label class="admin-form-label" for="jobLocation">Location *</label>
                         <input type="text" id="jobLocation" class="form-control bg-white-input" placeholder="e.g. Remote, Lahore, Karachi" required>
-                    </div>
-                    <div class="form-group">
-                        <label class="admin-form-label" for="jobType">Employment Type *</label>
-                        <select id="jobType" class="form-control bg-white-input" required>
-                            <option>Full-time</option>
-                            <option>Part-time</option>
-                            <option>Contract</option>
-                            <option>Internship</option>
-                            <option>Freelance</option>
-                        </select>
                     </div>
                 </div>
 

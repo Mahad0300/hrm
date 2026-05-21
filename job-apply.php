@@ -278,6 +278,23 @@ $safePageTitle = htmlspecialchars($pageTitle, ENT_QUOTES, 'UTF-8');
             background: rgba(var(--primary-rgb, 108, 76, 241), 0.08) !important;
         }
 
+        .ja-page .hidden {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
+        }
+
+        .ja-file-zone--error {
+            border-color: #ef4444 !important;
+            background: rgba(239, 68, 68, 0.06) !important;
+        }
+
         .ja-file-zone .ja-file-hint {
             font-size: 14px;
             font-weight: 600;
@@ -429,10 +446,6 @@ $safePageTitle = htmlspecialchars($pageTitle, ENT_QUOTES, 'UTF-8');
                     <dt>Location *</dt>
                     <dd id="applyJobLocation">North Nazimabad, Karachi (on-site)</dd>
                 </div>
-                <div class="job-meta-item">
-                    <dt>Employment type *</dt>
-                    <dd id="applyJobType">Full-time</dd>
-                </div>
             </div>
             <div class="job-desc-block">
                 <span class="job-desc-label">Job description *</span>
@@ -503,8 +516,8 @@ $safePageTitle = htmlspecialchars($pageTitle, ENT_QUOTES, 'UTF-8');
                         <div class="ja-file-hint">Click to upload or drag and drop</div>
                         <div class="ja-file-sub">PDF or DOCX, up to 5MB</div>
                     </div>
-                    <input type="file" id="appResume" class="hidden" accept=".pdf,.doc,.docx,application/pdf" required
-                        onchange="handleFileSelect(this)">
+                    <input type="file" id="appResume" class="hidden" accept=".pdf,.doc,.docx,application/pdf"
+                        aria-required="true" onchange="handleFileSelect(this)">
                 </div>
                 <div id="fileName" class="ja-file-name"></div>
                 </div>
@@ -523,6 +536,8 @@ $safePageTitle = htmlspecialchars($pageTitle, ENT_QUOTES, 'UTF-8');
             var name = input.files[0] ? input.files[0].name : '';
             var el = document.getElementById('fileName');
             if (el) el.textContent = name ? ('Selected: ' + name) : '';
+            var zone = input.closest('.ja-file-zone');
+            if (zone) zone.classList.remove('ja-file-zone--error');
         }
 
         function handleJaFilePick(input, labelId) {

@@ -257,7 +257,7 @@ if (!function_exists('buildAdminDashboardPayload')) {
         $pipeline_candidates = (int) $pdo->query("
             SELECT COUNT(*) FROM candidates
             WHERE deleted_at IS NULL
-            AND status IN ('New', 'Interview', 'Offer')
+            AND status IN ('New', 'Interview', 'Shortlisted', 'Offer')
         ")->fetchColumn();
 
         $week_start = date('Y-m-d', strtotime('monday this week'));
@@ -335,16 +335,17 @@ if (!function_exists('buildAdminDashboardPayload')) {
             AND status NOT IN ('Rejected', 'Banned', 'Duplicated')
             GROUP BY status
         ");
-        $funnel_map = ['New' => 0, 'Interview' => 0, 'Offer' => 0, 'Hired' => 0];
+        $funnel_map = ['New' => 0, 'Interview' => 0, 'Shortlisted' => 0, 'Offer' => 0, 'Hired' => 0];
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
             if (isset($funnel_map[$row['status']])) {
                 $funnel_map[$row['status']] = (int) $row['cnt'];
             }
         }
-        $funnel_labels = ['New', 'Interview', 'Offer', 'Hired'];
+        $funnel_labels = ['New', 'Interview', 'Shortlisted', 'Offer', 'Hired'];
         $funnel_data = [
             $funnel_map['New'],
             $funnel_map['Interview'],
+            $funnel_map['Shortlisted'],
             $funnel_map['Offer'],
             $funnel_map['Hired'],
         ];

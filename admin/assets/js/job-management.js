@@ -127,8 +127,7 @@ document.addEventListener('DOMContentLoaded', function() {
             formData.append('department_id', document.getElementById('jobDept').value);
             formData.append('location', document.getElementById('jobLocation').value);
             formData.append('description', document.getElementById('jobDesc').value);
-            formData.append('type', 'Full-time');
-            
+
             const statusEl = document.getElementById('jobStatus');
             formData.append('status', statusEl ? statusEl.value : 'Active');
             
@@ -154,99 +153,111 @@ document.addEventListener('DOMContentLoaded', function() {
         };
     }
 
-    // --- Job List Logic ---
-    const jobTableBody = document.getElementById('jobTableBody');
-    const jobPerPage = document.getElementById('perPageSelect');
-    const jobTableSummary = document.getElementById('tableSummary');
-    const jobPaginationInfo = document.getElementById('paginationInfo');
-    const jobPageNumbers = document.getElementById('pageNumbers');
-    const jobPrevBtn = document.getElementById('prevPage');
-    const jobNextBtn = document.getElementById('nextPage');
+    // --- Job List Logic (card grid) ---
+    const jobGridBody = document.getElementById('jobGridBody');
+    const jobStatusTabs = document.getElementById('jobStatusTabs');
 
-    let jobPage = 1;
-    let jobLimit = jobPerPage ? (jobPerPage.value === 'all' ? -1 : parseInt(jobPerPage.value)) : 10;
+    let jobStatusTab = '';
 
-    if (jobTableBody) {
+    function parseJobPostedDate(dateStr) {
+        if (!dateStr) return null;
+        const raw = String(dateStr).trim();
+        const dateOnly = raw.match(/^(\d{4})-(\d{2})-(\d{2})/);
+        if (dateOnly && raw.length <= 10) {
+            return new Date(Number(dateOnly[1]), Number(dateOnly[2]) - 1, Number(dateOnly[3]));
+        }
+        const parsed = new Date(raw);
+        return Number.isNaN(parsed.getTime()) ? null : parsed;
+    }
+
+    function formatJobPostedLabel(dateStr) {
+        const posted = parseJobPostedDate(dateStr);
+        if (!posted) return '—';
+        const day = posted.getDate();
+        const month = posted.toLocaleDateString('en-GB', { month: 'short' });
+        const year = posted.getFullYear();
+        return day + ' ' + month + ', ' + year;
+    }
+
+    function getJobStatusBadge(job) {
+        const status = job.status || 'Active';
+        if (status === 'Active') {
+            return { className: 'job-post-card__badge--active', label: 'Active Posting' };
+        }
+        if (status === 'Close') {
+            return { className: 'job-post-card__badge--closed', label: 'Closed' };
+        }
+        return { className: 'job-post-card__badge--closed', label: 'Closed' };
+    }
+
+    if (jobGridBody) {
         function renderJobs() {
             const query = (document.getElementById('jobSearch')?.value || '').toLowerCase();
             const dept = document.getElementById('filterDept')?.value || '';
-            const status = document.getElementById('filterStatus')?.value || '';
-            const sortBy = document.getElementById('sortBy')?.value || '';
-
             let filteredJobs = jobs.filter(job => {
                 const searchStr = (job.title + ' ' + (job.department_name || '') + ' ' + job.location).toLowerCase();
                 const matchesSearch = searchStr.includes(query);
-                const matchesDept = dept === '' || (job.department_name && job.department_name.includes(dept));
-                const matchesStatus = status === '' || job.status === status;
+                const matchesDept = dept === '' || (job.department_name && job.department_name === dept);
+                const matchesStatus = jobStatusTab === '' || job.status === jobStatusTab;
                 return matchesSearch && matchesDept && matchesStatus;
             });
 
-            if (sortBy === 'newest') {
-                filteredJobs.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
-            } else if (sortBy === 'oldest') {
-                filteredJobs.sort((a, b) => new Date(a.created_at) - new Date(b.created_at));
-            }
+            filteredJobs.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
 
-            const totalRows = filteredJobs.length;
-            if (totalRows === 0) {
-                jobTableBody.innerHTML = `<tr><td colspan="7" class="text-center p-40 text-light italic">No jobs found matching your criteria.</td></tr>`;
-                updateJobPagination(1);
+            if (filteredJobs.length === 0) {
+                jobGridBody.innerHTML = '<p class="text-center p-40 text-light italic" style="grid-column:1/-1;">No jobs found matching your criteria.</p>';
                 return;
             }
 
-            const totalPages = jobLimit === -1 ? 1 : Math.ceil(totalRows / jobLimit);
-            if (jobPage > totalPages) jobPage = totalPages;
-            
-            const start = (jobPage - 1) * jobLimit;
-            const end = jobLimit === -1 ? totalRows : start + jobLimit;
-            const currentJobs = jobLimit === -1 ? filteredJobs : filteredJobs.slice(start, end);
-
-            jobTableBody.innerHTML = currentJobs.map(job => {
-                const posted = job.posted_date ? new Date(job.posted_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : '—';
+            jobGridBody.innerHTML = filteredJobs.map(job => {
+                const badge = getJobStatusBadge(job);
                 const safeJobId = escapeHtml(job.id);
                 const safeJobTitle = escapeHtml(job.title || '');
+                const location = escapeHtml(job.location || '—');
+                const deptName = escapeHtml(job.department_name || '—');
+                const apps = parseInt(job.applicant_count, 10) || 0;
+                const interviews = parseInt(job.interview_count, 10) || 0;
+                const isClosed = job.status === 'Close';
+                const lockTitle = job.status === 'Active' ? 'Close Job' : 'Activate Job';
+                const lockIcon = job.status === 'Active' ? 'lock' : 'unlock';
+                const nextStatus = job.status === 'Active' ? 'Close' : 'Active';
+                const postedOn = job.posted_date || job.created_at;
+                const postedLabel = formatJobPostedLabel(postedOn);
+
                 return `
-                <tr>
-                    <td>
-                        <div class="text-dark font-14 font-600">${job.title}</div>
-                        <div class="font-11 text-light mt-1">${job.type}</div>
-                    </td>
-                    <td class="font-14">${job.department_name || '—'}</td>
-                    <td class="font-14">
-                        <div style="max-width: 200px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="${job.location}">
-                            ${job.location}
+                <article class="job-post-card">
+                    <span class="job-post-card__badge ${badge.className}">${badge.label}</span>
+                    <h3 class="job-post-card__title">${escapeHtml(job.title || 'Untitled')}</h3>
+                    <p class="job-post-card__meta" title="${location} • ${deptName}">${location} &bull; ${deptName}</p>
+                    <div class="job-post-card__stats">
+                        <div class="job-post-card__stat">
+                            <span class="job-post-card__stat-label">Apps</span>
+                            <span class="job-post-card__stat-value">${apps}</span>
                         </div>
-                    </td>
-                    <td class="font-14">${posted}</td>
-                    <td class="font-14">${job.applicant_count} Applicants</td>
-                    <td><span class="badge ${job.status === 'Active' ? 'badge-success' : job.status === 'Close' ? 'badge-danger' : 'badge-warning'}">${job.status}</span></td>
-                    <td class="text-right px-30">
-                        <div class="flex-center gap-8 justify-end">
-                            <button class="action-btn" title="View Details" onclick="viewJobDetails('${job.id}')"><i data-lucide="eye" size="14"></i></button>
-                            <a href="edit-job.php?id=${job.id}" class="action-btn" title="Edit Job"><i data-lucide="edit-2" size="14"></i></a>
-                            <button class="action-btn" title="${job.status === 'Active' ? 'Close Job' : 'Activate Job'}" onclick="toggleJobStatus('${job.id}', '${job.status === 'Active' ? 'Close' : 'Active'}')">
-                                <i data-lucide="${job.status === 'Active' ? 'lock' : 'unlock'}" size="14"></i>
-                            </button>
-                            <button class="action-btn" title="${job.status === 'Close' ? 'Job Closed' : 'Copy Apply Link'}" 
+                        <div class="job-post-card__stat">
+                            <span class="job-post-card__stat-label">Interview</span>
+                            <span class="job-post-card__stat-value">${interviews}</span>
+                        </div>
+                    </div>
+                    <footer class="job-post-card__footer">
+                        <span class="job-post-card__posted">
+                            <i data-lucide="calendar" size="12"></i>
+                            ${postedLabel}
+                        </span>
+                        <div class="job-post-card__actions">
+                            <button type="button" class="action-btn" title="View Details" onclick="viewJobDetails('${safeJobId}')"><i data-lucide="eye"></i></button>
+                            <a href="edit-job.php?id=${safeJobId}" class="action-btn" title="Edit Job"><i data-lucide="edit-2"></i></a>
+                            <button type="button" class="action-btn" title="${lockTitle}" onclick="toggleJobStatus('${safeJobId}', '${nextStatus}')"><i data-lucide="${lockIcon}"></i></button>
+                            <button type="button" class="action-btn" title="${isClosed ? 'Job Closed' : 'Copy Apply Link'}"
                                 data-job-id="${safeJobId}"
                                 data-job-title="${safeJobTitle}"
-                                onclick="${job.status === 'Close' ? 'return false' : 'copyJobLink(this.dataset.jobId, this.dataset.jobTitle)'}" 
-                                ${job.status === 'Close' ? 'disabled style="opacity: 0.5; cursor: not-allowed;"' : ''}>
-                                <i data-lucide="link" size="14"></i>
-                            </button>
+                                onclick="${isClosed ? 'return false' : 'copyJobLink(this.dataset.jobId, this.dataset.jobTitle)'}"
+                                ${isClosed ? 'disabled style="opacity:0.5;cursor:not-allowed;"' : ''}><i data-lucide="link"></i></button>
                         </div>
-                    </td>
-                </tr>
-            `;}).join('');
+                    </footer>
+                </article>`;
+            }).join('');
 
-            // Update Summaries
-            const showingStart = totalRows === 0 ? 0 : start + 1;
-            const showingEnd = Math.min(end, totalRows);
-            const infoText = `Showing ${showingStart} to ${showingEnd} of ${totalRows} entries`;
-            if (jobPaginationInfo) jobPaginationInfo.textContent = infoText;
-            if (jobTableSummary) jobTableSummary.textContent = infoText;
-
-            updateJobPagination(totalPages);
             lucide.createIcons();
         }
 
@@ -257,17 +268,16 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (result.status !== 'success') throw new Exception(result.message);
 
                 const job = result.data;
-                const posted = job.posted_date ? new Date(job.posted_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : '—';
+                const posted = formatJobPostedLabel(job.posted_date || job.created_at);
 
                 document.getElementById('detailJobTitle').textContent = job.title;
-                const statusClass = job.status === 'Active' ? 'job-detail-pill--success' : job.status === 'Close' ? 'job-detail-pill--danger' : 'job-detail-pill--neutral';
+                const statusClass = job.status === 'Active' ? 'job-detail-pill--success' : 'job-detail-pill--danger';
                 document.getElementById('detailJobAppCount').innerHTML = `
                     <span class="font-11 text-light font-600 uppercase ls-05 mr-12">${job.applicant_count || 0} Applicants</span>
                     <span class="job-detail-pill ${statusClass}">${job.status}</span>`;
                 
                 document.getElementById('detailDept').textContent = job.department_name || '—';
                 document.getElementById('detailLocation').textContent = job.location;
-                document.getElementById('detailType').textContent = job.type || 'Full-time';
                 document.getElementById('detailPostedDate').textContent = posted;
 
                 // Description
@@ -331,59 +341,25 @@ document.addEventListener('DOMContentLoaded', function() {
         };
 
         window.applyJobFilters = function() {
-            jobPage = 1;
             renderJobs();
         };
 
         const searchInput = document.getElementById('jobSearch');
         const deptFilter = document.getElementById('filterDept');
-        const statusFilter = document.getElementById('filterStatus');
-        const sortFilter = document.getElementById('sortBy');
 
         if (searchInput) searchInput.oninput = applyJobFilters;
         if (deptFilter) deptFilter.onchange = applyJobFilters;
-        if (statusFilter) statusFilter.onchange = applyJobFilters;
-        if (sortFilter) sortFilter.onchange = applyJobFilters;
 
-
-
-        function updateJobPagination(totalPages) {
-            if (!jobPageNumbers) return;
-            jobPageNumbers.innerHTML = '';
-            
-            if (totalPages <= 1) {
-                jobPrevBtn.parentElement.classList.add('hidden');
-            } else {
-                jobPrevBtn.parentElement.classList.remove('hidden');
-            }
-
-            jobPrevBtn.disabled = jobPage === 1;
-            jobNextBtn.disabled = jobPage === totalPages;
-            jobPrevBtn.style.opacity = jobPage === 1 ? '0.5' : '1';
-            jobNextBtn.style.opacity = jobPage === totalPages ? '0.5' : '1';
-
-            for (let i = 1; i <= totalPages; i++) {
-                const btn = document.createElement('button');
-                btn.className = `action-btn ${i === jobPage ? 'btn-active' : ''}`;
-                btn.textContent = i;
-                btn.onclick = () => { jobPage = i; renderJobs(); };
-                jobPageNumbers.appendChild(btn);
-            }
+        if (jobStatusTabs) {
+            jobStatusTabs.querySelectorAll('.job-list-tab').forEach(tab => {
+                tab.addEventListener('click', () => {
+                    jobStatusTabs.querySelectorAll('.job-list-tab').forEach(t => t.classList.remove('active'));
+                    tab.classList.add('active');
+                    jobStatusTab = tab.getAttribute('data-status') || '';
+                    applyJobFilters();
+                });
+            });
         }
-
-        if (jobPerPage) {
-            jobPerPage.onchange = () => {
-                jobLimit = jobPerPage.value === 'all' ? -1 : parseInt(jobPerPage.value);
-                jobPage = 1;
-                renderJobs();
-            };
-        }
-
-        if (jobPrevBtn) jobPrevBtn.onclick = () => { if (jobPage > 1) { jobPage--; renderJobs(); } };
-        if (jobNextBtn) jobNextBtn.onclick = () => { 
-            const totalPages = jobLimit === -1 ? 1 : Math.ceil(jobs.length / jobLimit);
-            if (jobPage < totalPages) { jobPage++; renderJobs(); } 
-        };
 
         loadJobs();
     }
@@ -640,7 +616,6 @@ document.addEventListener('DOMContentLoaded', function() {
             var title = job.title || 'Open role';
             var dept = job.department_name || job.department || '—';
             var loc = job.location || '—';
-            var type = job.type || 'Full-time';
             var desc;
             if (String(job.description || '').trim()) {
                 desc = String(job.description).trim();
@@ -653,7 +628,6 @@ document.addEventListener('DOMContentLoaded', function() {
             setText('applyJobTitleMeta', title);
             setText('applyJobDept', dept);
             setText('applyJobLocation', loc);
-            setText('applyJobType', type);
             setText('applyJobDesc', desc);
 
             // Close status check
@@ -814,12 +788,41 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         }
 
+        function jaClearResumeError() {
+            var zone = document.querySelector('.ja-file-zone');
+            if (zone) zone.classList.remove('ja-file-zone--error');
+        }
+
+        function jaValidateResume() {
+            var resumeEl = document.getElementById('appResume');
+            var zone = document.querySelector('.ja-file-zone');
+            if (resumeEl && resumeEl.files && resumeEl.files.length > 0) {
+                jaClearResumeError();
+                return true;
+            }
+            if (zone) {
+                zone.classList.add('ja-file-zone--error');
+                zone.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+            alert('Please upload your Resume / CV to continue.');
+            return false;
+        }
+
         applyForm.onsubmit = async function (e) {
             e.preventDefault();
-            
+            jaClearResumeError();
+
+            if (!applyForm.checkValidity()) {
+                applyForm.reportValidity();
+                return;
+            }
+            if (!jaValidateResume()) {
+                return;
+            }
+
             const submitBtn = applyForm.querySelector('button[type="submit"]');
             const originalBtnText = submitBtn.innerHTML;
-            
+
             submitBtn.disabled = true;
             submitBtn.innerHTML = '<span>Submitting...</span><i data-lucide="loader-2" class="spin" size="18"></i>';
             if (typeof lucide !== 'undefined') lucide.createIcons();

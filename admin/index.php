@@ -271,7 +271,7 @@ include 'includes/header.php';
             <div class="card-header-v2 card-header-v2--compact">
                 <div>
                     <h4 class="font-600">Hiring funnel</h4>
-                    <p class="dashboard-chart-sub" id="dash-funnel-sub">New → Interview → Offer → Hired (active pipeline)</p>
+                    <p class="dashboard-chart-sub" id="dash-funnel-sub">New → Interview → Shortlisted → Offer → Hired (active pipeline)</p>
                 </div>
             </div>
             <div class="chart-canvas-wrap chart-canvas-wrap--funnel">

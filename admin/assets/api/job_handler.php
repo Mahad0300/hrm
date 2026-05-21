@@ -44,9 +44,11 @@ try {
             $dept_id = $_POST['department_id'] ?? null;
             $location = $_POST['location'] ?? '';
             $desc = $_POST['description'] ?? '';
-            $type = $_POST['type'] ?? 'Full-time';
             $status = $_POST['status'] ?? 'Active';
-            
+            if (!in_array($status, ['Active', 'Close'], true)) {
+                throw new Exception('Invalid job status.');
+            }
+
             // Decode questions from JSON string
             $questions = isset($_POST['questions']) ? json_decode($_POST['questions'], true) : [];
             // Handle both FormData and potential JSON input
@@ -56,15 +58,15 @@ try {
 
             if ($id) {
                 // Update existing job
-                $stmt = $pdo->prepare("UPDATE jobs SET title = ?, department_id = ?, location = ?, description = ?, type = ?, status = ?, updated_at = NOW() WHERE id = ?");
-                $stmt->execute([$title, $dept_id, $location, $desc, $type, $status, $id]);
+                $stmt = $pdo->prepare("UPDATE jobs SET title = ?, department_id = ?, location = ?, description = ?, status = ?, updated_at = NOW() WHERE id = ?");
+                $stmt->execute([$title, $dept_id, $location, $desc, $status, $id]);
                 
                 // Remove old questions first
                 $pdo->prepare("DELETE FROM job_questions WHERE job_id = ?")->execute([$id]);
             } else {
                 // Insert new job
-                $stmt = $pdo->prepare("INSERT INTO jobs (title, department_id, location, description, type, status, posted_date, created_at) VALUES (?, ?, ?, ?, ?, ?, CURDATE(), NOW())");
-                $stmt->execute([$title, $dept_id, $location, $desc, $type, $status]);
+                $stmt = $pdo->prepare("INSERT INTO jobs (title, department_id, location, description, status, posted_date, created_at) VALUES (?, ?, ?, ?, ?, CURDATE(), NOW())");
+                $stmt->execute([$title, $dept_id, $location, $desc, $status]);
                 $id = $pdo->lastInsertId();
             }
 
@@ -93,8 +95,9 @@ try {
 
         case 'fetch_jobs':
             $stmt = $pdo->query("
-                SELECT j.*, d.name as department_name, 
-                (SELECT COUNT(*) FROM candidates WHERE job_id = j.id AND deleted_at IS NULL) as applicant_count
+                SELECT j.*, d.name as department_name,
+                (SELECT COUNT(*) FROM candidates WHERE job_id = j.id AND deleted_at IS NULL) as applicant_count,
+                (SELECT COUNT(*) FROM candidates WHERE job_id = j.id AND deleted_at IS NULL AND status = 'Interview') as interview_count
                 FROM jobs j
                 LEFT JOIN departments d ON j.department_id = d.id
                 WHERE j.deleted_at IS NULL
@@ -156,7 +159,7 @@ try {
             $t_stmt->execute([$jobId]);
             $j_title = $t_stmt->fetchColumn() ?: "Unknown Job";
 
-            $stmt = $pdo->prepare("UPDATE jobs SET deleted_at = NOW(), status = 'Archived' WHERE id = ?");
+            $stmt = $pdo->prepare("UPDATE jobs SET deleted_at = NOW() WHERE id = ?");
             $stmt->execute([$jobId]);
 
             // [LOG]
@@ -368,6 +371,10 @@ try {
             $stmt = $pdo->prepare("INSERT INTO interviews (candidate_id, interview_date, feedback, status, created_at) VALUES (?, ?, ?, 'Scheduled', NOW())");
             $stmt->execute([$candidate_id, $interview_datetime, $feedback]);
             
+            $currStmt = $pdo->prepare("SELECT status FROM candidates WHERE id = ?");
+            $currStmt->execute([$candidate_id]);
+            $prevStatus = $currStmt->fetchColumn() ?: 'New';
+
             // Update candidate status & Record History
             $upStmt = $pdo->prepare("UPDATE candidates SET status = 'Interview', updated_at = NOW() WHERE id = ?");
             $upStmt->execute([$candidate_id]);
@@ -376,8 +383,8 @@ try {
             $dt = new DateTime($interview_datetime);
             $formattedTime = $dt->format('F j-Y, g:i A');
 
-            $hStmt = $pdo->prepare("INSERT INTO candidate_history (candidate_id, status_from, status_to, feedback, created_by, created_at) VALUES (?, 'New', 'Interview', ?, ?, NOW())");
-            $hStmt->execute([$candidate_id, "Interview scheduled for $formattedTime. $feedback", $user_id]);
+            $hStmt = $pdo->prepare("INSERT INTO candidate_history (candidate_id, status_from, status_to, feedback, created_by, created_at) VALUES (?, ?, 'Interview', ?, ?, NOW())");
+            $hStmt->execute([$candidate_id, $prevStatus, "Interview scheduled for $formattedTime. $feedback", $user_id]);
 
             // [LOG]
             $c_stmt = $pdo->prepare("SELECT name FROM candidates WHERE id = ?");
@@ -442,6 +449,9 @@ try {
             $status = $_POST['status'] ?? null;
 
             if (!$id || !$status) throw new Exception("ID and Status are required.");
+            if (!in_array($status, ['Active', 'Close'], true)) {
+                throw new Exception('Invalid job status.');
+            }
 
             $stmt = $pdo->prepare("UPDATE jobs SET status = ?, updated_at = NOW() WHERE id = ?");
             $stmt->execute([$status, $id]);

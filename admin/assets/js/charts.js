@@ -42,13 +42,13 @@
         }
     }
 
-    const funnelStageColors = ['#a78bfa', '#8a6df1', '#6C4CF1', '#22c55e'];
+    const funnelStageColors = ['#a78bfa', '#8a6df1', '#94a3b8', '#6C4CF1', '#22c55e'];
 
     function renderHiringFunnelBars(labels, data, total) {
         const wrap = document.getElementById('adminFunnelChart');
         if (!wrap) return;
 
-        const stageLabels = labels || ['New', 'Interview', 'Offer', 'Hired'];
+        const stageLabels = labels || ['New', 'Interview', 'Shortlisted', 'Offer', 'Hired'];
         const counts = (data || [0, 0, 0, 0]).map((n) => Number(n) || 0);
         const max = Math.max(...counts, 1);
         const sum = total !== undefined ? total : counts.reduce((s, n) => s + n, 0);

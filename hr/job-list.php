@@ -35,8 +35,7 @@ include 'includes/header.php';
             <select id="filterStatus" class="form-control font-13">
                 <option value="">All Status</option>
                 <option value="Active">Active</option>
-                <option value="Closed">Closed</option>
-                <option value="Draft">Draft</option>
+                <option value="Close">Closed</option>
             </select>
         </div>
         <div class="filter-item">
@@ -124,13 +123,6 @@ include 'includes/header.php';
                     <div class="job-detail-stat__text">
                         <span class="job-detail-stat__label">Location</span>
                         <span class="job-detail-stat__value allow-wrap" id="detailLocation">—</span>
-                    </div>
-                </div>
-                <div class="job-detail-stat">
-                    <div class="job-detail-stat__icon"><i data-lucide="clock" size="18"></i></div>
-                    <div class="job-detail-stat__text">
-                        <span class="job-detail-stat__label">Employment Type</span>
-                        <span class="job-detail-stat__value" id="detailType">—</span>
                     </div>
                 </div>
                 <div class="job-detail-stat">

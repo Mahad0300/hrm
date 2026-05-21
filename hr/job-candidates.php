@@ -27,9 +27,11 @@ include 'includes/header.php';
                 <option>New</option>
                 <option>Shortlisted</option>
                 <option>Interview</option>
+                <option>Offer</option>
                 <option>Hired</option>
-                <option>Resource Pool</option>
                 <option>Rejected</option>
+                <option>Duplicated</option>
+                <option>Banned</option>
             </select>
         </div>
         <div class="filter-item">

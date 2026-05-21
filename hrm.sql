@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 21, 2026 at 08:08 PM
+-- Generation Time: May 22, 2026 at 12:35 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -206,7 +206,30 @@ INSERT INTO `activity_logs` (`id`, `employee_id`, `action`, `description`, `ip_a
 (163, 39, 'User Login', '[Authentication] User authenticated successfully and accessed the system dashboard.', '::1', '2026-05-21 18:07:29'),
 (164, 1, 'Deleted Employee Profile', '[Employees] Moved team member: test test to the Exit list.', '::1', '2026-05-21 18:07:36'),
 (165, 1, 'Restored Employee Profile', '[Employees] Reactivated team member: test test', '::1', '2026-05-21 18:07:51'),
-(166, 1, 'Deleted Employee Profile', '[Employees] Moved team member: test tes to the Exit list.', '::1', '2026-05-21 18:07:58');
+(166, 1, 'Deleted Employee Profile', '[Employees] Moved team member: test tes to the Exit list.', '::1', '2026-05-21 18:07:58'),
+(167, 1, 'Updated Job Opening', '[Job Management] Modified the requirements and details for position: \'test job title \'', '::1', '2026-05-21 18:23:33'),
+(168, 1, 'Scheduled Interview', '[Job Management] Scheduled an interview session for candidate \'test\' on May 21, 2026 at 20:30.', '::1', '2026-05-21 18:51:34'),
+(169, 1, 'Rescheduled Interview', '[Job Management] Rescheduled the interview session for \'test\' to May 22, 2026 at 20:30.', '::1', '2026-05-21 18:52:04'),
+(170, 1, 'Updated Candidate Status', '[Job Management] Updated status for candidate \'test\' from \'Interview\' to \'Offer\'.', '::1', '2026-05-21 18:52:48'),
+(171, 1, 'Updated Candidate Status', '[Job Management] Updated status for candidate \'test\' from \'Offer\' to \'Hired\'.', '::1', '2026-05-21 18:53:09'),
+(172, 1, 'Updated Candidate Status', '[Job Management] Updated status for candidate \'test\' from \'Hired\' to \'Banned\'.', '::1', '2026-05-21 19:03:08'),
+(173, 1, 'Updated Candidate Status', '[Job Management] Updated status for candidate \'test\' from \'Banned\' to \'Banned\'.', '::1', '2026-05-21 19:04:52'),
+(174, 1, 'Updated Job Opening', '[Job Management] Modified the requirements and details for position: \'Test Job\'', '::1', '2026-05-21 20:50:27'),
+(175, 1, 'Scheduled Interview', '[Job Management] Scheduled an interview session for candidate \'Test\' on May 22, 2026 at 20:00.', '::1', '2026-05-21 20:54:37'),
+(176, 1, 'Rescheduled Interview', '[Job Management] Rescheduled the interview session for \'Test\' to May 23, 2026 at 21:00.', '::1', '2026-05-21 20:55:18'),
+(177, 1, 'Updated Candidate Status', '[Job Management] Updated status for candidate \'Test\' from \'Interview\' to \'Shortlisted\'.', '::1', '2026-05-21 20:55:52'),
+(178, 1, 'Updated Candidate Status', '[Job Management] Updated status for candidate \'Test\' from \'Shortlisted\' to \'Offer\'.', '::1', '2026-05-21 20:56:24'),
+(179, 1, 'Updated Candidate Status', '[Job Management] Updated status for candidate \'Test\' from \'Offer\' to \'Hired\'.', '::1', '2026-05-21 20:56:39'),
+(180, 1, 'Updated Job Status', '[Job Management] Changed status for \'Test Job\' to \'Close\'.', '::1', '2026-05-21 21:25:18'),
+(181, 1, 'Updated Job Status', '[Job Management] Changed status for \'Test Job\' to \'Active\'.', '::1', '2026-05-21 21:26:01'),
+(182, 1, 'Updated Job Status', '[Job Management] Changed status for \'Test Job\' to \'Close\'.', '::1', '2026-05-21 21:38:20'),
+(183, 1, 'Updated Job Status', '[Job Management] Changed status for \'Test Job\' to \'Active\'.', '::1', '2026-05-21 21:38:24'),
+(184, 1, 'Updated Job Opening', '[Job Management] Modified the requirements and details for position: \'Test 2\'', '::1', '2026-05-21 22:23:33'),
+(185, 1, 'Updated Job Opening', '[Job Management] Modified the requirements and details for position: \'Test 3\'', '::1', '2026-05-21 22:23:48'),
+(186, 1, 'Updated Job Opening', '[Job Management] Modified the requirements and details for position: \'Test 4\'', '::1', '2026-05-21 22:24:12'),
+(187, 1, 'Updated Job Opening', '[Job Management] Modified the requirements and details for position: \'Test 5\'', '::1', '2026-05-21 22:24:25'),
+(188, 1, 'Updated Job Status', '[Job Management] Changed status for \'Test 4\' to \'Close\'.', '::1', '2026-05-21 22:32:29'),
+(189, 1, 'Updated Job Status', '[Job Management] Changed status for \'Test 2\' to \'Close\'.', '::1', '2026-05-21 22:32:32');
 
 -- --------------------------------------------------------
 
@@ -465,7 +488,7 @@ CREATE TABLE `candidates` (
   `address` text DEFAULT NULL,
   `job_id` int(11) DEFAULT NULL,
   `applied_date` date DEFAULT NULL,
-  `status` enum('New','Interview','Offer','Hired','Rejected','Duplicated','Banned') DEFAULT 'New',
+  `status` enum('New','Shortlisted','Interview','Offer','Hired','Rejected','Duplicated','Banned') NOT NULL DEFAULT 'New',
   `duplicate_of` int(11) DEFAULT NULL,
   `duplicate_reason` varchar(255) DEFAULT NULL,
   `resume_path` varchar(255) DEFAULT NULL,
@@ -479,9 +502,7 @@ CREATE TABLE `candidates` (
 --
 
 INSERT INTO `candidates` (`id`, `name`, `email`, `phone`, `cnic_number`, `address`, `job_id`, `applied_date`, `status`, `duplicate_of`, `duplicate_reason`, `resume_path`, `created_at`, `updated_at`, `deleted_at`) VALUES
-(17, 'Test Full Name', 'testing@gmail.com', '1231-2123123', '87954-6210021-3', 'Test Residential Address ', 9, '2026-04-30', 'Interview', NULL, NULL, 'uploads/candidates/resumes/RES_69f38bd341c3b.pdf', '2026-04-30 17:05:23', '2026-04-30 17:07:36', NULL),
-(18, 'adas', 'sa@gmail', '4322-2222222', '43544-1433443-4', 'fdaads', 10, '2026-05-01', 'Banned', NULL, NULL, 'uploads/candidates/resumes/RES_69f3c10bba1c5.pdf', '2026-04-30 20:52:27', '2026-05-01 17:24:03', NULL),
-(19, 'Test', 'test@gmail.com', '8974-5623145', '46597-8465213-1', 'test Address', 11, '2026-05-13', 'Hired', NULL, NULL, 'uploads/candidates/resumes/RES_6a04c0ae834db.pdf', '2026-05-13 18:19:26', '2026-05-13 18:22:57', NULL);
+(25, 'Test', 'test@gmail.com', '7894-6523145', '97465-3214659-7', 'Test 1', 13, '2026-05-22', 'Hired', NULL, NULL, 'uploads/candidates/resumes/RES_6a0f70a4eebcc.pdf', '2026-05-21 20:52:52', '2026-05-21 20:56:39', NULL);
 
 -- --------------------------------------------------------
 
@@ -502,19 +523,12 @@ CREATE TABLE `candidate_answers` (
 --
 
 INSERT INTO `candidate_answers` (`id`, `candidate_id`, `question_text`, `answer`, `created_at`) VALUES
-(61, 17, 'What is your current salary?', 'What is your current salary? * Test', '2026-04-30 17:05:23'),
-(62, 17, 'How many years of experience do you have?', 'How many years of experience do you have? * Test', '2026-04-30 17:05:23'),
-(63, 17, 'Portfolio Link', 'Portfolio Link * Test', '2026-04-30 17:05:23'),
-(64, 17, 'LinkedIn Profile', 'LinkedIn Profile * Test', '2026-04-30 17:05:23'),
-(65, 17, 'When can you start?', 'When can you start? * test', '2026-04-30 17:05:23'),
-(66, 17, 'Add Custom Question', 'Add Custom Question * Test', '2026-04-30 17:05:23'),
-(67, 18, 'What is your current salary?', 'asdfsdaffa', '2026-04-30 20:52:27'),
-(68, 19, 'What is your current salary?', 'test', '2026-05-13 18:19:26'),
-(69, 19, 'How many years of experience do you have?', 'test', '2026-05-13 18:19:26'),
-(70, 19, 'Portfolio Link', 'test', '2026-05-13 18:19:26'),
-(71, 19, 'LinkedIn Profile', 'test', '2026-05-13 18:19:26'),
-(72, 19, 'When can you start?', 'test', '2026-05-13 18:19:26'),
-(73, 19, 'Test job ', 'test', '2026-05-13 18:19:26');
+(104, 25, 'What is your current salary?', 'Test 1', '2026-05-21 20:52:52'),
+(105, 25, 'How many years of experience do you have?', 'Test 1', '2026-05-21 20:52:53'),
+(106, 25, 'Portfolio Link', 'Test 1', '2026-05-21 20:52:53'),
+(107, 25, 'LinkedIn Profile', 'Test 1', '2026-05-21 20:52:53'),
+(108, 25, 'When can you start?', 'Test 1', '2026-05-21 20:52:53'),
+(109, 25, 'Test Job Custom Question', 'Test 1', '2026-05-21 20:52:53');
 
 -- --------------------------------------------------------
 
@@ -537,19 +551,11 @@ CREATE TABLE `candidate_history` (
 --
 
 INSERT INTO `candidate_history` (`id`, `candidate_id`, `status_from`, `status_to`, `feedback`, `created_by`, `created_at`) VALUES
-(16, 17, 'New', 'Interview', 'Interview scheduled for April 30-2026, 8:00 PM. Interview Notes / Feedback Test', 1, '2026-04-30 17:07:36'),
-(17, 17, 'Interview', 'Interview', 'Interview rescheduled. Previous: April 30-2026, 8:00 PM. New: May 1-2026, 9:00 PM. Notes: Interview Notes / Feedback Test', 1, '2026-04-30 17:34:27'),
-(18, 18, 'New', 'Interview', 'Interview scheduled for May 1-2026, 8:00 PM. qrweqrqwe', 1, '2026-04-30 20:53:25'),
-(19, 18, 'Interview', 'Interview', 'Interview rescheduled. Previous: May 1-2026, 8:00 PM. New: May 2-2026, 9:00 PM. Notes: qrweqrqwe', 1, '2026-04-30 20:53:38'),
-(20, 18, 'Interview', 'Interview', 'Interview rescheduled. Previous: May 2-2026, 9:00 PM. New: May 1-2026, 8:00 PM. Notes: qrweqrqwe dsas', 1, '2026-04-30 20:55:13'),
-(21, 18, 'Interview', 'Offer', 'adssaaas', 1, '2026-04-30 20:55:25'),
-(22, 18, 'Offer', 'Hired', 'addsa', 1, '2026-04-30 20:55:31'),
-(23, 18, 'Hired', 'Banned', '', 1, '2026-04-30 20:55:44'),
-(24, 18, 'Banned', 'Banned', '', 1, '2026-05-01 17:24:03'),
-(25, 19, 'New', 'Interview', 'Interview scheduled for May 13-2026, 10:00 AM. Move  New to Interview', 1, '2026-05-13 18:20:45'),
-(26, 19, 'Interview', 'Interview', 'Interview rescheduled. Previous: May 13-2026, 10:00 AM. New: May 14-2026, 11:00 PM. Notes: Move  New to Interview Edit', 1, '2026-05-13 18:21:33'),
-(27, 19, 'Interview', 'Offer', 'Move Interview to Offer', 1, '2026-05-13 18:22:14'),
-(28, 19, 'Offer', 'Hired', 'Move Offer to Hired', 1, '2026-05-13 18:22:57');
+(35, 25, 'New', 'Interview', 'Interview scheduled for May 22-2026, 8:00 PM. new to interview', 1, '2026-05-21 20:54:37'),
+(36, 25, 'Interview', 'Interview', 'Interview rescheduled. Previous: May 22-2026, 8:00 PM. New: May 23-2026, 9:00 PM. Notes: new to interview', 1, '2026-05-21 20:55:18'),
+(37, 25, 'Interview', 'Shortlisted', 'interview to shortlist', 1, '2026-05-21 20:55:52'),
+(38, 25, 'Shortlisted', 'Offer', 'Shortlist to Offer', 1, '2026-05-21 20:56:24'),
+(39, 25, 'Offer', 'Hired', 'Offer to hired', 1, '2026-05-21 20:56:39');
 
 -- --------------------------------------------------------
 
@@ -723,9 +729,7 @@ CREATE TABLE `interviews` (
 --
 
 INSERT INTO `interviews` (`id`, `candidate_id`, `interviewer_id`, `interview_date`, `interview_type`, `location`, `status`, `feedback`, `created_at`, `updated_at`) VALUES
-(11, 17, NULL, '2026-05-01 21:00:00', 'Onsite', NULL, 'Scheduled', 'Interview Notes / Feedback Test', '2026-04-30 17:07:36', '2026-04-30 17:34:27'),
-(12, 18, NULL, '2026-05-01 20:00:00', 'Onsite', NULL, 'Scheduled', 'qrweqrqwe dsas', '2026-04-30 20:53:25', '2026-04-30 20:55:13'),
-(13, 19, NULL, '2026-05-14 23:00:00', 'Onsite', NULL, 'Scheduled', 'Move  New to Interview Edit', '2026-05-13 18:20:45', '2026-05-13 18:21:33');
+(15, 25, NULL, '2026-05-23 21:00:00', 'Onsite', NULL, 'Scheduled', 'new to interview', '2026-05-21 20:54:37', '2026-05-21 20:55:18');
 
 -- --------------------------------------------------------
 
@@ -738,9 +742,8 @@ CREATE TABLE `jobs` (
   `title` varchar(255) NOT NULL,
   `department_id` int(11) DEFAULT NULL,
   `location` varchar(255) DEFAULT NULL,
-  `type` enum('Full-time','Part-time','Contract','Internship') DEFAULT 'Full-time',
   `description` text DEFAULT NULL,
-  `status` enum('Active','Draft','Archived','Close') DEFAULT 'Active',
+  `status` enum('Active','Close') NOT NULL DEFAULT 'Active',
   `posted_date` date DEFAULT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
   `updated_at` timestamp NULL DEFAULT NULL ON UPDATE current_timestamp(),
@@ -751,10 +754,12 @@ CREATE TABLE `jobs` (
 -- Dumping data for table `jobs`
 --
 
-INSERT INTO `jobs` (`id`, `title`, `department_id`, `location`, `type`, `description`, `status`, `posted_date`, `created_at`, `updated_at`, `deleted_at`) VALUES
-(9, 'Test Job', 11, 'North Nazimabad Block D, Near Ship Owner College at Hill View Apartment karachi.', 'Full-time', 'tes discription ', 'Active', '2026-04-30', '2026-04-30 17:00:46', NULL, NULL),
-(10, 'test activity ewrwewre', 11, 'North Nazimabad Block D, Near Ship Owner College at Hill View Apartment karachi.', 'Full-time', 'discription', 'Close', '2026-05-01', '2026-04-30 20:48:53', '2026-05-13 17:00:42', NULL),
-(11, 'testttt again Job Title', 11, 'North Nazimabad Block D, Near Ship Owner College at Hill View Apartment karachi.', 'Full-time', 'testttt again  Job Description\r\n', 'Active', '2026-05-13', '2026-05-13 17:59:11', '2026-05-13 17:59:28', NULL);
+INSERT INTO `jobs` (`id`, `title`, `department_id`, `location`, `description`, `status`, `posted_date`, `created_at`, `updated_at`, `deleted_at`) VALUES
+(13, 'Test Job', 11, 'North Nazimabad Block D, Near Ship Owner College at Hill View Apartment karachi.', 'Test', 'Active', '2026-05-21', '2026-05-21 20:50:27', '2026-05-21 22:25:37', NULL),
+(14, 'Test 2', 13, 'North Nazimabad Block D, Near Ship Owner College at Hill View Apartment karachi.', 'Test 2', 'Close', '2026-05-22', '2026-05-21 22:23:33', '2026-05-21 22:32:32', NULL),
+(15, 'Test 3', 8, 'North Nazimabad Block D, Near Ship Owner College at Hill View Apartment karachi.', 'Test 3', 'Active', '2026-05-22', '2026-05-21 22:23:48', NULL, NULL),
+(16, 'Test 4', 10, 'North Nazimabad Block D, Near Ship Owner College at Hill View Apartment karachi.', 'Test 4', 'Close', '2026-05-22', '2026-05-21 22:24:12', '2026-05-21 22:32:29', NULL),
+(17, 'Test 5', 9, 'North Nazimabad Block D, Near Ship Owner College at Hill View Apartment karachi.', 'Test 5', 'Active', '2026-05-22', '2026-05-21 22:24:25', NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -775,19 +780,20 @@ CREATE TABLE `job_questions` (
 --
 
 INSERT INTO `job_questions` (`id`, `job_id`, `question_text`, `answer_type`, `is_required`) VALUES
-(30, 9, 'What is your current salary?', 'Text Answer', 1),
-(31, 9, 'How many years of experience do you have?', 'Text Answer', 1),
-(32, 9, 'Portfolio Link', 'Text Answer', 1),
-(33, 9, 'LinkedIn Profile', 'Text Answer', 1),
-(34, 9, 'When can you start?', 'Text Answer', 1),
-(35, 9, 'Add Custom Question', 'Text Answer', 1),
-(36, 10, 'What is your current salary?', 'Text Answer', 1),
-(43, 11, 'What is your current salary?', 'Text Answer', 1),
-(44, 11, 'How many years of experience do you have?', 'Text Answer', 1),
-(45, 11, 'Portfolio Link', 'Text Answer', 1),
-(46, 11, 'LinkedIn Profile', 'Text Answer', 1),
-(47, 11, 'When can you start?', 'Text Answer', 1),
-(48, 11, 'Test job ', 'Text Answer', 1);
+(55, 13, 'What is your current salary?', 'Text Answer', 1),
+(56, 13, 'How many years of experience do you have?', 'Text Answer', 1),
+(57, 13, 'Portfolio Link', 'Text Answer', 1),
+(58, 13, 'LinkedIn Profile', 'Text Answer', 1),
+(59, 13, 'When can you start?', 'Text Answer', 1),
+(60, 13, 'Test Job Custom Question', 'Text Answer', 1),
+(61, 14, 'What is your current salary?', 'Text Answer', 1),
+(62, 14, 'How many years of experience do you have?', 'Text Answer', 1),
+(63, 14, 'Portfolio Link', 'Text Answer', 1),
+(64, 14, 'LinkedIn Profile', 'Text Answer', 1),
+(65, 14, 'When can you start?', 'Text Answer', 1),
+(66, 16, 'How many years of experience do you have?', 'Text Answer', 1),
+(67, 16, 'Portfolio Link', 'Text Answer', 1),
+(68, 16, 'LinkedIn Profile', 'Text Answer', 1);
 
 -- --------------------------------------------------------
 
@@ -948,7 +954,13 @@ INSERT INTO `notifications` (`id`, `title`, `message`, `target_url`, `sender_id`
 (54, 'Leave Request Rejected', 'Your leave request has been Rejected.', 'leave-management.php', 1, 'Leave', '2026-05-20 18:18:39', NULL),
 (55, 'Leave Request Approved', 'Your leave request has been Approved.', 'leave-management.php', 1, 'Leave', '2026-05-20 18:21:30', NULL),
 (56, 'New Leave Request Submitted', 'Zain Ul Abidin has submitted a new leave request (Casual Leave, From 19 May, 2026 to 20 May, 2026). Awaiting your approval.', 'leave-management.php', 30, 'Leave', '2026-05-20 20:16:33', NULL),
-(57, 'Leave Request Approved', 'Your leave request has been Approved.', 'leave-management.php', 1, 'Leave', '2026-05-20 20:17:04', NULL);
+(57, 'Leave Request Approved', 'Your leave request has been Approved.', 'leave-management.php', 1, 'Leave', '2026-05-20 20:17:04', NULL),
+(58, 'New Job Application', 'New application received from test for position: test job title .', 'job-candidates.php', NULL, 'Recruitment', '2026-05-21 18:48:39', NULL),
+(59, 'New Job Application', 'New application received from test1 for position: test job title .', 'job-candidates.php', NULL, 'Recruitment', '2026-05-21 18:57:56', NULL),
+(60, 'New Job Application', 'New application received from test2 for position: test job title .', 'job-candidates.php', NULL, 'Recruitment', '2026-05-21 18:59:15', NULL),
+(61, 'New Job Application', 'New application received from test3 for position: test job title .', 'job-candidates.php', NULL, 'Recruitment', '2026-05-21 19:00:31', NULL),
+(62, 'New Job Application', 'New application received from test4 for position: test job title .', 'job-candidates.php', NULL, 'Recruitment', '2026-05-21 19:02:04', NULL),
+(63, 'New Job Application', 'New application received from Test for position: Test Job.', 'job-candidates.php', NULL, 'Recruitment', '2026-05-21 20:52:53', NULL);
 
 -- --------------------------------------------------------
 
@@ -975,7 +987,7 @@ INSERT INTO `notification_recipients` (`id`, `notification_id`, `employee_id`, `
 (128, 35, 22, 1, '2026-05-01 18:29:33'),
 (129, 36, 22, 1, '2026-05-01 18:29:32'),
 (130, 37, 22, 1, '2026-05-01 18:34:30'),
-(131, 38, 1, 0, NULL),
+(131, 38, 1, 1, '2026-05-21 19:11:34'),
 (132, 38, 37, 0, NULL),
 (133, 39, 22, 1, '2026-05-13 20:28:37'),
 (136, 39, 27, 0, NULL),
@@ -1046,15 +1058,21 @@ INSERT INTO `notification_recipients` (`id`, `notification_id`, `employee_id`, `
 (212, 48, 29, 0, NULL),
 (213, 48, 33, 0, NULL),
 (214, 48, 37, 0, NULL),
-(215, 49, 1, 0, NULL),
+(215, 49, 1, 1, '2026-05-21 19:11:34'),
 (216, 50, 22, 0, NULL),
-(217, 51, 1, 0, NULL),
+(217, 51, 1, 1, '2026-05-21 19:11:34'),
 (218, 52, 30, 0, NULL),
-(219, 53, 1, 0, NULL),
+(219, 53, 1, 1, '2026-05-21 19:11:34'),
 (220, 54, 30, 0, NULL),
 (221, 55, 30, 0, NULL),
-(222, 56, 1, 0, NULL),
-(223, 57, 30, 0, NULL);
+(222, 56, 1, 1, '2026-05-21 19:11:34'),
+(223, 57, 30, 0, NULL),
+(224, 58, 1, 1, '2026-05-21 19:11:34'),
+(225, 59, 1, 1, '2026-05-21 19:11:34'),
+(226, 60, 1, 1, '2026-05-21 19:11:34'),
+(227, 61, 1, 1, '2026-05-21 19:11:34'),
+(228, 62, 1, 1, '2026-05-21 19:11:34'),
+(229, 63, 1, 0, NULL);
 
 -- --------------------------------------------------------
 
@@ -1510,7 +1528,7 @@ ALTER TABLE `ticket_messages`
 -- AUTO_INCREMENT for table `activity_logs`
 --
 ALTER TABLE `activity_logs`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=167;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=190;
 
 --
 -- AUTO_INCREMENT for table `announcements`
@@ -1534,19 +1552,19 @@ ALTER TABLE `banking_info`
 -- AUTO_INCREMENT for table `candidates`
 --
 ALTER TABLE `candidates`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
 
 --
 -- AUTO_INCREMENT for table `candidate_answers`
 --
 ALTER TABLE `candidate_answers`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=74;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=110;
 
 --
 -- AUTO_INCREMENT for table `candidate_history`
 --
 ALTER TABLE `candidate_history`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=40;
 
 --
 -- AUTO_INCREMENT for table `departments`
@@ -1576,19 +1594,19 @@ ALTER TABLE `events`
 -- AUTO_INCREMENT for table `interviews`
 --
 ALTER TABLE `interviews`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- AUTO_INCREMENT for table `jobs`
 --
 ALTER TABLE `jobs`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
 
 --
 -- AUTO_INCREMENT for table `job_questions`
 --
 ALTER TABLE `job_questions`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=49;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=69;
 
 --
 -- AUTO_INCREMENT for table `kpi_goals`
@@ -1618,13 +1636,13 @@ ALTER TABLE `leave_types`
 -- AUTO_INCREMENT for table `notifications`
 --
 ALTER TABLE `notifications`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=58;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=64;
 
 --
 -- AUTO_INCREMENT for table `notification_recipients`
 --
 ALTER TABLE `notification_recipients`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=224;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=230;
 
 --
 -- AUTO_INCREMENT for table `payroll`
