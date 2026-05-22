@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        /* General Styles */
+        body {
+            font-family: 'Outfit', sans-serif;
+            line-height: 1.6;
+            color: #334155;
+            background-color: #f1f5f9;
+            margin: 0;
+            padding: 0;
+        }
+
+        .wrapper {
+            max-width: 600px;
+            margin: 40px auto;
+            background-color: #ffffff;
+            border-radius: 0px;
+            overflow: hidden;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, #6c4cf1 0%, #8a6fff 100%);
+            padding: 28px 32px;
+            color: #ffffff;
+        }
+
+        .header-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .header-center-cell {
+            text-align: center;
+            vertical-align: middle;
+        }
+
+        .header-inner-table {
+            margin: 0 auto;
+            border-collapse: collapse;
+        }
+
+        .header-logo-cell {
+            vertical-align: middle;
+            padding-right: 16px;
+        }
+
+        .header-brand-cell {
+            vertical-align: middle;
+            text-align: left;
+        }
+
+        .header-logo {
+            display: block;
+            height: 48px;
+            width: auto;
+            max-width: 140px;
+            border: 0;
+        }
+
+        .header .logo {
+            font-size: 25px;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            text-transform: uppercase;
+            line-height: 1.2;
+            color: #ffffff;
+        }
+
+        /* Content */
+        .content {
+            padding: 30px 20px;
+            background-color: #ffffff;
+        }
+
+        .greeting {
+            font-size: 20px;
+            font-weight: 700;
+            color: #0f172a;
+            margin-bottom: 20px;
+        }
+
+        .main-text {
+            font-size: 15px;
+            color: #475569;
+            margin-bottom: 20px;
+        }
+
+        .accent {
+            color: #4f46e5;
+            font-weight: 700;
+        }
+
+        /* Info Section */
+        .details-container {
+            background-color: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 4px;
+            padding: 15px;
+            margin-bottom: 32px;
+        }
+
+        .detail-row {
+            display: flex;
+            margin-bottom: 16px;
+            align-items: start;
+        }
+
+        .detail-row:last-child {
+            margin-bottom: 0;
+        }
+
+        .detail-icon {
+            font-size: 18px;
+            width: 32px;
+            min-width: 32px;
+        }
+
+        .detail-content {
+            flex: 1;
+        }
+
+        .detail-label {
+            font-size: 11px;
+            font-weight: 800;
+            text-transform: uppercase;
+            color: #94a3b8;
+            letter-spacing: 1px;
+            margin-bottom: 2px;
+        }
+
+        .detail-text {
+            font-size: 14px;
+            font-weight: 600;
+            color: #1e293b;
+        }
+
+        /* Call to Action */
+        .note-box {
+            background-color: #fffbeb;
+            border-left: 4px solid #f59e0b;
+            padding: 16px 20px;
+            border-radius: 4px 12px 12px 4px;
+            margin-bottom: 32px;
+            font-size: 14px;
+            color: #92400e;
+        }
+
+        .btn-container {
+            text-align: center;
+            margin-top: 35px;
+        }
+
+        .btn {
+            display: inline-block;
+            background: linear-gradient(135deg, #6c4cf1 0%, #8a6fff 100%);
+            color: #ffffff;
+            padding: 16px 32px;
+            border-radius: 12px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 15px;
+            box-shadow: 0 10px 15px -3px rgba(79, 70, 229, 0.3);
+        }
+
+        /* Signature */
+        .signature {
+            margin-top: 35px;
+            padding-top: 32px;
+            border-top: 1px solid #f1f5f9;
+        }
+
+        .signature-text {
+            font-size: 15px;
+            color: #475569;
+            margin-bottom: 20px;
+        }
+
+        .sig-name {
+            font-size: 17px;
+            font-weight: 700;
+            color: #1e1b4b;
+            margin: 0;
+        }
+
+        .sig-title {
+            font-size: 13px;
+            color: #64748b;
+            margin: 2px 0 0 0;
+        }
+
+        .contact-info {
+            gap: 10px;
+            margin-top: 16px;
+            font-size: 14px;
+            color: #475569;
+            border-left: 2px solid #e2e8f0;
+            padding-left: 16px;
+        }
+
+        .contact-link {
+            color: #475569;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        /* Footer */
+        .footer {
+            background-color: #f8fafc;
+            padding: 20px;
+            text-align: center;
+            border-top: 1px solid #f1f5f9;
+        }
+
+        .footer-logo {
+            font-size: 16px;
+            font-weight: 800;
+            color: #475569;
+        }
+
+        .footer-links {
+            margin-bottom: 12px;
+        }
+
+        .footer-link {
+            font-size: 13px;
+            color: #64748b;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .footer-sep {
+            color: #94a3b8;
+            font-weight: 600;
+            margin: 0 6px;
+        }
+
+        .copy {
+            font-size: 12px;
+            color: #94a3b8;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="wrapper">
+        <div class="header">
+            <table class="header-table" role="presentation" cellpadding="0" cellspacing="0" border="0">
+                <tr>
+                    <td class="header-center-cell" align="center">
+                        <table class="header-inner-table" role="presentation" cellpadding="0" cellspacing="0" border="0">
+                            <tr>
+                                <td class="header-logo-cell" valign="middle">
+                                    <img src="../../images/loginimage/logo.png" alt="Richmond Tech Group" class="header-logo" height="48" width="auto" style="display:block;height:48px;max-width:140px;border:0;">
+                                </td>
+                                <td class="header-brand-cell" valign="middle" align="left">
+                                    <div class="logo">Richmond Tech Group</div>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="content">
+            <div class="greeting">Dear {{candidate_name}},</div>
+
+            <p class="main-text">
+                We are pleased to invite you to an onsite interview for the position of <span
+                    class="accent">{{job_title}}</span> at Richmond Tech Group. We were impressed by your profile and
+                look forward to discussing how your skills align with our goals.
+            </p>
+
+            <div class="details-container">
+                <div class="detail-row">
+                    <div class="detail-icon">🗓</div>
+                    <div class="detail-content">
+                        <div class="detail-label">Interview Date</div>
+                        <div class="detail-text">{{interview_date}}</div>
+                    </div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-icon">🕑</div>
+                    <div class="detail-content">
+                        <div class="detail-label">Interview Time</div>
+                        <div class="detail-text">{{interview_time}}</div>
+                    </div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-icon">🌐</div>
+                    <div class="detail-content">
+                        <div class="detail-label">Interview Mode</div>
+                        <div class="detail-text">Onsite Interview</div>
+                    </div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-icon">📍</div>
+                    <div class="detail-content">
+                        <div class="detail-label">Location Details</div>
+                        <div class="detail-text">North Nazimabad Block D, Near Ship Owner College at Hill View
+                            Apartments - Ground Floor, Karachi.</div>
+                    </div>
+                </div>
+            </div>
+
+            <p class="main-text">
+                Please bring a copy of your updated CV and CNIC. We recommend arriving <strong>10 minutes early</strong>
+                to complete any necessary check-in procedures.
+            </p>
+
+            <div class="note-box">
+                <strong>Note:</strong> We request you to be dressed in <strong>formal business attire</strong> for the
+                duration of the interview.
+            </div>
+
+            <div class="btn-container">
+                <a href="https://maps.google.com/?q=24.947044,67.039650" class="btn">📍 View Location on Google Maps</a>
+            </div>
+
+            <div class="signature">
+                <div class="signature-text">Looking forward to speaking with you.</div>
+                <p class="sig-name">Syeda Bismah Wajeeh</p>
+                <p class="sig-title">HR Executive - Richmond Tech Group</p>
+
+                <div class="contact-info">
+                    <div style="margin-bottom: 8px;">📱 0330-2784784</div>
+                    <div style="margin-bottom: 8px;">📧 <a href="mailto:hr@richmondtechgroup.com"
+                            class="contact-link">hr@richmondtechgroup.com</a></div>
+                    <div>🔗 <a href="https://www.linkedin.com/company/rtg-info/" class="contact-link">LinkedIn Page</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <div class="footer-logo">Richmond Tech Group</div>
+            <div class="footer-links">
+                <a href="https://richmondtechgroup.com" class="footer-link">Website</a><span class="footer-sep">|</span><a href="https://www.linkedin.com/company/rtg-info/" class="footer-link">LinkedIn</a><span class="footer-sep">|</span><a href="https://www.instagram.com/richmondtechgroup/" class="footer-link">Instagram</a><span class="footer-sep">|</span><a href="https://www.facebook.com/RichmondTechGroup/" class="footer-link">Facebook</a>
+            </div>
+            <div class="copy">&copy; 2026 Richmond Tech Group. All rights reserved.</div>
+        </div>
+    </div>
+</body>
+
+</html>

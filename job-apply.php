@@ -95,6 +95,7 @@ $safePageTitle = htmlspecialchars($pageTitle, ENT_QUOTES, 'UTF-8');
 
         .apply-success-banner.is-visible {
             display: flex;
+            align-items: center;
         }
 
         .apply-success-banner strong {

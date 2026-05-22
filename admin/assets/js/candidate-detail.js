@@ -14,6 +14,23 @@
     let currentInterview = null;
     let currentCandidateStatus = '';
 
+    /** Reject not allowed once hired or in other closed states */
+    const REJECT_HIDDEN_STATUSES = ['hired', 'rejected', 'banned', 'duplicated'];
+
+    function normalizeStatusKey(status) {
+        return String(status || 'new').toLowerCase().trim().replace(/\s+/g, '-');
+    }
+
+    function syncRejectCandidateButton(statusKey) {
+        const rejectBtn = document.getElementById('rejectCandidateBtn');
+        if (!rejectBtn) return;
+        const hide = REJECT_HIDDEN_STATUSES.includes(normalizeStatusKey(statusKey));
+        rejectBtn.classList.toggle('hidden', hide);
+        rejectBtn.style.display = hide ? 'none' : '';
+        rejectBtn.disabled = hide;
+        rejectBtn.setAttribute('aria-hidden', hide ? 'true' : 'false');
+    }
+
     function syncBanCandidateButton(statusKey) {
         const banBtn = document.getElementById('banCandidateBtn');
         if (!banBtn) return;
@@ -103,9 +120,10 @@
                 statusBadge.textContent = rawStatus.toUpperCase();
                 
                 // Use standardized lowercase status as class
-                const s = rawStatus.toLowerCase().replace(' ', '-');
+                const s = normalizeStatusKey(rawStatus);
                 statusBadge.className = `cand-v2-status-badge ${s}`;
                 currentCandidateStatus = s;
+                syncRejectCandidateButton(s);
                 syncBanCandidateButton(s);
 
                 // --- Pipeline Action Button ---
@@ -161,6 +179,7 @@
                         pipelineBtn.disabled = true;
                         pipelineBtn.style.opacity = '0.6';
                         pipelineBtn.style.cursor = 'not-allowed';
+                        syncRejectCandidateButton('hired');
                     } else if (s === 'rejected' || s === 'banned' || s === 'duplicated') {
                         pipelineBtn.textContent = s.toUpperCase();
                         pipelineBtn.disabled = true;
@@ -306,12 +325,32 @@
 
     function openStatusModal(status) {
         document.getElementById('targetStatus').value = status;
-        document.getElementById('statusModalTitle').textContent = `Move to ${status}`;
-        document.getElementById('statusModalSubtitle').textContent = `Please provide feedback for moving candidate to ${status} stage.`;
+        const titleEl = document.getElementById('statusModalTitle');
+        const subtitleEl = document.getElementById('statusModalSubtitle');
+        const submitBtn = document.getElementById('statusModalSubmitBtn');
+        const feedbackEl = document.getElementById('statusFeedback');
+
+        if (status === 'Rejected') {
+            if (titleEl) titleEl.textContent = 'Reject Candidate';
+            if (subtitleEl) subtitleEl.textContent = 'Please provide a reason for rejecting this application.';
+            if (submitBtn) submitBtn.textContent = 'Confirm Rejection';
+            if (feedbackEl) {
+                feedbackEl.placeholder = 'Reason for rejection (required)...';
+            }
+        } else {
+            if (titleEl) titleEl.textContent = `Move to ${status}`;
+            if (subtitleEl) subtitleEl.textContent = `Please provide feedback for moving candidate to ${status} stage.`;
+            if (submitBtn) submitBtn.textContent = 'Confirm & Update';
+            if (feedbackEl) {
+                feedbackEl.placeholder = 'Please provide a detailed evaluation or reason for this status change...';
+            }
+        }
+
         document.getElementById('statusFeedback').value = '';
-        
+
         const modal = document.getElementById('statusTransitionModal');
         if (modal) modal.classList.add('active');
+        if (typeof lucide !== 'undefined') lucide.createIcons();
     }
 
     async function updateStatus(newStatus, feedback = '') {
@@ -344,6 +383,7 @@
         const interviewForm = document.getElementById('scheduleInterviewForm');
         const transitionForm = document.getElementById('statusTransitionForm');
         const banBtn = document.getElementById('banCandidateBtn');
+        const rejectBtn = document.getElementById('rejectCandidateBtn');
 
         if (transitionForm) {
             transitionForm.addEventListener('submit', async function(e) {
@@ -353,6 +393,15 @@
                 
                 closeModal('statusTransitionModal');
                 await updateStatus(status, feedback);
+            });
+        }
+
+        if (rejectBtn) {
+            rejectBtn.addEventListener('click', () => {
+                if (REJECT_HIDDEN_STATUSES.includes(normalizeStatusKey(currentCandidateStatus))) {
+                    return;
+                }
+                openStatusModal('Rejected');
             });
         }
 

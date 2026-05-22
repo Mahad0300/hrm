@@ -18,12 +18,13 @@ include 'includes/sidebar.php';
             <h2 class="font-24 font-700 m-0" style="color: #1e1b4b;">Candidate Profile</h2>
         </div>
         <div class="flex-center gap-12">
+            <button class="btn-light gap-8 hidden" id="rejectCandidateBtn"
+                style="background: rgba(245, 158, 11, 0.1); color: #b45309;">
+                <i data-lucide="user-x"></i> <span>Reject Candidate</span>
+            </button>
             <button class="btn-light gap-8" id="banCandidateBtn"
                 style="background: rgba(239, 68, 68, 0.08); color: var(--danger);">
                 <i data-lucide="ban"></i> <span>Ban Candidate</span>
-            </button>
-            <button class="btn-light gap-8">
-                <i data-lucide="mail"></i> <span>Send Email</span>
             </button>
         </div>
     </div>
