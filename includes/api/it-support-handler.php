@@ -12,14 +12,14 @@ if (!isLoggedIn()) {
 $user_id = (int) $_SESSION['user_id'];
 $user_role = $_SESSION['user_role'] ?? 'Employee';
 
-if (!in_array($user_role, ['Employee', 'Admin'], true)) {
+if (!in_array($user_role, ['Employee', 'Admin', 'HR'], true)) {
     echo json_encode(['success' => false, 'message' => 'Unauthorized']);
     exit;
 }
 
 $action = $_POST['action'] ?? $_GET['action'] ?? '';
 
-$is_admin = ($user_role === 'Admin');
+$is_admin = in_array($user_role, ['Admin', 'HR'], true);
 $is_it_staff = $is_admin;
 $stmt = $pdo->prepare("SELECT d.name FROM employees e LEFT JOIN departments d ON e.department_id = d.id WHERE e.id = ?");
 $stmt->execute([$user_id]);

@@ -4,6 +4,7 @@ require_once '../../../includes/db_connect.php';
 require_once '../../../includes/auth_helper.php';
 require_once '../../../includes/api/activity_helper.php';
 require_once '../../../includes/api/rate_limiter.php';
+require_once '../../../includes/email_helper.php';
 
 header('Content-Type: application/json');
 
@@ -504,6 +505,12 @@ switch ($action) {
                 }
 
                 $pdo->commit();
+
+                // Trigger onboarding/hired email
+                if ($action === 'hire_candidate' && $candidate_id) {
+                    $joining_date = $_POST['joining_date'] ?? null;
+                    sendCandidateStatusEmail($candidate_id, 'Hired', ['date' => $joining_date]);
+                }
                 
                 // [LOG] - Log only if NOT from public joining form and Admin is logged in
                 $admin_id = $_SESSION['user_id'] ?? 0;

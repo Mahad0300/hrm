@@ -4,6 +4,7 @@ require_once dirname(__DIR__, 3) . '/includes/db_connect.php';
 require_once dirname(__DIR__, 3) . '/includes/api/notification_handler.php';
 require_once dirname(__DIR__, 3) . '/includes/api/activity_helper.php';
 require_once dirname(__DIR__, 3) . '/includes/api/rate_limiter.php';
+require_once dirname(__DIR__, 3) . '/includes/email_helper.php';
 
 header('Content-Type: application/json');
 
@@ -352,6 +353,7 @@ try {
             logActivity($user_id, "Updated Candidate Status", "Job Management", "Updated status for candidate '$c_name' from '$oldStatus' to '$status'.");
 
             $pdo->commit();
+            sendCandidateStatusEmail($id, $status);
             echo json_encode(['status' => 'success', 'message' => 'Status updated successfully']);
             break;
 
@@ -393,6 +395,7 @@ try {
             logActivity($user_id, "Scheduled Interview", "Job Management", "Scheduled an interview session for candidate '$c_name' on " . date('M d, Y', strtotime($date)) . " at $time.");
 
             $pdo->commit();
+            sendCandidateStatusEmail($candidate_id, 'Interview', ['date' => $date, 'time' => $time]);
             echo json_encode(['status' => 'success', 'message' => 'Interview scheduled successfully']);
             break;
 
@@ -441,6 +444,9 @@ try {
             }
 
             $pdo->commit();
+            if ($target_candidate_id) {
+                sendCandidateStatusEmail($target_candidate_id, 'Interview', ['date' => $date, 'time' => $time]);
+            }
             echo json_encode(['status' => 'success', 'message' => 'Interview rescheduled successfully']);
             break;
 

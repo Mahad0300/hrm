@@ -15,14 +15,17 @@ include 'includes/header.php';
 
 <!-- Filters -->
 <div class="card p-24 mb-24">
-    <div class="policy-mgmt-filters">
-        <div class="modal-search">
-            <i data-lucide="search" class="input-icon"></i>
-            <input type="text" id="policyFilterSearch" class="form-control bg-white-input" placeholder="Search by title...">
+    <div class="filter-grid-3">
+        <div class="filter-item">
+            <label class="admin-form-label font-12" for="policyFilterSearch">Search</label>
+            <div class="search-box w-full">
+                <i data-lucide="search" size="16"></i>
+                <input type="text" id="policyFilterSearch" class="form-control" placeholder="Search by title...">
+            </div>
         </div>
         <div class="filter-item">
-            <label class="admin-form-label policy-mgmt-sr-only" for="policyFilterStatus">Status</label>
-            <select id="policyFilterStatus" class="form-control bg-white-input">
+            <label class="admin-form-label font-12" for="policyFilterStatus">Status</label>
+            <select id="policyFilterStatus" class="form-control">
                 <option value="">All statuses</option>
                 <option>Draft</option>
                 <option>Active</option>
@@ -32,7 +35,9 @@ include 'includes/header.php';
     </div>
 </div>
 
-<p class="font-12 text-light mb-15 policy-empty-hint" id="policyEmptyHint" style="display:none;">No policies match your filters. <button type="button" class="policy-mgmt-btn-link font-12" id="policyClearFilters">Clear filters</button></p>
+<p class="font-12 text-light mb-15 policy-empty-hint" id="policyEmptyHint" style="display:none;">No policies match your
+    filters. <button type="button" class="policy-mgmt-btn-link font-12" id="policyClearFilters">Clear filters</button>
+</p>
 
 <div class="policy-tiles-grid" id="policyTilesRoot" aria-live="polite"></div>
 
@@ -42,7 +47,8 @@ include 'includes/header.php';
         <div class="modal-header">
             <div>
                 <h3 class="mb-4">Add Policy</h3>
-                <p class="font-12 text-light">Use the editor for headings, lists, and emphasis. Saved policies appear as tiles below.</p>
+                <p class="font-12 text-light">Use the editor for headings, lists, and emphasis. Saved policies appear as
+                    tiles below.</p>
             </div>
             <button type="button" class="icon-btn js-modal-close"><i data-lucide="x"></i></button>
         </div>
@@ -50,7 +56,8 @@ include 'includes/header.php';
             <form id="policyAddForm">
                 <div class="form-group mb-20">
                     <label class="admin-form-label" for="policyAddTitle">Policy title</label>
-                    <input type="text" id="policyAddTitle" class="form-control bg-white-input" placeholder="e.g. Remote work guidelines" required maxlength="200">
+                    <input type="text" id="policyAddTitle" class="form-control bg-white-input"
+                        placeholder="e.g. Remote work guidelines" required maxlength="200">
                 </div>
 
                 <div class="form-grid-2 mb-20">
@@ -64,7 +71,8 @@ include 'includes/header.php';
                     </div>
                     <div class="form-group">
                         <label class="admin-form-label" for="policyAddEffective">Effective from</label>
-                        <input type="date" id="policyAddEffective" class="form-control bg-white-input" value="<?= date('Y-m-d') ?>">
+                        <input type="date" id="policyAddEffective" class="form-control bg-white-input"
+                            min="<?= date('Y-m-d') ?>">
                     </div>
                 </div>
 
@@ -73,15 +81,21 @@ include 'includes/header.php';
                     <div class="rich-text-container policy-modal-rich">
                         <div class="rich-text-toolbar">
                             <button type="button" class="toolbar-btn" title="Bold"><i data-lucide="bold"></i></button>
-                            <button type="button" class="toolbar-btn" title="Italic"><i data-lucide="italic"></i></button>
-                            <button type="button" class="toolbar-btn" title="Underline"><i data-lucide="underline"></i></button>
+                            <button type="button" class="toolbar-btn" title="Italic"><i
+                                    data-lucide="italic"></i></button>
+                            <button type="button" class="toolbar-btn" title="Underline"><i
+                                    data-lucide="underline"></i></button>
                             <div class="toolbar-divider"></div>
-                            <button type="button" class="toolbar-btn" title="InsertUnorderedList"><i data-lucide="list"></i></button>
-                            <button type="button" class="toolbar-btn" title="InsertOrderedList"><i data-lucide="list-ordered"></i></button>
+                            <button type="button" class="toolbar-btn" title="InsertUnorderedList"><i
+                                    data-lucide="list"></i></button>
+                            <button type="button" class="toolbar-btn" title="InsertOrderedList"><i
+                                    data-lucide="list-ordered"></i></button>
                             <div class="toolbar-divider"></div>
-                            <button type="button" class="toolbar-btn" title="CreateLink"><i data-lucide="link"></i></button>
+                            <button type="button" class="toolbar-btn" title="CreateLink"><i
+                                    data-lucide="link"></i></button>
                         </div>
-                        <div id="policyAddRichEditor" class="rich-text-editor" contenteditable="true" data-placeholder="Write your policy details here..."></div>
+                        <div id="policyAddRichEditor" class="rich-text-editor" contenteditable="true"
+                            data-placeholder="Write your policy details here..."></div>
                     </div>
                 </div>
             </form>
@@ -107,7 +121,8 @@ include 'includes/header.php';
             <form id="policyEditForm">
                 <div class="form-group mb-20">
                     <label class="admin-form-label" for="policyEditTitle">Policy title</label>
-                    <input type="text" id="policyEditTitle" class="form-control bg-white-input" placeholder="e.g. Remote work guidelines" required maxlength="200">
+                    <input type="text" id="policyEditTitle" class="form-control bg-white-input"
+                        placeholder="e.g. Remote work guidelines" required maxlength="200">
                 </div>
 
                 <div class="form-grid-2 mb-20">
@@ -121,7 +136,8 @@ include 'includes/header.php';
                     </div>
                     <div class="form-group">
                         <label class="admin-form-label" for="policyEditEffective">Effective from</label>
-                        <input type="date" id="policyEditEffective" class="form-control bg-white-input">
+                        <input type="date" id="policyEditEffective" class="form-control bg-white-input"
+                            min="<?= date('Y-m-d') ?>">
                     </div>
                 </div>
 
@@ -130,15 +146,21 @@ include 'includes/header.php';
                     <div class="rich-text-container policy-modal-rich">
                         <div class="rich-text-toolbar">
                             <button type="button" class="toolbar-btn" title="Bold"><i data-lucide="bold"></i></button>
-                            <button type="button" class="toolbar-btn" title="Italic"><i data-lucide="italic"></i></button>
-                            <button type="button" class="toolbar-btn" title="Underline"><i data-lucide="underline"></i></button>
+                            <button type="button" class="toolbar-btn" title="Italic"><i
+                                    data-lucide="italic"></i></button>
+                            <button type="button" class="toolbar-btn" title="Underline"><i
+                                    data-lucide="underline"></i></button>
                             <div class="toolbar-divider"></div>
-                            <button type="button" class="toolbar-btn" title="InsertUnorderedList"><i data-lucide="list"></i></button>
-                            <button type="button" class="toolbar-btn" title="InsertOrderedList"><i data-lucide="list-ordered"></i></button>
+                            <button type="button" class="toolbar-btn" title="InsertUnorderedList"><i
+                                    data-lucide="list"></i></button>
+                            <button type="button" class="toolbar-btn" title="InsertOrderedList"><i
+                                    data-lucide="list-ordered"></i></button>
                             <div class="toolbar-divider"></div>
-                            <button type="button" class="toolbar-btn" title="CreateLink"><i data-lucide="link"></i></button>
+                            <button type="button" class="toolbar-btn" title="CreateLink"><i
+                                    data-lucide="link"></i></button>
                         </div>
-                        <div id="policyEditRichEditor" class="rich-text-editor" contenteditable="true" data-placeholder="Write your policy details here..."></div>
+                        <div id="policyEditRichEditor" class="rich-text-editor" contenteditable="true"
+                            data-placeholder="Write your policy details here..."></div>
                     </div>
                 </div>
             </form>

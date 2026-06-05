@@ -1,7 +1,7 @@
-<?php 
+<?php
 $page_title = "Event Calendar";
 $page_subtitle = "View and manage company events, meetings, and deadlines.";
-include 'includes/header.php'; 
+include 'includes/header.php';
 ?>
 
 <!-- Add Calendar Styles -->
@@ -24,16 +24,11 @@ include 'includes/header.php';
             <div class="calendar-nav">
                 <h3 class="font-18 font-700 m-0" id="monthYear">March 2026</h3>
                 <div class="btn-group">
-                    <button type="button" class="action-btn" id="prevMonth" aria-label="Previous month"><i data-lucide="chevron-left" size="20"></i></button>
+                    <button type="button" class="action-btn" id="prevMonth" aria-label="Previous month"><i
+                            data-lucide="chevron-left" size="20"></i></button>
                     <button type="button" class="btn-primary no-bg border" id="todayBtn">Today</button>
-                    <button type="button" class="action-btn" id="nextMonth" aria-label="Next month"><i data-lucide="chevron-right" size="20"></i></button>
-                </div>
-            </div>
-            <div class="calendar-actions">
-                <div class="btn-group">
-                    <button type="button" class="btn-active view-tab" data-view="month">Month</button>
-                    <button type="button" class="view-tab" data-view="week">Week</button>
-                    <button type="button" class="view-tab" data-view="day">Day</button>
+                    <button type="button" class="action-btn" id="nextMonth" aria-label="Next month"><i
+                            data-lucide="chevron-right" size="20"></i></button>
                 </div>
             </div>
         </div>
@@ -49,7 +44,7 @@ include 'includes/header.php';
                 <div class="calendar-day-label">Sat</div>
             </div>
         </div>
-        
+
         <div class="calendar-grid custom-scrollbar" id="calendarGrid">
             <!-- Days will be injected by JS -->
         </div>
@@ -59,8 +54,9 @@ include 'includes/header.php';
     <div class="calendar-sidebar">
         <div class="filter-card">
             <h4 class="filter-title"><i data-lucide="search" size="18"></i> Search Events</h4>
-            <div class="search-box">
-                <input type="text" id="eventSearch" placeholder="Search by title..." class="form-control">
+            <div class="search-box w-full">
+                <i data-lucide="search" size="16"></i>
+                <input type="text" id="eventSearch" class="form-control" placeholder="Search by title...">
             </div>
         </div>
 
@@ -75,13 +71,9 @@ include 'includes/header.php';
                     <span class="color-dot" style="background: #ef4444;"></span>
                     <span>Holidays</span>
                 </div>
-                <div class="filter-option" data-category="Workshop">
+                <div class="filter-option" data-category="Celebration">
                     <span class="color-dot" style="background: #10b981;"></span>
-                    <span>Workshops</span>
-                </div>
-                <div class="filter-option" data-category="Others">
-                    <span class="color-dot" style="background: #6b7280;"></span>
-                    <span>Others</span>
+                    <span>Celebration</span>
                 </div>
             </div>
         </div>
@@ -108,39 +100,37 @@ include 'includes/header.php';
                     <p class="font-12 text-light m-0" id="modalSubtitle">Schedule and manage company events</p>
                 </div>
             </div>
-            <button class="icon-btn" onclick="closeModal('eventModal')" aria-label="Close"><i data-lucide="x" size="20"></i></button>
+            <button class="icon-btn" onclick="closeModal('eventModal')" aria-label="Close"><i data-lucide="x"
+                    size="20"></i></button>
         </div>
         <div class="modal-body p-30">
             <form id="eventForm">
                 <input type="hidden" id="eventId">
-                
+
                 <div class="form-group mb-20">
                     <label class="admin-form-label">Event Title *</label>
-                    <input type="text" class="form-control bg-white-input" id="eventTitle" placeholder="e.g. Quarterly Review" required>
+                    <input type="text" class="form-control bg-white-input" id="eventTitle"
+                        placeholder="e.g. Quarterly Review" required>
                 </div>
-                
-                <div class="form-grid-2">
-                    <div class="form-group mb-20">
-                        <label class="admin-form-label">Category *</label>
-                        <select class="form-control bg-white-input" id="eventCategory" required>
-                            <option value="Meeting">Meeting</option>
-                            <option value="Holiday">Holiday</option>
-                            <option value="Workshop">Workshop</option>
-                            <option value="Others">Others</option>
-                        </select>
-                    </div>
-                    <div class="form-group mb-20">
-                        <label class="admin-form-label">Department *</label>
-                        <select class="form-control bg-white-input" id="eventDept" required>
-                            <option value="All">All Departments</option>
-                            <option value="Engineering">Engineering</option>
-                            <option value="Design">Design</option>
-                            <option value="HR">Human Resources</option>
-                            <option value="Sales">Sales & Marketing</option>
-                        </select>
-                    </div>
+
+                <div class="form-group mb-20">
+                    <label class="admin-form-label">Category *</label>
+                    <select class="form-control bg-white-input" id="eventCategory" required>
+                        <option value="Meeting">Meeting</option>
+                        <option value="Holiday">Holiday</option>
+                        <option value="Celebration">Celebration</option>
+                    </select>
                 </div>
-                
+
+                <div class="form-group mb-20">
+                    <label class="admin-form-label">Department *</label>
+                    <div class="event-dept-pills category-selection-grid" id="eventDeptSelection">
+                        <div class="category-pill active" data-dept="everyone">All Departments</div>
+                        <!-- Filled by JS -->
+                    </div>
+                    <input type="hidden" id="eventDept" value="everyone">
+                </div>
+
                 <div class="form-grid-2">
                     <div class="form-group mb-20">
                         <label class="admin-form-label">Date *</label>
@@ -151,30 +141,34 @@ include 'includes/header.php';
                         <input type="time" class="form-control bg-white-input" id="eventTime" required>
                     </div>
                 </div>
-                
+
                 <div class="form-group mb-20">
                     <label class="admin-form-label">Description / Notes</label>
-                    <textarea class="form-control bg-white-input" id="eventDesc" rows="3" style="height: auto;" placeholder="Add any additional details or notes here..."></textarea>
+                    <textarea class="form-control bg-white-input" id="eventDesc" rows="3" style="height: auto;"
+                        placeholder="Add any additional details or notes here..."></textarea>
                 </div>
 
                 <div class="form-group mb-0">
                     <label class="flex-center gap-10 cursor-pointer">
-                        <input type="checkbox" id="eventShowInAccount" style="width: 18px; height: 18px; cursor: pointer;">
+                        <input type="checkbox" id="eventShowInAccount"
+                            style="width: 18px; height: 18px; cursor: pointer;">
                         <span class="font-13 text-dark font-600">Show this event in Announcement</span>
                     </label>
                 </div>
             </form>
         </div>
         <div class="modal-footer flex-between p-30 border-top-0">
-            <div>
-                <!-- Deleted button from here -->
-            </div>
-            <div class="flex-center gap-12">
-                <button type="button" class="btn-primary no-bg border text-light" onclick="closeModal('eventModal')">Cancel</button>
-                <button type="submit" form="eventForm" class="btn-primary px-30">Save Event</button>
-            </div>
+            <button type="button" class="btn-light"
+                onclick="closeModal('eventModal')">
+                <i data-lucide="x"></i> Cancel
+            </button>
+            <button type="submit" form="eventForm" class="btn-primary">
+                <i data-lucide="calendar-plus"></i> Save Event
+            </button>
         </div>
     </div>
+</div>
+
 </div>
 
 <div class="modal-overlay" id="eventDetailModal">
@@ -191,10 +185,11 @@ include 'includes/header.php';
             </div>
             <div class="flex-center gap-16">
                 <span class="badge" id="detailCategory">Meeting</span>
-                <button class="icon-btn" onclick="closeModal('eventDetailModal')"><i data-lucide="x" size="20"></i></button>
+                <button class="icon-btn" onclick="closeModal('eventDetailModal')"><i data-lucide="x"
+                        size="20"></i></button>
             </div>
         </div>
-        
+
         <div class="modal-body p-30">
             <div class="attendance-details-grid mb-24" style="grid-template-columns: 1fr 1fr;">
                 <div class="detail-item">
@@ -226,16 +221,38 @@ include 'includes/header.php';
                 </div>
             </div>
         </div>
-        
+
         <div class="modal-footer flex-between p-30 border-top-0">
-            <button type="button" class="btn-primary danger no-bg border" id="deleteEventBtnDetail">
-                <i data-lucide="trash-2" size="18"></i>
+            <button type="button" class="btn-light" id="deleteEventBtnDetail" style="color: var(--danger); background: rgba(239, 68, 68, 0.08);">
+                <i data-lucide="trash-2"></i>
                 <span>Delete Event</span>
             </button>
-            <button type="button" class="btn-primary px-30" id="editEventBtn">
-                <i data-lucide="edit-2" size="16"></i>
+            <button type="button" class="btn-primary" id="editEventBtn">
+                <i data-lucide="edit-2"></i>
                 <span>Edit Event Details</span>
             </button>
+        </div>
+    </div>
+</div>
+
+<div class="modal-overlay" id="dayEventsModal">
+    <div class="modal-content premium" style="max-width: 450px;">
+        <div class="modal-header">
+            <div class="flex-center gap-12">
+                <div class="type-icon-box primary">
+                    <i data-lucide="calendar" size="20"></i>
+                </div>
+                <div>
+                    <h3 id="dayModalTitle">Events on March 25</h3>
+                    <p class="font-12 text-light m-0">Daily Schedule</p>
+                </div>
+            </div>
+            <button class="icon-btn" onclick="closeModal('dayEventsModal')"><i data-lucide="x" size="20"></i></button>
+        </div>
+        <div class="modal-body p-20">
+            <div id="dayEventsList" class="flex-column gap-12">
+                <!-- Events will be populated here -->
+            </div>
         </div>
     </div>
 </div>

@@ -20,36 +20,33 @@ include 'includes/header.php';
 
 <!-- Filters Card -->
 <div class="card p-24 mb-24">
-    <div class="filter-grid">
-        <div class="search-box">
-            <i data-lucide="search" size="18"></i>
-            <input type="text" placeholder="Search by name, email or ID...">
+    <div class="filter-grid grid-4">
+        <div class="filter-item">
+            <label class="admin-form-label font-12">Search by ID</label>
+            <div class="search-box w-full">
+                <i data-lucide="hash" size="16"></i>
+                <input type="text" id="filterID" class="form-control" placeholder="e.g. 22">
+            </div>
         </div>
         <div class="filter-item">
-            <select class="form-control">
+            <label class="admin-form-label font-12">Search by Name</label>
+            <div class="search-box w-full">
+                <i data-lucide="user" size="16"></i>
+                <input type="text" id="filterName" class="form-control" placeholder="Employee name...">
+            </div>
+        </div>
+        <div class="filter-item">
+            <label class="admin-form-label font-12">Department</label>
+            <select class="form-control" id="filterDept">
                 <option value="">All Departments</option>
-                <option value="eng">Engineering</option>
-                <option value="design">Design</option>
-                <option value="hr">Human Resources</option>
-                <option value="sales">Sales & Marketing</option>
             </select>
         </div>
         <div class="filter-item">
-            <select class="form-control">
+            <label class="admin-form-label font-12">Role</label>
+            <select class="form-control" id="filterRole">
                 <option value="">All Roles</option>
-                <option value="lead">Team Lead</option>
-                <option value="senior">Senior Associate</option>
-                <option value="junior">Junior Associate</option>
-                <option value="intern">Intern</option>
-            </select>
-        </div>
-        <div class="filter-item">
-            <select class="form-control">
-                <option value="">All Status</option>
-                <option value="active">Active</option>
-                <option value="onleave">On Leave</option>
-                <option value="terminated">Terminated</option>
-                <option value="exit">Exit</option>
+                <option value="HR">HR</option>
+                <option value="Employee">Employee</option>
             </select>
         </div>
     </div>
@@ -82,297 +79,19 @@ include 'includes/header.php';
                     <th>EMPLOYEE</th>
                     <th>EMAIL</th>
                     <th>DEPARTMENT</th>
-                    <th>ROLE</th>
+                    <th>JOB TITLE</th>
                     <th>STATUS</th>
                     <th class="text-right px-30">ACTIONS</th>
                 </tr>
             </thead>
             <tbody id="employeeTableBody">
-                <!-- Row 1 -->
-                <tr data-emp-status="active">
-                    <td>
-                        <a href="employee-profile.php?id=EM-4820" class="emp-profile no-decoration hover-opacity">
-                            <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=150"
-                                class="emp-avatar" alt="Avatar">
-                            <div class="emp-info">
-                                <span class="name">Emma Williams</span>
-                                <span class="email">EM-4820</span>
-                            </div>
-                        </a>
-                    </td>
-                    <td class="allow-wrap">emma.w@rtg.com</td>
-                    <td class="allow-wrap">Engineering</td>
-                    <td>Product Manager</td>
-                    <td><span class="badge badge-success">Active</span></td>
-                    <td class="text-right px-30">
-                        <div class="btn-group justify-end">
-                            <button class="action-btn action-btn-view" title="View Details"><i data-lucide="eye"
-                                    size="14"></i></button>
-                            <button class="action-btn action-btn-edit" title="Edit"
-                                onclick="openEditEmployeeModal('EM-4820')"><i data-lucide="edit-2"
-                                    size="14"></i></button>
-                            <button class="action-btn action-btn-delete" title="Delete"><i data-lucide="trash-2"
-                                    size="14"></i></button>
-                        </div>
-                    </td>
-                </tr>
-                <!-- Row 2 -->
-                <tr data-emp-status="active">
-                    <td>
-                        <a href="employee-profile.php?id=EM-4821" class="emp-profile no-decoration hover-opacity">
-                            <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&q=80&w=150"
-                                class="emp-avatar" alt="Avatar">
-                            <div class="emp-info">
-                                <span class="name">Oliver Mitchell</span>
-                                <span class="email">EM-4821</span>
-                            </div>
-                        </a>
-                    </td>
-                    <td>oliver.m@rtg.com</td>
-                    <td>Engineering</td>
-                    <td>Lead Developer</td>
-                    <td><span class="badge badge-success">Active</span></td>
-                    <td class="text-right px-30">
-                        <div class="btn-group justify-end">
-                            <button class="action-btn action-btn-view" title="View Details"><i data-lucide="eye"
-                                    size="14"></i></button>
-                            <button class="action-btn action-btn-edit" title="Edit"
-                                onclick="openEditEmployeeModal('EM-4821')"><i data-lucide="edit-2"
-                                    size="14"></i></button>
-                            <button class="action-btn action-btn-delete" title="Delete"><i data-lucide="trash-2"
-                                    size="14"></i></button>
-                        </div>
-                    </td>
-                </tr>
-                <!-- Row 3 -->
-                <tr data-emp-status="onleave">
-                    <td>
-                        <a href="employee-profile.php?id=EM-4822" class="emp-profile no-decoration hover-opacity">
-                            <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&q=80&w=150"
-                                class="emp-avatar" alt="Avatar">
-                            <div class="emp-info">
-                                <span class="name">Sophia Reynolds</span>
-                                <span class="email">EM-4822</span>
-                            </div>
-                        </a>
-                    </td>
-                    <td>sophia.r@rtg.com</td>
-                    <td>Design</td>
-                    <td>UX Designer</td>
-                    <td><span class="badge badge-warning">On Leave</span></td>
-                    <td class="text-right px-30">
-                        <div class="btn-group justify-end">
-                            <button class="action-btn action-btn-view" title="View Details"><i data-lucide="eye"
-                                    size="14"></i></button>
-                            <button class="action-btn action-btn-edit" title="Edit"
-                                onclick="openEditEmployeeModal('EM-4822')"><i data-lucide="edit-2"
-                                    size="14"></i></button>
-                            <button class="action-btn action-btn-delete" title="Delete"><i data-lucide="trash-2"
-                                    size="14"></i></button>
-                        </div>
-                    </td>
-                </tr>
-                <!-- Row 1 -->
-                <tr data-emp-status="exit">
-                    <td>
-                        <div class="emp-profile">
-                            <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=150"
-                                class="emp-avatar" alt="Avatar">
-                            <div class="emp-info">
-                                <span class="name">Emma Williams</span>
-                                <span class="email">EM-4820</span>
-                            </div>
-                        </div>
-                    </td>
-                    <td class="allow-wrap">emma.w@rtg.com</td>
-                    <td class="allow-wrap">Engineering</td>
-                    <td>Product Manager</td>
-                    <td><span class="badge badge-danger">Exit</span></td>
-                    <td class="text-right px-30">
-                        <div class="btn-group justify-end">
-                            <button class="action-btn action-btn-view" title="View Details"><i data-lucide="eye"
-                                    size="14"></i></button>
-                            <button class="action-btn action-btn-edit" title="Edit"
-                                onclick="openEditEmployeeModal('EM-4820')"><i data-lucide="edit-2"
-                                    size="14"></i></button>
-                            <button class="action-btn action-btn-delete" title="Delete"><i data-lucide="trash-2"
-                                    size="14"></i></button>
-                        </div>
-                    </td>
-                </tr>
-                <!-- Row 2 -->
-                <tr data-emp-status="active">
-                    <td>
-                        <a href="employee-profile.php?id=EM-4821" class="emp-profile no-decoration hover-opacity">
-                            <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&q=80&w=150"
-                                class="emp-avatar" alt="Avatar">
-                            <div class="emp-info">
-                                <span class="name">Oliver Mitchell</span>
-                                <span class="email">EM-4821</span>
-                            </div>
-                        </a>
-                    </td>
-                    <td>oliver.m@rtg.com</td>
-                    <td>Engineering</td>
-                    <td>Lead Developer</td>
-                    <td><span class="badge badge-success">Active</span></td>
-                    <td class="text-right px-30">
-                        <div class="btn-group justify-end">
-                            <button class="action-btn action-btn-view" title="View Details"><i data-lucide="eye"
-                                    size="14"></i></button>
-                            <button class="action-btn action-btn-edit" title="Edit"
-                                onclick="openEditEmployeeModal('EM-4821')"><i data-lucide="edit-2"
-                                    size="14"></i></button>
-                            <button class="action-btn action-btn-delete" title="Delete"><i data-lucide="trash-2"
-                                    size="14"></i></button>
-                        </div>
-                    </td>
-                </tr>
-                <!-- Row 3 -->
-                <tr data-emp-status="onleave">
-                    <td>
-                        <a href="employee-profile.php?id=EM-4822" class="emp-profile no-decoration hover-opacity">
-                            <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&q=80&w=150"
-                                class="emp-avatar" alt="Avatar">
-                            <div class="emp-info">
-                                <span class="name">Sophia Reynolds</span>
-                                <span class="email">EM-4822</span>
-                            </div>
-                        </a>
-                    </td>
-                    <td>sophia.r@rtg.com</td>
-                    <td>Design</td>
-                    <td>UX Designer</td>
-                    <td><span class="badge badge-warning">On Leave</span></td>
-                    <td class="text-right px-30">
-                        <div class="btn-group justify-end">
-                            <button class="action-btn action-btn-view" title="View Details"><i data-lucide="eye"
-                                    size="14"></i></button>
-                            <button class="action-btn action-btn-edit" title="Edit"
-                                onclick="openEditEmployeeModal('EM-4822')"><i data-lucide="edit-2"
-                                    size="14"></i></button>
-                            <button class="action-btn action-btn-delete" title="Delete"><i data-lucide="trash-2"
-                                    size="14"></i></button>
-                        </div>
-                    </td>
-                </tr>
-                <!-- Row 1 -->
-                <tr data-emp-status="exit">
-                    <td>
-                        <div class="emp-profile">
-                            <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=150"
-                                class="emp-avatar" alt="Avatar">
-                            <div class="emp-info">
-                                <span class="name">Emma Williams</span>
-                                <span class="email">EM-4820</span>
-                            </div>
-                        </div>
-                    </td>
-                    <td class="allow-wrap">emma.w@rtg.com</td>
-                    <td class="allow-wrap">Engineering</td>
-                    <td>Product Manager</td>
-                    <td><span class="badge badge-danger">Exit</span></td>
-                    <td class="text-right px-30">
-                        <div class="btn-group justify-end">
-                            <button class="action-btn action-btn-view" title="View Details"><i data-lucide="eye"
-                                    size="14"></i></button>
-                            <button class="action-btn action-btn-edit" title="Edit"
-                                onclick="openEditEmployeeModal('EM-4820')"><i data-lucide="edit-2"
-                                    size="14"></i></button>
-                            <button class="action-btn action-btn-delete" title="Delete"><i data-lucide="trash-2"
-                                    size="14"></i></button>
-                        </div>
-                    </td>
-                </tr>
-                <!-- Row 2 -->
-                <tr data-emp-status="active">
-                    <td>
-                        <a href="employee-profile.php?id=EM-4821" class="emp-profile no-decoration hover-opacity">
-                            <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&q=80&w=150"
-                                class="emp-avatar" alt="Avatar">
-                            <div class="emp-info">
-                                <span class="name">Oliver Mitchell</span>
-                                <span class="email">EM-4821</span>
-                            </div>
-                        </a>
-                    </td>
-                    <td>oliver.m@rtg.com</td>
-                    <td>Engineering</td>
-                    <td>Lead Developer</td>
-                    <td><span class="badge badge-success">Active</span></td>
-                    <td class="text-right px-30">
-                        <div class="btn-group justify-end">
-                            <button class="action-btn action-btn-view" title="View Details"><i data-lucide="eye"
-                                    size="14"></i></button>
-                            <button class="action-btn action-btn-edit" title="Edit"
-                                onclick="openEditEmployeeModal('EM-4821')"><i data-lucide="edit-2"
-                                    size="14"></i></button>
-                            <button class="action-btn action-btn-delete" title="Delete"><i data-lucide="trash-2"
-                                    size="14"></i></button>
-                        </div>
-                    </td>
-                </tr>
-                <!-- Row 3 -->
-                <tr data-emp-status="onleave">
-                    <td>
-                        <a href="employee-profile.php?id=EM-4822" class="emp-profile no-decoration hover-opacity">
-                            <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&q=80&w=150"
-                                class="emp-avatar" alt="Avatar">
-                            <div class="emp-info">
-                                <span class="name">Sophia Reynolds</span>
-                                <span class="email">EM-4822</span>
-                            </div>
-                        </a>
-                    </td>
-                    <td>sophia.r@rtg.com</td>
-                    <td>Design</td>
-                    <td>UX Designer</td>
-                    <td><span class="badge badge-warning">On Leave</span></td>
-                    <td class="text-right px-30">
-                        <div class="btn-group justify-end">
-                            <button class="action-btn action-btn-view" title="View Details"><i data-lucide="eye"
-                                    size="14"></i></button>
-                            <button class="action-btn action-btn-edit" title="Edit"
-                                onclick="openEditEmployeeModal('EM-4822')"><i data-lucide="edit-2"
-                                    size="14"></i></button>
-                            <button class="action-btn action-btn-delete" title="Delete"><i data-lucide="trash-2"
-                                    size="14"></i></button>
-                        </div>
-                    </td>
-                </tr>
-                <!-- Row 1 -->
-                <tr data-emp-status="exit">
-                    <td>
-                        <a href="employee-profile.php?id=EM-4821" class="emp-profile no-decoration hover-opacity">
-                            <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&q=80&w=150"
-                                class="emp-avatar" alt="Avatar">
-                            <div class="emp-info">
-                                <span class="name">Oliver Mitchell</span>
-                                <span class="email">EM-4821</span>
-                            </div>
-                        </a>
-                    </td>
-                    <td>oliver.m@rtg.com</td>
-                    <td>Engineering</td>
-                    <td>Lead Developer</td>
-                    <td><span class="badge badge-danger">Exit</span></td>
-                    <td class="text-right px-30">
-                        <div class="btn-group justify-end">
-                            <button class="action-btn action-btn-view" title="View Details"><i data-lucide="eye"
-                                    size="14"></i></button>
-                            <button class="action-btn action-btn-edit" title="Edit"
-                                onclick="openEditEmployeeModal('EM-4821')"><i data-lucide="edit-2"
-                                    size="14"></i></button>
-                            <button class="action-btn action-btn-delete" title="Delete"><i data-lucide="trash-2"
-                                    size="14"></i></button>
-                        </div>
-                    </td>
-                </tr>
+                <!-- Data will be loaded via AJAX from fetch_directory -->
+            </tbody>
             </tbody>
         </table>
     </div>
     <div class="p-24 flex-between border-top">
-        <span class="font-13 text-light" id="paginationInfo">Showing 0 to 0 of 0 entries</span>
+        <span class="font-13 text-light" id="paginationInfo">Showing 1 to 10 of 482 entries</span>
         <div class="flex-center gap-8" id="paginationControls">
             <button class="action-btn" id="prevPage"><i data-lucide="chevron-left" size="16"></i></button>
             <div id="pageNumbers" class="flex-center gap-8">
@@ -401,15 +120,15 @@ include 'includes/header.php';
             <div class="step-indicators">
                 <div class="step-indicator active" data-step="1">
                     1
-                    <span class="step-label">Personal</span>
+                    <span class="step-label">Personal Details</span>
                 </div>
                 <div class="step-indicator" data-step="2">
                     2
-                    <span class="step-label">Job & Bank</span>
+                    <span class="step-label">Job & Banking</span>
                 </div>
                 <div class="step-indicator" data-step="3">
                     3
-                    <span class="step-label">Education</span>
+                    <span class="step-label">Education & Experience</span>
                 </div>
             </div>
 
@@ -419,70 +138,77 @@ include 'includes/header.php';
                     <div class="form-grid-3">
                         <div class="form-group">
                             <label class="admin-form-label">First Name *</label>
-                            <input type="text" class="form-control bg-white-input" placeholder="Enter first name"
-                                required>
+                            <input type="text" id="add_first_name" name="first_name" class="form-control bg-white-input"
+                                placeholder="Enter first name" required>
                         </div>
                         <div class="form-group">
                             <label class="admin-form-label">Middle Name</label>
-                            <input type="text" class="form-control bg-white-input" placeholder="Enter middle name">
+                            <input type="text" id="add_middle_name" name="middle_name"
+                                class="form-control bg-white-input" placeholder="Enter middle name">
                         </div>
                         <div class="form-group">
                             <label class="admin-form-label">Last Name *</label>
-                            <input type="text" class="form-control bg-white-input" placeholder="Enter last name"
-                                required>
+                            <input type="text" id="add_last_name" name="last_name" class="form-control bg-white-input"
+                                placeholder="Enter last name" required>
                         </div>
                     </div>
                     <div class="form-grid-2">
                         <div class="form-group">
                             <label class="admin-form-label">Gender *</label>
-                            <select class="form-control bg-white-input" required>
+                            <select id="add_gender" name="gender" class="form-control bg-white-input" required>
                                 <option value="">Select Gender</option>
-                                <option>Male</option>
-                                <option>Female</option>
-                                <option>Other</option>
+                                <option value="Male">Male</option>
+                                <option value="Female">Female</option>
                             </select>
                         </div>
                         <div class="form-group">
-                            <label class="admin-form-label">Date of Birth</label>
-                            <input type="date" class="form-control bg-white-input">
+                            <label class="admin-form-label">Date of Birth *</label>
+                            <input type="date" name="dob" class="form-control bg-white-input" required>
                         </div>
                     </div>
                     <div class="form-grid-2">
                         <div class="form-group">
-                            <label class="admin-form-label">Phone</label>
-                            <input type="text" class="form-control bg-white-input" placeholder="+1 (555) 000-0000">
+                            <label class="admin-form-label">Phone *</label>
+                            <input type="tel" id="add_phone" name="phone" class="form-control bg-white-input"
+                                placeholder="03XXXXXXXXX" maxlength="12" required
+                                title="Please enter exactly 11 digits">
                         </div>
                         <div class="form-group">
-                            <label class="admin-form-label">ID card Number</label>
-                            <input type="text" class="form-control bg-white-input" placeholder="00000-0000000-0">
+                            <label class="admin-form-label">ID Card Number *</label>
+                            <input type="text" id="add_cnic" name="cnic_number" class="form-control bg-white-input"
+                                placeholder="00000-0000000-0" maxlength="15" required>
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="admin-form-label">Address</label>
-                        <textarea class="form-control bg-white-input" rows="2"
-                            placeholder="Enter full address"></textarea>
+                        <label class="admin-form-label">Address *</label>
+                        <textarea id="add_address" name="address" class="form-control bg-white-input" rows="2"
+                            placeholder="Enter full address" required></textarea>
                     </div>
                     <div class="form-grid-2">
                         <div class="form-group">
-                            <label class="admin-form-label">Emergency Contact</label>
-                            <input type="text" class="form-control bg-white-input" placeholder="+1 (555) 000-0000">
+                            <label class="admin-form-label">Emergency Contact *</label>
+                            <input type="tel" id="add_emergency_phone" name="emergency_contact"
+                                class="form-control bg-white-input" placeholder="03XXXXXXXXX" maxlength="12" required
+                                title="Please enter exactly 11 digits">
                         </div>
                         <div class="form-group">
-                            <label class="admin-form-label">Emergency Contact Relation</label>
-                            <input type="text" class="form-control bg-white-input" placeholder="e.g. Father, Spouse">
+                            <label class="admin-form-label">Emergency Contact Relation *</label>
+                            <input type="text" id="add_emergency_relation" name="emergency_relation"
+                                class="form-control bg-white-input" placeholder="e.g. Father, Spouse" required>
                         </div>
                     </div>
                     <div class="form-grid-2">
                         <div class="form-group">
                             <label class="admin-form-label">Email *</label>
-                            <input type="email" class="form-control bg-white-input" placeholder="email@company.com"
-                                required>
+                            <input type="email" id="add_email" name="email" class="form-control bg-white-input"
+                                placeholder="email@company.com" required>
+                            <span id="email_verify_msg" class="font-11 mt-4 block"></span>
                         </div>
                         <div class="form-group">
                             <label class="admin-form-label">Password *</label>
                             <div class="password-input-container">
-                                <input type="password" class="form-control bg-white-input" id="add_password"
-                                    placeholder="••••••••" required>
+                                <input type="password" name="password" class="form-control bg-white-input"
+                                    id="add_password" placeholder="••••••••" required>
                                 <button type="button" class="password-toggle"
                                     onclick="togglePassword('add_password', this)">
                                     <i data-lucide="eye" size="18"></i>
@@ -496,46 +222,42 @@ include 'includes/header.php';
                 <div class="step-pane" id="step2">
                     <div class="form-grid-3">
                         <div class="form-group">
-                            <label class="admin-form-label">Shift Timing</label>
-                            <select class="form-control bg-white-input">
-                                <option value="">Select Shift</option>
-                                <option>Shift A (09:00 AM - 06:00 PM)</option>
-                                <option>Shift B (02:00 PM - 11:00 PM)</option>
-                                <option>Shift C (10:00 PM - 07:00 AM)</option>
+                            <label class="admin-form-label">Shift Timing *</label>
+                            <select id="add_shift" name="shift_id" class="form-control bg-white-input" required>
+                                <option value="">Loading Shifts...</option>
                             </select>
                         </div>
                         <div class="form-group">
-                            <label class="admin-form-label">Job Title</label>
-                            <input type="text" class="form-control bg-white-input" placeholder="e.g. Software Engineer">
+                            <label class="admin-form-label">Job Title *</label>
+                            <input type="text" id="add_job_title" name="job_title" class="form-control bg-white-input"
+                                placeholder="e.g. Software Engineer" required>
                         </div>
                         <div class="form-group">
-                            <label class="admin-form-label">Department</label>
-                            <select class="form-control bg-white-input">
-                                <option value="">Select Department</option>
-                                <option>Engineering</option>
-                                <option>Design</option>
-                                <option>HR</option>
-                                <option>Sales & Marketing</option>
+                            <label class="admin-form-label">Department *</label>
+                            <select id="add_dept" name="department_id" class="form-control bg-white-input" required>
+                                <option value="">Loading Departments...</option>
                             </select>
                         </div>
                     </div>
                     <div class="form-grid-3">
                         <div class="form-group">
-                            <label class="admin-form-label">Job Type</label>
-                            <select class="form-control bg-white-input">
-                                <option>Full Time</option>
-                                <option>Part Time</option>
-                                <option>Contract</option>
-                                <option>Internship</option>
+                            <label class="admin-form-label">Job Type *</label>
+                            <select id="add_job_type" name="job_type" class="form-control bg-white-input" required>
+                                <option value="">Select Job Type</option>
+                                <option value="Permanent">Permanent</option>
+                                <option value="Probation">Probation</option>
+                                <option value="Internship">Internship</option>
                             </select>
                         </div>
                         <div class="form-group">
-                            <label class="admin-form-label">Salary</label>
-                            <input type="number" class="form-control bg-white-input" placeholder="0.00">
+                            <label class="admin-form-label">Salary *</label>
+                            <input type="number" id="add_salary" name="salary" class="form-control bg-white-input"
+                                placeholder="0" required>
                         </div>
                         <div class="form-group">
-                            <label class="admin-form-label">Joining Date</label>
-                            <input type="date" class="form-control bg-white-input">
+                            <label class="admin-form-label">Joining Date *</label>
+                            <input type="date" id="add_joining_date" name="joining_date"
+                                class="form-control bg-white-input" required>
                         </div>
                     </div>
                     <div class="p-15 rounded-12 mb-20 border">
@@ -544,120 +266,137 @@ include 'includes/header.php';
                         </h4>
                         <div class="form-grid-3">
                             <div class="form-group">
-                                <label class="font-11 font-600 text-light mb-1 block uppercase">Bank Name</label>
-                                <select class="form-control bg-white-input">
-                                    <option>Select Bank</option>
-                                    <option>Standard Chartered</option>
-                                    <option>HBL</option>
-                                    <option>Bank Alfalah</option>
-                                    <option>UBL</option>
+                                <label class="admin-form-label">Bank Name *</label>
+                                <select id="add_bank_name" name="bank_name" class="form-control bg-white-input" required>
+                                    <option value="">Select Bank</option>
+                                    <option value="HBL">HBL</option>
+                                    <option value="ALHabib">AL Habib</option>
+                                    <option value="MCB">MCB</option>
+                                    <option value="UBL">UBL</option>
+                                    <option value="Meezan">Meezan</option>
+                                    <option value="Allied">Allied</option>
+                                    <option value="Bank Alfalah">Bank Alfalah</option>
+                                    <option value="Askari">Askari</option>
+                                    <option value="Faysal">Faysal</option>
+                                    <option value="Habib Metro">Habib Metro</option>
+                                    <option value="Soneri">Soneri</option>
+                                    <option value="JS Bank">JS Bank</option>
+                                    <option value="Bank Islami">Bank Islami</option>
+                                    <option value="Standard Chartered">Standard Chartered</option>
                                 </select>
                             </div>
                             <div class="form-group">
-                                <label class="font-11 font-600 text-light mb-1 block uppercase">Account Type</label>
-                                <select class="form-control bg-white-input">
-                                    <option>Current</option>
-                                    <option>Savings</option>
+                                <label class="admin-form-label">Account Type *</label>
+                                <select id="add_account_type" name="account_type" class="form-control bg-white-input" required>
+                                    <option value="">Select Type</option>
+                                    <option value="IBN">IBN</option>
+                                    <option value="IBFT">IBFT</option>
                                 </select>
                             </div>
                             <div class="form-group">
-                                <label class="font-11 font-600 text-light mb-1 block uppercase">Account Title</label>
-                                <input type="text" class="form-control bg-white-input" placeholder="Name on account">
+                                <label class="admin-form-label">Account Title *</label>
+                                <input type="text" id="add_account_title" name="account_title"
+                                    class="form-control bg-white-input" placeholder="Name on account" required>
                             </div>
                         </div>
                         <div class="form-grid-2 mt-10">
                             <div class="form-group">
-                                <label class="font-11 font-600 text-light mb-1 block uppercase">Account Number</label>
-                                <input type="text" class="form-control bg-white-input"
-                                    placeholder="0000 0000 0000 0000">
+                                <label class="admin-form-label">Account Number *</label>
+                                <input type="text" id="add_account_number" name="account_number"
+                                    class="form-control bg-white-input" placeholder="0000 0000 0000 0000" required>
                             </div>
                             <div class="form-group">
-                                <label class="font-11 font-600 text-light mb-1 block uppercase">Bank Branch</label>
-                                <input type="text" class="form-control bg-white-input" placeholder="Branch Code / City">
+                                <label class="admin-form-label">Bank Branch *</label>
+                                <input type="text" id="add_branch_info" name="branch_info"
+                                    class="form-control bg-white-input" placeholder="Branch Code / City" required>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Step 3: Education & Docs -->
+                <!-- Step 3: Education & Experience -->
                 <div class="step-pane" id="step3">
                     <div class="form-grid-2">
                         <div class="form-group">
-                            <label class="admin-form-label">Qualification</label>
-                            <input type="text" class="form-control bg-white-input" placeholder="e.g. Master's in CS">
+                            <label class="admin-form-label">Qualification *</label>
+                            <input type="text" id="add_qualification" name="qualification"
+                                class="form-control bg-white-input" placeholder="e.g. Master's in CS" required>
                         </div>
                         <div class="form-group">
-                            <label class="admin-form-label">Degree / Certification</label>
-                            <input type="text" class="form-control bg-white-input"
-                                placeholder="e.g. PMP, AWS Solutions Architect">
-                        </div>
-                    </div>
-                    <div class="form-grid-2">
-                        <div class="form-group">
-                            <label class="admin-form-label">College / University</label>
-                            <input type="text" class="form-control bg-white-input" placeholder="Name of institution">
-                        </div>
-                        <div class="form-group">
-                            <label class="admin-form-label">Professional Expertise</label>
-                            <input type="text" class="form-control bg-white-input"
-                                placeholder="e.g. React, Node.js, UI/UX">
+                            <label class="admin-form-label">Degree / Certification *</label>
+                            <input type="text" id="add_degree" name="degree_certification"
+                                class="form-control bg-white-input" placeholder="e.g. PMP, AWS Solutions Architect" required>
                         </div>
                     </div>
                     <div class="form-grid-2">
                         <div class="form-group">
-                            <label class="admin-form-label">Last Employer</label>
-                            <input type="text" class="form-control bg-white-input" placeholder="Previous Company Name">
+                            <label class="admin-form-label">College / University *</label>
+                            <input type="text" id="add_college" name="college_university"
+                                class="form-control bg-white-input" placeholder="Name of institution" required>
                         </div>
                         <div class="form-group">
-                            <label class="admin-form-label">Last Job Title</label>
-                            <input type="text" class="form-control bg-white-input" placeholder="e.g. Senior Developer">
+                            <label class="admin-form-label">Professional Expertise *</label>
+                            <input type="text" id="add_expertise" name="professional_expertise"
+                                class="form-control bg-white-input" placeholder="e.g. React, Node.js, UI/UX" required>
+                        </div>
+                    </div>
+                    <div class="form-grid-2">
+                        <div class="form-group">
+                            <label class="admin-form-label">Last Employer *</label>
+                            <input type="text" id="add_last_employer" name="last_employer"
+                                class="form-control bg-white-input" placeholder="Previous Company Name" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="admin-form-label">Last Job Title *</label>
+                            <input type="text" id="add_last_designation" name="last_designation"
+                                class="form-control bg-white-input" placeholder="e.g. Senior Developer" required>
                         </div>
                     </div>
                     <div class="form-grid-2">
                         <div class="form-group">
                             <label class="admin-form-label">Experience From Date</label>
-                            <input type="date" class="form-control bg-white-input">
+                            <input type="date" name="experience_from" class="form-control bg-white-input">
                         </div>
                         <div class="form-group">
                             <label class="admin-form-label">Experience To Date</label>
-                            <input type="date" class="form-control bg-white-input">
+                            <input type="date" name="experience_to" class="form-control bg-white-input">
                         </div>
                     </div>
                     <div class="form-grid-3 mt-10">
                         <div class="form-group">
-                            <label class="font-11 font-600 text-light mb-1 block uppercase">Resume Attachment</label>
+                            <label class="admin-form-label">Resume Attachment *</label>
                             <div class="custom-file-upload">
                                 <label for="resume_upload" class="file-upload-wrapper" id="resume_wrapper">
                                     <i data-lucide="file-text" size="20"></i>
                                     <span class="file-upload-label">Choose Resume</span>
                                     <span class="file-upload-info" id="resume_filename">PDF, DOCX up to 5MB</span>
                                 </label>
-                                <input type="file" id="resume_upload" class="hidden-file-input"
+                                <input type="file" id="resume_upload" name="resume" class="hidden-file-input"
                                     onchange="handleFileSelect(this, 'resume_wrapper', 'resume_filename')">
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="font-11 font-600 text-light mb-1 block uppercase">ID Card Attachment *</label>
+                            <label class="admin-form-label">ID Card Attachment *</label>
                             <div class="custom-file-upload">
                                 <label for="id_upload" class="file-upload-wrapper" id="id_wrapper">
                                     <i data-lucide="image" size="20"></i>
                                     <span class="file-upload-label">Upload ID Card</span>
                                     <span class="file-upload-info" id="id_filename">PNG, JPG or PDF</span>
                                 </label>
-                                <input type="file" id="id_upload" class="hidden-file-input" required
+                                <input type="file" id="id_upload" name="id_card" class="hidden-file-input"
                                     onchange="handleFileSelect(this, 'id_wrapper', 'id_filename')">
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="font-11 font-600 text-light mb-1 block uppercase">Other Documents</label>
+                            <label class="admin-form-label">Other Documents</label>
                             <div class="custom-file-upload">
                                 <label for="other_upload" class="file-upload-wrapper" id="other_wrapper">
                                     <i data-lucide="files" size="20"></i>
                                     <span class="file-upload-label">Choose Files</span>
                                     <span class="file-upload-info" id="other_filename">Certificates, etc.</span>
                                 </label>
-                                <input type="file" id="other_upload" class="hidden-file-input" multiple
-                                    onchange="handleFileSelect(this, 'other_wrapper', 'other_filename')">
+                                <input type="file" id="other_upload" name="other_documents[]" class="hidden-file-input"
+                                    multiple onchange="handleFileSelect(this, 'other_wrapper', 'other_filename')">
                             </div>
                         </div>
                     </div>
@@ -694,76 +433,89 @@ include 'includes/header.php';
 
         <div class="modal-body p-30">
             <div class="step-indicators">
-                <div class="step-indicator active" data-step="1">1<span class="step-label">Personal</span></div>
-                <div class="step-indicator" data-step="2">2<span class="step-label">Job & Bank</span></div>
-                <div class="step-indicator" data-step="3">3<span class="step-label">Education</span></div>
+                <div class="step-indicator active" data-step="1">1<span class="step-label">Personal Details</span></div>
+                <div class="step-indicator" data-step="2">2<span class="step-label">Job & Banking</span></div>
+                <div class="step-indicator" data-step="3">3<span class="step-label">Education & Experience</span></div>
             </div>
 
             <form id="editEmployeeForm">
+                <input type="hidden" id="edit_id_hidden" name="employee_id_hidden">
                 <!-- Step 1: Personal Details -->
                 <div class="step-pane active">
                     <div class="form-grid-3">
                         <div class="form-group">
                             <label class="admin-form-label">First Name *</label>
-                            <input type="text" class="form-control bg-white-input" value="Sophia" required>
+                            <input type="text" id="edit_first_name" name="first_name"
+                                class="form-control bg-white-input" value="Sophia" required>
                         </div>
                         <div class="form-group">
                             <label class="admin-form-label">Middle Name</label>
-                            <input type="text" class="form-control bg-white-input">
+                            <input type="text" id="edit_middle_name" name="middle_name"
+                                class="form-control bg-white-input">
                         </div>
                         <div class="form-group">
                             <label class="admin-form-label">Last Name *</label>
-                            <input type="text" class="form-control bg-white-input" value="Reynolds" required>
+                            <input type="text" id="edit_last_name" name="last_name" class="form-control bg-white-input"
+                                value="Reynolds" required>
                         </div>
                     </div>
                     <div class="form-grid-2">
                         <div class="form-group">
                             <label class="admin-form-label">Gender *</label>
-                            <select class="form-control bg-white-input" required>
-                                <option>Female</option>
-                                <option>Male</option>
-                                <option>Other</option>
+                            <select id="edit_gender" name="gender" class="form-control bg-white-input" required>
+                                <option value="Male">Male</option>
+                                <option value="Female">Female</option>
                             </select>
                         </div>
                         <div class="form-group">
-                            <label class="admin-form-label">Date of Birth</label>
-                            <input type="date" class="form-control bg-white-input" value="1995-06-15">
+                            <label class="admin-form-label">Date of Birth *</label>
+                            <input type="date" id="edit_dob" name="dob" class="form-control bg-white-input"
+                                value="1995-06-15" required>
                         </div>
                     </div>
                     <div class="form-grid-2">
                         <div class="form-group">
-                            <label class="admin-form-label">Phone</label>
-                            <input type="text" class="form-control bg-white-input" value="+1 (555) 482-0192">
+                            <label class="admin-form-label">Phone *</label>
+                            <input type="tel" id="edit_phone" name="phone" class="form-control bg-white-input"
+                                placeholder="03XXXXXXXXX" maxlength="12" required
+                                title="Please enter exactly 11 digits">
                         </div>
                         <div class="form-group">
-                            <label class="admin-form-label">ID card Number</label>
-                            <input type="text" class="form-control bg-white-input" value="42101-5829102-1">
+                            <label class="admin-form-label">ID Card Number *</label>
+                            <input type="text" id="edit_cnic" name="cnic_number" class="form-control bg-white-input"
+                                placeholder="00000-0000000-0" maxlength="15" required>
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="admin-form-label">Address</label>
-                        <textarea class="form-control bg-white-input" rows="2">422 Maple Drive, Austin, TX</textarea>
+                        <label class="admin-form-label">Address *</label>
+                        <textarea id="edit_address" name="address" class="form-control bg-white-input"
+                            rows="2" required>422 Maple Drive, Austin, TX</textarea>
                     </div>
                     <div class="form-grid-2">
                         <div class="form-group">
-                            <label class="admin-form-label">Emergency Contact</label>
-                            <input type="text" class="form-control bg-white-input" value="+1 (555) 902-1122">
+                            <label class="admin-form-label">Emergency Contact *</label>
+                            <input type="tel" id="edit_emergency_phone" name="emergency_contact"
+                                class="form-control bg-white-input" placeholder="03XXXXXXXXX" maxlength="12" required
+                                title="Please enter exactly 11 digits">
                         </div>
                         <div class="form-group">
-                            <label class="admin-form-label">Emergency Contact Relation</label>
-                            <input type="text" class="form-control bg-white-input" value="Spouse">
+                            <label class="admin-form-label">Emergency Contact Relation *</label>
+                            <input type="text" id="edit_emergency_relation" name="emergency_relation"
+                                class="form-control bg-white-input" value="Spouse" required>
                         </div>
                     </div>
                     <div class="form-grid-2">
                         <div class="form-group">
                             <label class="admin-form-label">Email *</label>
-                            <input type="email" class="form-control bg-white-input" value="sophia.r@rtg.com" required>
+                            <input type="email" id="edit_email" name="email" class="form-control bg-white-input"
+                                value="sophia.r@rtg.com" required>
                         </div>
                         <div class="form-group">
-                            <label class="admin-form-label">Password *</label>
+                            <label class="admin-form-label">Password</label>
                             <div class="password-input-container">
-                                <input type="password" class="form-control bg-white-input" id="edit_password"
-                                    value="sophia@123" required>
+                                <input type="password" name="password" class="form-control bg-white-input"
+                                    id="edit_password" value="" autocomplete="new-password"
+                                    placeholder="Leave blank to keep current">
                                 <button type="button" class="password-toggle"
                                     onclick="togglePassword('edit_password', this)">
                                     <i data-lucide="eye" size="18"></i>
@@ -777,39 +529,42 @@ include 'includes/header.php';
                 <div class="step-pane">
                     <div class="form-grid-3">
                         <div class="form-group">
-                            <label class="admin-form-label">Shift Timing</label>
-                            <select class="form-control bg-white-input">
-                                <option selected>Shift A (09:00 AM - 06:00 PM)</option>
-                                <option>Shift B</option>
-                                <option>Shift C</option>
+                            <label class="admin-form-label">Shift Timing *</label>
+                            <select id="edit_shift" name="shift_id" class="form-control bg-white-input" required>
+                                <option value="">Loading Shifts...</option>
                             </select>
                         </div>
                         <div class="form-group">
-                            <label class="admin-form-label">Job Title</label>
-                            <input type="text" class="form-control bg-white-input" value="UX Designer">
+                            <label class="admin-form-label">Job Title *</label>
+                            <input type="text" id="edit_job_title" name="job_title" class="form-control bg-white-input"
+                                value="UX Designer" required>
                         </div>
                         <div class="form-group">
-                            <label class="admin-form-label">Department</label>
-                            <select class="form-control bg-white-input">
-                                <option selected>Design</option>
-                                <option>Engineering</option>
+                            <label class="admin-form-label">Department *</label>
+                            <select id="edit_dept" name="department_id" class="form-control bg-white-input" required>
+                                <option value="">Loading Departments...</option>
                             </select>
                         </div>
                     </div>
                     <div class="form-grid-3">
                         <div class="form-group">
-                            <label class="admin-form-label">Job Type</label>
-                            <select class="form-control bg-white-input">
-                                <option selected>Full Time</option>
+                            <label class="admin-form-label">Job Type *</label>
+                            <select id="edit_job_type" name="job_type" class="form-control bg-white-input" required>
+                                <option value="">Select Job Type</option>
+                                <option value="Permanent">Permanent</option>
+                                <option value="Probation">Probation</option>
+                                <option value="Internship">Internship</option>
                             </select>
                         </div>
                         <div class="form-group">
-                            <label class="admin-form-label">Salary</label>
-                            <input type="number" class="form-control bg-white-input" value="85000">
+                            <label class="admin-form-label">Salary *</label>
+                            <input type="number" id="edit_salary" name="salary" class="form-control bg-white-input"
+                                value="85000" required>
                         </div>
                         <div class="form-group">
-                            <label class="admin-form-label">Joining Date</label>
-                            <input type="date" class="form-control bg-white-input" value="2022-03-01">
+                            <label class="admin-form-label">Joining Date *</label>
+                            <input type="date" id="edit_joining_date" name="joining_date"
+                                class="form-control bg-white-input" value="2022-03-01" required>
                         </div>
                     </div>
                     <div class="p-15 rounded-12 mb-20 border">
@@ -817,82 +572,107 @@ include 'includes/header.php';
                                 data-lucide="building" size="16"></i> Banking Information</h4>
                         <div class="form-grid-3">
                             <div class="form-group">
-                                <label class="font-11 font-600 text-light mb-1 block uppercase">Bank Name</label>
-                                <select class="form-control bg-white-input">
-                                    <option selected>Standard Chartered</option>
+                                <label class="admin-form-label">Bank Name *</label>
+                                <select id="edit_bank_name" name="bank_name" class="form-control bg-white-input" required>
+                                    <option value="">Select Bank</option>
+                                    <option value="HBL">HBL</option>
+                                    <option value="ALHabib">AL Habib</option>
+                                    <option value="MCB">MCB</option>
+                                    <option value="UBL">UBL</option>
+                                    <option value="Meezan">Meezan</option>
+                                    <option value="Allied">Allied</option>
+                                    <option value="Bank Alfalah">Bank Alfalah</option>
+                                    <option value="Askari">Askari</option>
+                                    <option value="Faysal">Faysal</option>
+                                    <option value="Habib Metro">Habib Metro</option>
+                                    <option value="Soneri">Soneri</option>
+                                    <option value="JS Bank">JS Bank</option>
+                                    <option value="Bank Islami">Bank Islami</option>
+                                    <option value="Standard Chartered">Standard Chartered</option>
                                 </select>
                             </div>
                             <div class="form-group">
-                                <label class="font-11 font-600 text-light mb-1 block uppercase">Account Type</label>
-                                <select class="form-control bg-white-input">
-                                    <option selected>Savings</option>
+                                <label class="admin-form-label">Account Type *</label>
+                                <select id="edit_account_type" name="account_type" class="form-control bg-white-input" required>
+                                    <option value="">Select Type</option>
+                                    <option value="IBN">IBN</option>
+                                    <option value="IBFT">IBFT</option>
                                 </select>
                             </div>
                             <div class="form-group">
-                                <label class="font-11 font-600 text-light mb-1 block uppercase">Account Title</label>
-                                <input type="text" class="form-control bg-white-input" value="Sophia Reynolds">
+                                <label class="admin-form-label">Account Title *</label>
+                                <input type="text" id="edit_account_title" name="account_title"
+                                    class="form-control bg-white-input" value="Sophia Reynolds" required>
                             </div>
                         </div>
                         <div class="form-grid-2 mt-10">
                             <div class="form-group">
-                                <label class="font-11 font-600 text-light mb-1 block uppercase">Account Number</label>
-                                <input type="text" class="form-control bg-white-input" value="SCB-5829-1029-4821">
+                                <label class="admin-form-label">Account Number *</label>
+                                <input type="text" id="edit_account_number" name="account_number"
+                                    class="form-control bg-white-input" value="SCB-4810293021" required>
                             </div>
                             <div class="form-group">
-                                <label class="font-11 font-600 text-light mb-1 block uppercase">Bank Branch</label>
-                                <input type="text" class="form-control bg-white-input" value="Downtown Austin">
+                                <label class="admin-form-label">Bank Branch *</label>
+                                <input type="text" id="edit_branch_info" name="branch_info"
+                                    class="form-control bg-white-input" value="Main Street Branch" required>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Step 3: Education & Docs -->
+                <!-- Step 3: Education & Experience -->
                 <div class="step-pane">
                     <div class="form-grid-2">
                         <div class="form-group">
-                            <label class="admin-form-label">Qualification</label>
-                            <input type="text" class="form-control bg-white-input" value="Master's in Graphic Design">
+                            <label class="admin-form-label">Qualification *</label>
+                            <input type="text" id="edit_qualification" name="qualification"
+                                class="form-control bg-white-input" value="Master's in Graphic Design" required>
                         </div>
                         <div class="form-group">
-                            <label class="admin-form-label">Degree / Certification</label>
-                            <input type="text" class="form-control bg-white-input"
-                                value="Google UX Design Professional Cert">
-                        </div>
-                    </div>
-                    <div class="form-grid-2">
-                        <div class="form-group">
-                            <label class="admin-form-label">College / University</label>
-                            <input type="text" class="form-control bg-white-input" value="Texas State University">
-                        </div>
-                        <div class="form-group">
-                            <label class="admin-form-label">Professional Expertise</label>
-                            <input type="text" class="form-control bg-white-input"
-                                value="Figma, Adobe XD, User Research">
+                            <label class="admin-form-label">Degree / Certification *</label>
+                            <input type="text" id="edit_degree" name="degree_certification"
+                                class="form-control bg-white-input" value="Google UX Design Professional Cert" required>
                         </div>
                     </div>
                     <div class="form-grid-2">
                         <div class="form-group">
-                            <label class="admin-form-label">Last Employer</label>
-                            <input type="text" class="form-control bg-white-input" value="Creative Solutions Inc.">
+                            <label class="admin-form-label">College / University *</label>
+                            <input type="text" id="edit_college" name="college_university"
+                                class="form-control bg-white-input" value="Texas State University" required>
                         </div>
                         <div class="form-group">
-                            <label class="admin-form-label">Last Job Title</label>
-                            <input type="text" class="form-control bg-white-input" value="Junior Designer">
+                            <label class="admin-form-label">Professional Expertise *</label>
+                            <input type="text" id="edit_expertise" name="professional_expertise"
+                                class="form-control bg-white-input" value="Figma, Adobe XD, User Research" required>
+                        </div>
+                    </div>
+                    <div class="form-grid-2">
+                        <div class="form-group">
+                            <label class="admin-form-label">Last Employer *</label>
+                            <input type="text" id="edit_last_employer" name="last_employer"
+                                class="form-control bg-white-input" value="Creative Solutions Inc." required>
+                        </div>
+                        <div class="form-group">
+                            <label class="admin-form-label">Last Job Title *</label>
+                            <input type="text" id="edit_last_designation" name="last_designation"
+                                class="form-control bg-white-input" value="Junior Designer" required>
                         </div>
                     </div>
                     <div class="form-grid-2">
                         <div class="form-group">
                             <label class="admin-form-label">Experience From Date</label>
-                            <input type="date" class="form-control bg-white-input" value="2020-01-01">
+                            <input type="date" id="edit_experience_from" name="experience_from"
+                                class="form-control bg-white-input" value="2020-01-01">
                         </div>
                         <div class="form-group">
                             <label class="admin-form-label">Experience To Date</label>
-                            <input type="date" class="form-control bg-white-input" value="2022-02-15">
+                            <input type="date" id="edit_experience_to" name="experience_to"
+                                class="form-control bg-white-input" value="2022-02-15">
                         </div>
                     </div>
                     <div class="form-grid-3 mt-10">
                         <div class="form-group">
-                            <label class="font-11 font-600 text-light mb-1 block uppercase">Resume Attachment</label>
+                            <label class="admin-form-label">Resume Attachment *</label>
                             <div class="custom-file-upload">
                                 <label for="edit_resume_upload" class="file-upload-wrapper has-file"
                                     id="edit_resume_wrapper">
@@ -900,31 +680,32 @@ include 'includes/header.php';
                                     <span class="file-upload-label" id="edit_resume_filename">Resume_Sophia_R.pdf</span>
                                     <span class="file-upload-info text-success">File already uploaded</span>
                                 </label>
-                                <input type="file" id="edit_resume_upload" class="hidden-file-input"
+                                <input type="file" id="edit_resume_upload" name="resume" class="hidden-file-input"
                                     onchange="handleFileSelect(this, 'edit_resume_wrapper', 'edit_resume_filename')">
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="font-11 font-600 text-light mb-1 block uppercase">ID Card Attachment *</label>
+                            <label class="admin-form-label">ID Card Attachment *</label>
                             <div class="custom-file-upload">
                                 <label for="edit_id_upload" class="file-upload-wrapper has-file" id="edit_id_wrapper">
                                     <i data-lucide="image" size="20" class="text-success"></i>
                                     <span class="file-upload-label" id="edit_id_filename">ID_Card_Front.jpg</span>
                                     <span class="file-upload-info text-success">File already uploaded</span>
                                 </label>
-                                <input type="file" id="edit_id_upload" class="hidden-file-input" required
+                                <input type="file" id="edit_id_upload" name="id_card" class="hidden-file-input"
                                     onchange="handleFileSelect(this, 'edit_id_wrapper', 'edit_id_filename')">
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="font-11 font-600 text-light mb-1 block uppercase">Other Documents</label>
+                            <label class="admin-form-label">Other Documents</label>
                             <div class="custom-file-upload">
                                 <label for="edit_other_upload" class="file-upload-wrapper" id="edit_other_wrapper">
-                                    <i data-lucide="files" size="20"></i>
+                                    <i data-lucide="files" size="20" id="edit_other_icon"></i>
                                     <span class="file-upload-label" id="edit_other_filename">Choose Files</span>
-                                    <span class="file-upload-info">Certificates, etc.</span>
+                                    <span class="file-upload-info" id="edit_other_info">Certificates, etc.</span>
                                 </label>
-                                <input type="file" id="edit_other_upload" class="hidden-file-input" multiple
+                                <input type="file" id="edit_other_upload" name="other_documents[]"
+                                    class="hidden-file-input" multiple
                                     onchange="handleFileSelect(this, 'edit_other_wrapper', 'edit_other_filename')">
                             </div>
                         </div>

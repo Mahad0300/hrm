@@ -1,29 +1,34 @@
 // Password Visibility Toggle
 function togglePassword(inputId, btn) {
     const input = document.getElementById(inputId);
-    const icon = btn.querySelector('i');
-    
+    if (!input || !btn) return;
+
+    const icon = btn.querySelector('i') || btn.querySelector('svg');
     if (input.type === 'password') {
         input.type = 'text';
-        icon.setAttribute('data-lucide', 'eye-off');
+        if (icon) icon.setAttribute('data-lucide', 'eye-off');
     } else {
         input.type = 'password';
-        icon.setAttribute('data-lucide', 'eye');
+        if (icon) icon.setAttribute('data-lucide', 'eye');
     }
-    
-    lucide.createIcons({
-        attrs: { size: 18 },
-        nameAttr: 'data-lucide'
-    });
+
+    if (typeof lucide !== 'undefined') {
+        lucide.createIcons({
+            attrs: { size: 18 },
+            nameAttr: 'data-lucide'
+        });
+    }
 }
 
 // File selection feedback
 function handleFileSelect(input, wrapperId, filenameId) {
     const wrapper = document.getElementById(wrapperId);
     const filenameLabel = document.getElementById(filenameId);
-    
+    if (!wrapper || !filenameLabel) return;
+
     if (input.files && input.files.length > 0) {
         wrapper.classList.add('has-file');
+        wrapper.classList.remove('file-upload-error');
         if (input.files.length === 1) {
             filenameLabel.textContent = input.files[0].name;
             filenameLabel.classList.add('text-success');
@@ -34,199 +39,90 @@ function handleFileSelect(input, wrapperId, filenameId) {
     } else {
         wrapper.classList.remove('has-file');
         filenameLabel.classList.remove('text-success');
-        // Reset to default info based on ID
-        if (wrapperId === 'resume_wrapper') filenameLabel.textContent = "PDF, DOCX up to 5MB";
-        else if (wrapperId === 'id_wrapper') filenameLabel.textContent = "PNG, JPG or PDF";
+        
+        // Reset to default info based on wrapper ID
+        if (wrapperId.includes('resume')) filenameLabel.textContent = "PDF, DOCX up to 5MB";
+        else if (wrapperId.includes('id')) filenameLabel.textContent = "PNG, JPG or PDF";
         else filenameLabel.textContent = "Certificates, etc.";
     }
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-    let currentStep = 1;
-    const totalSteps = 3;
-    const form = document.getElementById('addEmployeeForm');
-    const modal = document.getElementById('addEmployeeModal');
-    
-    function updateStepUI() {
-        // Update Indicators
-        document.querySelectorAll('.step-indicator').forEach(ind => {
-            const step = parseInt(ind.dataset.step);
-            ind.classList.toggle('active', step === currentStep);
-            ind.classList.toggle('completed', step < currentStep);
-        });
+function getEmployeeFullName(emp) {
+    return [emp.first_name, emp.middle_name, emp.last_name]
+        .filter(part => part && String(part).trim())
+        .join(' ')
+        .trim();
+}
 
-        // Update Panes
-        document.querySelectorAll('.step-pane').forEach((pane, idx) => {
-            pane.classList.toggle('active', idx + 1 === currentStep);
-        });
+function createEmployeeProfileSlug(name) {
+    return String(name || '')
+        .trim()
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/gi, '-')
+        .replace(/^-+|-+$/g, '');
+}
 
-        // Update Buttons
-        const backBtn = document.getElementById('navBackBtn');
-        const backText = document.getElementById('backBtnText');
-        const backIcon = document.getElementById('backIcon');
+function getEmployeeProfileUrl(emp) {
+    const slug = createEmployeeProfileSlug(getEmployeeFullName(emp));
+    return slug
+        ? `employee-profile.php?name=${encodeURIComponent(slug)}`
+        : `employee-profile.php?id=${encodeURIComponent(emp.id)}`;
+}
+
+async function loadRequirementData() {
+    try {
+        const response = await fetch('assets/api/employee_handler.php?action=fetch_requirements');
+        const result = await response.json();
         
-        if (currentStep === 1) {
-            backText.textContent = "Cancel Account";
-            backBtn.classList.remove('text-primary-color');
-            backBtn.classList.add('text-light');
-            backIcon.setAttribute('data-lucide', 'x');
-        } else {
-            backText.textContent = "Back to Previous Step";
-            backBtn.classList.remove('text-light');
-            backBtn.classList.add('text-primary-color');
-            backIcon.setAttribute('data-lucide', 'arrow-left');
-        }
-        
-        // Re-initialize icons for the back button
-        lucide.createIcons({
-            attrs: {
-                size: 18
-            },
-            nameAttr: 'data-lucide'
-        });
-
-        document.getElementById('nextStepBtn').classList.toggle('hidden', currentStep === totalSteps);
-        document.getElementById('submitEmployeeBtn').classList.toggle('hidden', currentStep !== totalSteps);
-        
-        // Update Title Subtitle
-        const titles = ["Personal Details", "Job & Banking", "Education & Experience"];
-        const subs = ["Identity and contact information", "Employment setup and payroll details", "Academic background and documentation"];
-        document.querySelector('#addEmployeeModal h3').textContent = "Step " + currentStep + ": " + titles[currentStep-1];
-        document.querySelector('#addEmployeeModal p').textContent = subs[currentStep-1];
-    }
-
-    const nextStepBtn = document.getElementById('nextStepBtn');
-    if (nextStepBtn) {
-        nextStepBtn.addEventListener('click', () => {
-            if (currentStep < totalSteps) {
-                currentStep++;
-                updateStepUI();
-            }
-        });
-    }
-
-    const navBackBtn = document.getElementById('navBackBtn');
-    if (navBackBtn) {
-        navBackBtn.addEventListener('click', () => {
-            if (currentStep === 1) {
-                closeModal('addEmployeeModal');
-            } else {
-                currentStep--;
-                updateStepUI();
-            }
-        });
-    }
-
-    // Reset wizard when modal closes or opens
-    window.openAddEmployeeModal = () => {
-        currentStep = 1;
-        if (form) form.reset();
-        updateStepUI();
-        openModal('addEmployeeModal');
-    };
-});
-
-// Edit Employee Wizard Logic
-document.addEventListener('DOMContentLoaded', () => {
-    let editCurrentStep = 1;
-    const editTotalSteps = 3;
-    const editForm = document.getElementById('editEmployeeForm');
-    
-    function updateEditStepUI() {
-        // Update Indicators
-        const indicators = document.querySelectorAll('#editEmployeeModal .step-indicator');
-        indicators.forEach(ind => {
-            const step = parseInt(ind.dataset.step);
-            ind.classList.toggle('active', step === editCurrentStep);
-            ind.classList.toggle('completed', step < editCurrentStep);
+        if (result.status === 'success') {
+            const addDept = document.getElementById('add_dept');
+            const addShift = document.getElementById('add_shift');
+            const editDept = document.getElementById('edit_dept');
+            const editShift = document.getElementById('edit_shift');
+            const filterDept = document.getElementById('filterDept');
             
-            // Make indicators clickable for editing efficiency
-            ind.style.cursor = 'pointer';
-            ind.onclick = () => {
-                editCurrentStep = step;
-                updateEditStepUI();
+            const deptOptions = '<option value="">Select Department</option>' + 
+                result.departments.map(d => `<option value="${d.id}">${d.name}</option>`).join('');
+                
+            const filterDeptOptions = '<option value="">All Departments</option>' + 
+                result.departments.map(d => `<option value="${d.id}">${d.name}</option>`).join('');
+                
+            const formatTime = (timeStr) => {
+                if (!timeStr) return '';
+                let [h, m] = timeStr.split(':');
+                h = parseInt(h);
+                let ampm = h >= 12 ? 'PM' : 'AM';
+                h = h % 12 || 12;
+                return `${h}:${m} ${ampm}`;
             };
-        });
 
-        // Update Panes
-        const panes = document.querySelectorAll('#editEmployeeModal .step-pane');
-        panes.forEach((pane, idx) => {
-            pane.classList.toggle('active', idx + 1 === editCurrentStep);
-        });
+            const shiftOptions = '<option value="">Select Shift</option>' + 
+                result.shifts.map(s => {
+                    const timing = (s.start_time && s.end_time) ? ` (${formatTime(s.start_time)} - ${formatTime(s.end_time)})` : '';
+                    return `<option value="${s.id}">${s.name}${timing}</option>`;
+                }).join('');
 
-        // Update Buttons
-        const backBtn = document.getElementById('editNavBackBtn');
-        const backText = document.getElementById('editBackBtnText');
-        const backIcon = document.getElementById('editBackIcon');
-        
-        if (backBtn && backText && backIcon) {
-            if (editCurrentStep === 1) {
-                backText.textContent = "Cancel Changes";
-                backBtn.classList.remove('text-primary-color');
-                backBtn.classList.add('text-light');
-                backIcon.setAttribute('data-lucide', 'x');
-            } else {
-                backText.textContent = "Back to Previous Step";
-                backBtn.classList.remove('text-light');
-                backBtn.classList.add('text-primary-color');
-                backIcon.setAttribute('data-lucide', 'arrow-left');
-            }
+            if (addDept) addDept.innerHTML = deptOptions;
+            if (editDept) editDept.innerHTML = deptOptions;
+            if (filterDept) filterDept.innerHTML = filterDeptOptions;
+            
+            if (addShift) addShift.innerHTML = shiftOptions;
+            if (editShift) editShift.innerHTML = shiftOptions;
         }
-        
-        lucide.createIcons({
-            attrs: { size: 18 },
-            nameAttr: 'data-lucide'
-        });
-
-        const editNextStepBtn = document.getElementById('editNextStepBtn');
-        const editSubmitBtn = document.getElementById('editSubmitBtn');
-        if (editNextStepBtn) editNextStepBtn.classList.toggle('hidden', editCurrentStep === editTotalSteps);
-        if (editSubmitBtn) editSubmitBtn.classList.toggle('hidden', editCurrentStep !== editTotalSteps);
-        
-        const titles = ["Edit Personal Details", "Edit Job & Banking", "Edit Education & Experience"];
-        const subs = ["Update identity and contact information", "Update employment and payroll setup", "Update academic and professional details"];
-        
-        const modalHeaderH3 = document.querySelector('#editEmployeeModal h3');
-        const modalHeaderP = document.querySelector('#editEmployeeModal p');
-        if (modalHeaderH3) modalHeaderH3.textContent = titles[editCurrentStep-1];
-        if (modalHeaderP) modalHeaderP.textContent = subs[editCurrentStep-1];
+    } catch (error) {
+        console.error('Error loading requirements:', error);
     }
+}
 
-    const editNextStepBtn = document.getElementById('editNextStepBtn');
-    if (editNextStepBtn) {
-        editNextStepBtn.addEventListener('click', () => {
-            if (editCurrentStep < editTotalSteps) {
-                editCurrentStep++;
-                updateEditStepUI();
-            }
-        });
-    }
-
-    const editNavBackBtn = document.getElementById('editNavBackBtn');
-    if (editNavBackBtn) {
-        editNavBackBtn.addEventListener('click', () => {
-            if (editCurrentStep === 1) {
-                closeModal('editEmployeeModal');
-            } else {
-                editCurrentStep--;
-                updateEditStepUI();
-            }
-        });
-    }
-
-    window.openEditEmployeeModal = (empId) => {
-        editCurrentStep = 1;
-        // Mock data loading
-        console.log("Loading data for employee: " + empId);
-        updateEditStepUI();
-        openModal('editEmployeeModal');
-    };
-});
-
-// --- Pagination & Table Logic (optional Exit-only filter) ---
+// --- Pagination & Table Logic (Dynamic Server-side) ---
 document.addEventListener('DOMContentLoaded', () => {
+    // Selectors
     const tableBody = document.getElementById('employeeTableBody');
     const perPageSelect = document.getElementById('perPageSelect');
+    const filterID = document.getElementById('filterID');
+    const filterName = document.getElementById('filterName');
+    const filterDept = document.getElementById('filterDept');
+    const filterRole = document.getElementById('filterRole');
     const paginationInfo = document.getElementById('paginationInfo');
     const tableSummary = document.getElementById('tableSummary');
     const pageNumbersContainer = document.getElementById('pageNumbers');
@@ -234,160 +130,727 @@ document.addEventListener('DOMContentLoaded', () => {
     const nextBtn = document.getElementById('nextPage');
     const btnExitEmployees = document.getElementById('btnExitEmployees');
 
-    if (!tableBody || !perPageSelect || !paginationInfo) return;
+    if (!tableBody) return;
 
-    const allRows = Array.from(tableBody.querySelectorAll('tr'));
     let currentPage = 1;
-    let rowsPerPage = parseInt(perPageSelect.value, 10) || 10;
-    let exitEmployeesFilterActive = false;
+    let entriesLimit = parseInt(perPageSelect.value) || 10;
+    let isExitOnly = false;
+    let searchTimer;
 
-    function getFilteredRows() {
-        if (!exitEmployeesFilterActive) return allRows;
-        return allRows.filter((row) => row.getAttribute('data-emp-status') === 'exit');
+    async function fetchEmployees() {
+        // Show loading state
+        tableBody.innerHTML = `
+            <tr>
+                <td colspan="6" class="text-center py-50">
+                    <div class="flex-column flex-center text-center">
+                        <i data-lucide="loader-2" class="spin text-primary-color mb-10" size="32"></i>
+                        <p class="text-light">Fetching directory entries...</p>
+                    </div>
+                </td>
+            </tr>
+        `;
+        lucide.createIcons();
+
+        try {
+            const id_search = filterID ? filterID.value : '';
+            const name_search = filterName ? filterName.value : '';
+            const dept = filterDept ? filterDept.value : '';
+            const role = filterRole ? filterRole.value : '';
+            // Default to empty status unless it's Exit toggle
+            const status = isExitOnly ? 'Exit' : '';
+
+            const url = `assets/api/employee_handler.php?action=fetch_directory&page=${currentPage}&limit=${entriesLimit}&id_search=${encodeURIComponent(id_search)}&name_search=${encodeURIComponent(name_search)}&department=${dept}&role=${role}&status=${status}`;
+            
+            const response = await fetch(url);
+            const result = await response.json();
+
+            if (result.status === 'success') {
+                renderEmployees(result.data);
+                updatePaginationControls(result.total, result.page, result.limit);
+            } else {
+                tableBody.innerHTML = `<tr><td colspan="6" class="text-center py-30 text-danger">${result.message}</td></tr>`;
+            }
+        } catch (error) {
+            console.error('Fetch Directory Error:', error);
+            tableBody.innerHTML = `<tr><td colspan="6" class="text-center py-30 text-danger">Unable to load directory entries.</td></tr>`;
+        }
     }
 
-    function updateTable() {
-        const filteredRows = getFilteredRows();
-        const totalRows = filteredRows.length;
-        const totalPages =
-            totalRows === 0 ? 1 : rowsPerPage === -1 ? 1 : Math.ceil(totalRows / rowsPerPage);
+    function renderEmployees(employees) {
+        if (!employees || employees.length === 0) {
+            tableBody.innerHTML = `
+                <tr>
+                    <td colspan="6" class="text-center py-50">
+                        <div class="noti-empty" style="display: flex;">
+                            <div class="noti-empty-icon text-light opacity-30">
+                                <i data-lucide="user-minus" size="48"></i>
+                            </div>
+                            <h3 class="noti-empty-title">No employees found</h3>
+                            <p class="noti-empty-text">Adjust your filters or try a different search term.</p>
+                        </div>
+                    </td>
+                </tr>
+            `;
+            lucide.createIcons();
+            return;
+        }
 
-        if (currentPage > totalPages) currentPage = totalPages;
-        if (currentPage < 1) currentPage = 1;
+        tableBody.innerHTML = employees.map(emp => {
+            const statusClass = (emp.status || 'Active').toLowerCase().replace(' ', '');
+            const badgeClass = statusClass === 'active' ? 'badge-success' : 
+                               (statusClass === 'onleave' ? 'badge-warning' : 
+                               (statusClass === 'terminated' || statusClass === 'exit' ? 'badge-danger' : 'badge-light'));
+            const profileUrl = getEmployeeProfileUrl(emp);
+            const actionsHtml = isExitOnly
+                ? `
+                            <button class="action-btn action-btn-view" title="View Details" onclick="window.location.href='${profileUrl}'"><i data-lucide="eye" size="14"></i></button>
+                            <button class="action-btn action-btn-restore" title="Restore to active directory" onclick="restoreEmployee('${emp.id}')"><i data-lucide="rotate-ccw" size="14"></i></button>
+                `
+                : `
+                            <button class="action-btn action-btn-view" title="View Details" onclick="window.location.href='${profileUrl}'"><i data-lucide="eye" size="14"></i></button>
+                            <button class="action-btn action-btn-edit" title="Edit" onclick="openEditEmployeeModal('${emp.id}')"><i data-lucide="user-pen" size="14"></i></button>
+                            <button class="action-btn action-btn-delete" title="Move to exit list" onclick="deleteEmployee('${emp.id}')"><i data-lucide="trash-2" size="14"></i></button>
+                `;
 
-        const start = (currentPage - 1) * rowsPerPage;
-        const end = rowsPerPage === -1 ? totalRows : start + rowsPerPage;
+            return `
+                <tr data-emp-id="${emp.id}">
+                    <td>
+                        <a href="${profileUrl}" class="emp-profile no-decoration hover-opacity">
+                            <img src="${emp.profile_pic ? '../' + emp.profile_pic : '../images/profile-image/default-avatar.svg'}"
+                                class="emp-avatar" alt="Avatar"
+                                onerror="this.src='../images/profile-image/default-avatar.svg'">
+                            <div class="emp-info">
+                                <span class="name">${emp.first_name} ${emp.middle_name ? emp.middle_name + ' ' : ''}${emp.last_name}</span>
+                                <span class="email">EMP-0${emp.id}</span>
+                            </div>
+                        </a>
+                    </td>
+                    <td class="allow-wrap">${emp.email}</td>
+                    <td class="allow-wrap">${emp.dept_name || 'Unassigned'}</td>
+                    <td>${emp.job_title || 'Employee'}</td>
+                    <td><span class="badge ${badgeClass}">${emp.status}</span></td>
+                    <td class="text-right px-30">
+                        <div class="btn-group justify-end">${actionsHtml}
+                        </div>
+                    </td>
+                </tr>
+            `;
+        }).join('');
+        
+        lucide.createIcons();
+    }
 
-        allRows.forEach((row) => {
-            row.style.display = 'none';
-        });
-        filteredRows.forEach((row, index) => {
-            const show = rowsPerPage === -1 || (index >= start && index < end);
-            row.style.display = show ? '' : 'none';
-        });
-
-        const showingStart = totalRows === 0 ? 0 : start + 1;
-        const showingEnd = rowsPerPage === -1 ? totalRows : Math.min(end, totalRows);
-        const infoText = `Showing ${showingStart} to ${showingEnd} of ${totalRows} entries`;
+    function updatePaginationControls(total, page, limit) {
+        if (!paginationInfo) return;
+        
+        const totalPages = Math.ceil(total / limit) || 1;
+        const start = total === 0 ? 0 : (page - 1) * limit + 1;
+        const end = Math.min(page * limit, total);
+        
+        const infoText = `Showing ${start} to ${end} of ${total} entries`;
         paginationInfo.textContent = infoText;
         if (tableSummary) tableSummary.textContent = infoText;
 
-        updatePaginationControls(totalPages);
+        if (pageNumbersContainer) {
+            pageNumbersContainer.innerHTML = '';
+            for (let i = 1; i <= totalPages; i++) {
+                if (totalPages > 5 && i > 3 && i < totalPages) {
+                    if (i === 4) {
+                        const dots = document.createElement('span');
+                        dots.textContent = '...';
+                        dots.className = 'px-10 text-light';
+                        pageNumbersContainer.appendChild(dots);
+                    }
+                    continue;
+                }
+                const btn = document.createElement('button');
+                btn.className = `action-btn ${i === page ? 'btn-active' : ''}`;
+                btn.textContent = i;
+                btn.onclick = () => { currentPage = i; fetchEmployees(); };
+                pageNumbersContainer.appendChild(btn);
+            }
+        }
+
+        if (prevBtn) {
+            prevBtn.disabled = page === 1;
+            prevBtn.style.opacity = page === 1 ? '0.5' : '1';
+            prevBtn.onclick = () => { if (currentPage > 1) { currentPage--; fetchEmployees(); } };
+        }
+        if (nextBtn) {
+            nextBtn.disabled = page === totalPages;
+            nextBtn.style.opacity = page === totalPages ? '0.5' : '1';
+            nextBtn.onclick = () => { if (currentPage < totalPages) { currentPage++; fetchEmployees(); } };
+        }
     }
 
-    function updatePaginationControls(totalPages) {
-        if (!pageNumbersContainer || !prevBtn || !nextBtn) return;
-
-        pageNumbersContainer.innerHTML = '';
-
-        if (totalPages <= 1) {
-            prevBtn.classList.add('hidden');
-            nextBtn.classList.add('hidden');
-            return;
-        }
-        prevBtn.classList.remove('hidden');
-        nextBtn.classList.remove('hidden');
-
-        prevBtn.disabled = currentPage === 1;
-        nextBtn.disabled = currentPage === totalPages;
-        prevBtn.style.opacity = currentPage === 1 ? '0.5' : '1';
-        nextBtn.style.opacity = currentPage === totalPages ? '0.5' : '1';
-
-        for (let i = 1; i <= totalPages; i++) {
-            const btn = document.createElement('button');
-            btn.className = `action-btn ${i === currentPage ? 'btn-active' : ''}`;
-            btn.textContent = i;
-            btn.onclick = () => {
-                currentPage = i;
-                updateTable();
-            };
-            pageNumbersContainer.appendChild(btn);
-        }
-    }
-
-    perPageSelect.addEventListener('change', () => {
+    // Event Listeners
+    if (perPageSelect) perPageSelect.onchange = () => { 
         const val = perPageSelect.value;
-        rowsPerPage = val === 'all' ? -1 : parseInt(val, 10);
-        currentPage = 1;
-        updateTable();
-    });
-
-    prevBtn.onclick = () => {
-        if (currentPage > 1) {
-            currentPage--;
-            updateTable();
-        }
+        entriesLimit = val === 'all' ? 1000 : parseInt(val);
+        currentPage = 1; 
+        fetchEmployees(); 
+    };
+    if (filterDept) filterDept.onchange = () => { currentPage = 1; fetchEmployees(); };
+    if (filterRole) filterRole.onchange = () => { currentPage = 1; fetchEmployees(); };
+    
+    const handleSearchInput = () => {
+        clearTimeout(searchTimer);
+        searchTimer = setTimeout(() => {
+            currentPage = 1;
+            fetchEmployees();
+        }, 400);
     };
 
-    nextBtn.onclick = () => {
-        const filteredRows = getFilteredRows();
-        const totalRows = filteredRows.length;
-        const totalPages =
-            totalRows === 0 ? 1 : rowsPerPage === -1 ? 1 : Math.ceil(totalRows / rowsPerPage);
-        if (currentPage < totalPages) {
-            currentPage++;
-            updateTable();
-        }
-    };
-
-    function syncExitEmployeesButtonUI() {
-        if (!btnExitEmployees) return;
-        const labelSpan = btnExitEmployees.querySelector('span');
-        const iconEl = btnExitEmployees.querySelector('[data-lucide]');
-        if (exitEmployeesFilterActive) {
-            if (labelSpan) labelSpan.textContent = 'Back to All';
-            if (iconEl) iconEl.setAttribute('data-lucide', 'arrow-left');
-            btnExitEmployees.title = 'Show all employees';
-            btnExitEmployees.setAttribute('aria-label', 'Back to all employees');
-        } else {
-            if (labelSpan) labelSpan.textContent = 'Exit Employees';
-            if (iconEl) iconEl.setAttribute('data-lucide', 'log-out');
-            btnExitEmployees.title = 'Show only employees with Exit status';
-            btnExitEmployees.setAttribute('aria-label', 'Show only exit employees');
-        }
-        if (typeof lucide !== 'undefined' && lucide.createIcons) {
-            lucide.createIcons({ nameAttr: 'data-lucide' });
-        }
-    }
+    if (filterID) filterID.oninput = handleSearchInput;
+    if (filterName) filterName.oninput = handleSearchInput;
 
     if (btnExitEmployees) {
-        btnExitEmployees.addEventListener('click', () => {
-            exitEmployeesFilterActive = !exitEmployeesFilterActive;
+        btnExitEmployees.onclick = () => {
+            isExitOnly = !isExitOnly;
+            // Use is-exit-filter-active (not btn-active — btn-active has pointer-events:none)
+            btnExitEmployees.classList.toggle('is-exit-filter-active', isExitOnly);
+            btnExitEmployees.classList.remove('btn-active');
+            btnExitEmployees.setAttribute('aria-pressed', isExitOnly ? 'true' : 'false');
+
+            const label = btnExitEmployees.querySelector('span');
+            const icon = btnExitEmployees.querySelector('[data-lucide]') || btnExitEmployees.querySelector('svg');
+
+            if (isExitOnly) {
+                if (label) label.textContent = 'Back to All';
+                if (icon && icon.hasAttribute('data-lucide')) {
+                    icon.setAttribute('data-lucide', 'arrow-left');
+                }
+            } else {
+                if (label) label.textContent = 'Exit Employees';
+                if (icon && icon.hasAttribute('data-lucide')) {
+                    icon.setAttribute('data-lucide', 'log-out');
+                }
+            }
+            lucide.createIcons();
             currentPage = 1;
-            btnExitEmployees.setAttribute('aria-pressed', exitEmployeesFilterActive ? 'true' : 'false');
-            btnExitEmployees.classList.toggle('is-exit-filter-active', exitEmployeesFilterActive);
-            syncExitEmployeesButtonUI();
-            updateTable();
+            fetchEmployees();
+        };
+    }
+
+    // Modal close hooks to refresh data
+    const modalCloses = document.querySelectorAll('.js-modal-close');
+    modalCloses.forEach(btn => {
+        btn.addEventListener('click', () => {
+            // Optional: refresh if something changed?
+        });
+    });
+
+    // --- Wizard Navigation Logic (Add & Edit) ---
+    let addCurrentStep = 1;
+    let editCurrentStep = 1;
+
+    function validateWizardStep(form, stepIndex) {
+        const pane = form?.querySelectorAll('.step-pane')[stepIndex - 1];
+        if (!pane) return true;
+        const fields = pane.querySelectorAll('input, select, textarea');
+        for (const field of fields) {
+            if (field.type === 'file' || field.type === 'hidden') continue;
+            if (!field.checkValidity()) {
+                field.reportValidity();
+                return false;
+            }
+        }
+        return true;
+    }
+
+    function employeeAttachmentOk(resumeWrapperId, resumeInputId, idWrapperId, idInputId) {
+        const hasResume = document.getElementById(resumeWrapperId)?.classList.contains('has-file')
+            || (document.getElementById(resumeInputId)?.files?.length > 0);
+        const hasId = document.getElementById(idWrapperId)?.classList.contains('has-file')
+            || (document.getElementById(idInputId)?.files?.length > 0);
+        return { hasResume, hasId };
+    }
+
+    function clearEmployeeFileErrors(wrapperIds) {
+        wrapperIds.forEach((id) => {
+            document.getElementById(id)?.classList.remove('file-upload-error');
         });
     }
 
-    updateTable();
-});
+    function employeesFormAlert(title, text, icon = 'warning') {
+        return Swal.fire({
+            title,
+            text,
+            icon,
+            confirmButtonColor: '#6c4cf1'
+        });
+    }
 
-// Employee directory: eye (view) → employee profile
-document.addEventListener('DOMContentLoaded', () => {
-    const tbody = document.getElementById('employeeTableBody');
-    if (!tbody) return;
+    function validateAllWizardSteps(form, modalId, setStep) {
+        for (let step = 1; step <= 3; step++) {
+            if (!validateWizardStep(form, step)) {
+                setStep(step);
+                updateWizardUI(modalId, step);
+                return false;
+            }
+        }
+        return true;
+    }
 
-    tbody.addEventListener('click', (e) => {
-        const viewBtn = e.target.closest('.action-btn-view');
-        if (!viewBtn) return;
+    function requireEmployeeAttachments(modalId, setStep, resumeWrapperId, resumeInputId, idWrapperId, idInputId) {
+        const files = employeeAttachmentOk(resumeWrapperId, resumeInputId, idWrapperId, idInputId);
+        clearEmployeeFileErrors([resumeWrapperId, idWrapperId]);
 
-        const tr = viewBtn.closest('tr');
-        if (!tr) return;
+        if (!files.hasResume) {
+            setStep(3);
+            updateWizardUI(modalId, 3);
+            const wrapper = document.getElementById(resumeWrapperId);
+            wrapper?.classList.add('file-upload-error');
+            wrapper?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            employeesFormAlert('Required Field', 'Please upload Resume Attachment to continue.');
+            return false;
+        }
+        if (!files.hasId) {
+            setStep(3);
+            updateWizardUI(modalId, 3);
+            const wrapper = document.getElementById(idWrapperId);
+            wrapper?.classList.add('file-upload-error');
+            wrapper?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            employeesFormAlert('Required Field', 'Please upload ID Card Attachment to continue.');
+            return false;
+        }
+        return true;
+    }
 
-        const profileLink = tr.querySelector('a[href*="employee-profile.php"]');
-        if (profileLink) {
-            e.preventDefault();
-            window.location.href = profileLink.href;
+    function updateWizardUI(modalId, step) {
+        const modal = document.getElementById(modalId);
+        if (!modal) return;
+
+        // Update Indicators
+        const indicators = modal.querySelectorAll('.step-indicator');
+        indicators.forEach(ind => {
+            const indStep = parseInt(ind.getAttribute('data-step'));
+            ind.classList.toggle('active', indStep === step);
+            ind.classList.toggle('completed', indStep < step);
+        });
+
+        // Update Panes
+        const panes = modal.querySelectorAll('.step-pane');
+        panes.forEach((pane, idx) => {
+            pane.classList.toggle('active', (idx + 1) === step);
+        });
+
+        // Update Buttons
+        const backBtn = modal.querySelector(modalId === 'addEmployeeModal' ? '#navBackBtn' : '#editNavBackBtn');
+        const nextBtn = modal.querySelector(modalId === 'addEmployeeModal' ? '#nextStepBtn' : '#editNextStepBtn');
+        const submitBtn = modal.querySelector(modalId === 'addEmployeeModal' ? '#submitEmployeeBtn' : '#editSubmitBtn');
+        const backText = modal.querySelector(modalId === 'addEmployeeModal' ? '#backBtnText' : '#editBackBtnText');
+        const backIcon = modal.querySelector(modalId === 'addEmployeeModal' ? '#backIcon' : '#editBackIcon');
+
+        if (step === 1) {
+            backText.textContent = modalId === 'addEmployeeModal' ? "Cancel Account" : "Cancel Changes";
+            backIcon.setAttribute('data-lucide', 'x');
+        } else {
+            backText.textContent = "Back Step";
+            backIcon.setAttribute('data-lucide', 'arrow-left');
+        }
+
+        if (step === 3) {
+            nextBtn.classList.add('hidden');
+            submitBtn.classList.remove('hidden');
+        } else {
+            nextBtn.classList.remove('hidden');
+            submitBtn.classList.add('hidden');
+        }
+
+        lucide.createIcons();
+    }
+
+    // Global Add Opener
+    window.openAddEmployeeModal = () => {
+        addCurrentStep = 1;
+        updateWizardUI('addEmployeeModal', 1);
+        document.getElementById('addEmployeeModal').classList.add('active');
+        // Reset form
+        document.getElementById('addEmployeeForm')?.reset();
+        // Reset file status
+        ['resume', 'id', 'other'].forEach(type => {
+            const wrapper = document.getElementById(`${type}_wrapper`);
+            if (wrapper) {
+                wrapper.classList.remove('has-file');
+                wrapper.classList.remove('file-upload-error');
+            }
+        });
+    };
+
+    // Add Modal Nav
+    document.getElementById('nextStepBtn')?.addEventListener('click', () => {
+        const form = document.getElementById('addEmployeeForm');
+        if (addCurrentStep < 3) {
+            if (!validateWizardStep(form, addCurrentStep)) return;
+            addCurrentStep++;
+            updateWizardUI('addEmployeeModal', addCurrentStep);
+        }
+    });
+    document.getElementById('navBackBtn')?.addEventListener('click', () => {
+        if (addCurrentStep > 1) {
+            addCurrentStep--;
+            updateWizardUI('addEmployeeModal', addCurrentStep);
+        } else {
+            document.getElementById('addEmployeeModal').classList.remove('active');
+        }
+    });
+
+    // Edit Modal Nav
+    document.getElementById('editNextStepBtn')?.addEventListener('click', () => {
+        const form = document.getElementById('editEmployeeForm');
+        if (editCurrentStep < 3) {
+            if (!validateWizardStep(form, editCurrentStep)) return;
+            editCurrentStep++;
+            updateWizardUI('editEmployeeModal', editCurrentStep);
+        }
+    });
+    document.getElementById('editNavBackBtn')?.addEventListener('click', () => {
+        if (editCurrentStep > 1) {
+            editCurrentStep--;
+            updateWizardUI('editEmployeeModal', editCurrentStep);
+        } else {
+            document.getElementById('editEmployeeModal').classList.remove('active');
+        }
+    });
+
+    // Global Edit Opener
+    window.openEditEmployeeModal = async (empId) => {
+        editCurrentStep = 1;
+        updateWizardUI('editEmployeeModal', 1);
+        
+        try {
+            const response = await fetch(`assets/api/employee_handler.php?action=get_employee&id=${empId}`);
+            const result = await response.json();
+            
+            if (result.status === 'success') {
+                const data = result.data;
+                const modal = document.getElementById('editEmployeeModal');
+                
+                // Bind Data to Fields
+                document.getElementById('edit_id_hidden').value = data.id;
+                document.getElementById('edit_first_name').value = data.first_name || '';
+                document.getElementById('edit_middle_name').value = data.middle_name || '';
+                document.getElementById('edit_last_name').value = data.last_name || '';
+                document.getElementById('edit_gender').value = data.gender || 'Male';
+                document.getElementById('edit_dob').value = data.dob || '';
+                document.getElementById('edit_phone').value = data.phone || '';
+                document.getElementById('edit_cnic').value = data.cnic_number || '';
+                document.getElementById('edit_address').value = data.address || '';
+                document.getElementById('edit_emergency_phone').value = data.emergency_contact || '';
+                document.getElementById('edit_emergency_relation').value = data.emergency_relation || '';
+                document.getElementById('edit_email').value = data.email || '';
+                
+                // Job & Bank
+                document.getElementById('edit_shift').value = data.shift_id || '';
+                document.getElementById('edit_dept').value = data.department_id || '';
+                document.getElementById('edit_job_title').value = data.job_title || '';
+                document.getElementById('edit_job_type').value = data.job_type || 'Permanent';
+                document.getElementById('edit_salary').value = data.salary ? Math.round(data.salary) : '';
+                document.getElementById('edit_joining_date').value = data.joining_date || '';
+                
+                document.getElementById('edit_bank_name').value = data.bank_name || '';
+                document.getElementById('edit_account_type').value = data.account_type || 'IBN';
+                document.getElementById('edit_account_title').value = data.account_title || '';
+                document.getElementById('edit_account_number').value = data.account_number || '';
+                document.getElementById('edit_branch_info').value = data.branch_info || '';
+
+                // Education
+                document.getElementById('edit_qualification').value = data.qualification || '';
+                document.getElementById('edit_degree').value = data.degree_certification || '';
+                document.getElementById('edit_college').value = data.college_university || '';
+                document.getElementById('edit_expertise').value = data.professional_expertise || '';
+                document.getElementById('edit_last_employer').value = data.last_employer || '';
+                document.getElementById('edit_last_designation').value = data.last_designation || '';
+                document.getElementById('edit_experience_from').value = data.experience_from || '';
+                document.getElementById('edit_experience_to').value = data.experience_to || '';
+
+                // File Status Update
+                const updateFileStatus = (type, path, isOther = false) => {
+                    const wrapper = document.getElementById(`edit_${type}_wrapper`);
+                    const filenameLabel = document.getElementById(`edit_${type}_filename`);
+                    const infoLabel = wrapper?.querySelector('.file-upload-info');
+                    const icon = wrapper?.querySelector('i');
+
+                    if (path && ((!isOther) || (isOther && JSON.parse(path || '[]').length > 0))) {
+                        wrapper.classList.add('has-file');
+                        if (icon) icon.className = 'text-success';
+                        
+                        if (isOther) {
+                            const docs = JSON.parse(path || '[]');
+                            const filenames = docs.map(p => p.split('/').pop()).join(', ');
+                            filenameLabel.textContent = filenames;
+                            if (infoLabel) {
+                                infoLabel.textContent = "Click to add more";
+                                infoLabel.classList.add('text-success');
+                            }
+                        } else {
+                            filenameLabel.textContent = path.split('/').pop(); // Get filename
+                            if (infoLabel) {
+                                infoLabel.textContent = "File already uploaded";
+                                infoLabel.classList.add('text-success');
+                            }
+                        }
+                    } else {
+                        wrapper.classList.remove('has-file');
+                        if (icon) icon.className = '';
+                        filenameLabel.textContent = type === 'resume' ? "Resume_Sophia_R.pdf" : (type === 'id' ? "ID_Card_Front.jpg" : "Choose Files");
+                        if (infoLabel) {
+                            infoLabel.textContent = type === 'resume' ? "PDF, DOCX up to 5MB" : (type === 'id' ? "PNG, JPG or PDF" : "Certificates, etc.");
+                            infoLabel.classList.remove('text-success');
+                        }
+                    }
+                };
+
+                updateFileStatus('resume', data.resume_path);
+                updateFileStatus('id', data.id_card_path);
+                updateFileStatus('other', data.other_docs, true);
+
+                modal.classList.add('active');
+            } else {
+                Swal.fire('Error', 'Unable to fetch employee data', 'error');
+            }
+        } catch (error) {
+            console.error('Error opening edit modal:', error);
+            Swal.fire('Error', 'An unexpected error occurred', 'error');
+        }
+    };
+
+    // Edit Form Submission
+    document.getElementById('editEmployeeForm')?.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        if (!e.target.checkValidity()) {
+            e.target.reportValidity();
+            return;
+        }
+        if (!validateAllWizardSteps(e.target, 'editEmployeeModal', (s) => { editCurrentStep = s; })) {
+            return;
+        }
+        if (!requireEmployeeAttachments(
+            'editEmployeeModal',
+            (s) => { editCurrentStep = s; },
+            'edit_resume_wrapper',
+            'edit_resume_upload',
+            'edit_id_wrapper',
+            'edit_id_upload'
+        )) {
+            return;
+        }
+        const submitBtn = document.getElementById('editSubmitBtn');
+        const originalText = submitBtn.innerHTML;
+        
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<i data-lucide="loader-2" class="spin" size="18"></i> Saving...';
+        lucide.createIcons();
+
+        try {
+            const formData = new FormData(e.target);
+            formData.append('action', 'update');
+            
+            const response = await fetch('assets/api/employee_handler.php', {
+                method: 'POST',
+                body: formData
+            });
+            const result = await response.json();
+
+            if (result.status === 'success') {
+                document.getElementById('editEmployeeModal').classList.remove('active');
+                fetchEmployees();
+                Swal.fire('Success', 'Employee updated successfully', 'success');
+            } else {
+                Swal.fire('Error', result.message || 'Update failed', 'error');
+            }
+        } catch (error) {
+            console.error('Update Error:', error);
+            Swal.fire('Error', 'Network error or server deviation', 'error');
+        } finally {
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = originalText;
+            lucide.createIcons();
+        }
+    });
+    
+    // Add Form Submission
+    document.getElementById('addEmployeeForm')?.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        if (!validateAllWizardSteps(e.target, 'addEmployeeModal', (s) => { addCurrentStep = s; })) {
+            return;
+        }
+        if (!requireEmployeeAttachments(
+            'addEmployeeModal',
+            (s) => { addCurrentStep = s; },
+            'resume_wrapper',
+            'resume_upload',
+            'id_wrapper',
+            'id_upload'
+        )) {
+            return;
+        }
+        const submitBtn = document.getElementById('submitEmployeeBtn');
+        const originalText = submitBtn.innerHTML;
+        
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<i data-lucide="loader-2" class="spin" size="18"></i> Creating...';
+        lucide.createIcons();
+
+        try {
+            const formData = new FormData(e.target);
+            formData.append('action', 'add');
+            
+            const response = await fetch('assets/api/employee_handler.php', {
+                method: 'POST',
+                body: formData
+            });
+            const result = await response.json();
+
+            if (result.status === 'success') {
+                document.getElementById('addEmployeeModal').classList.remove('active');
+                e.target.reset(); // Clear form
+                fetchEmployees();
+                Swal.fire('Success', 'Employee account created successfully', 'success');
+            } else {
+                Swal.fire('Error', result.message || 'Creation failed', 'error');
+            }
+        } catch (error) {
+            console.error('Creation Error:', error);
+            Swal.fire('Error', 'Network error or server deviation', 'error');
+        } finally {
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = originalText;
+            lucide.createIcons();
+        }
+    });
+
+    // --- Input Masking for Phone & CNIC ---
+    const applyMask = (selector, type) => {
+        const input = document.getElementById(selector);
+        if (!input) return;
+
+        input.addEventListener('input', (e) => {
+            let value = e.target.value.replace(/\D/g, ''); // Remove non-digits
+            if (type === 'phone') {
+                if (value.length > 4) value = value.slice(0, 4) + '-' + value.slice(4, 11);
+                else value = value.slice(0, 11);
+            } else if (type === 'cnic') {
+                if (value.length > 5 && value.length <= 12) value = value.slice(0, 5) + '-' + value.slice(5);
+                else if (value.length > 12) value = value.slice(0, 5) + '-' + value.slice(5, 12) + '-' + value.slice(12, 13);
+            }
+            e.target.value = value;
+        });
+    };
+
+    ['add_phone', 'add_emergency_phone', 'edit_phone', 'edit_emergency_phone'].forEach(id => applyMask(id, 'phone'));
+    ['add_cnic', 'edit_cnic'].forEach(id => applyMask(id, 'cnic'));
+
+    window.restoreEmployee = async (id) => {
+        const result = await Swal.fire({
+            title: 'Restore employee?',
+            text: 'This employee will return to the active directory with Active status.',
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonColor: '#6c4cf1',
+            cancelButtonColor: '#94a3b8',
+            confirmButtonText: 'Yes, restore'
+        });
+
+        if (!result.isConfirmed) return;
+
+        try {
+            const formData = new FormData();
+            formData.append('id', id);
+            const response = await fetch('assets/api/employee_handler.php?action=restore', {
+                method: 'POST',
+                body: formData
+            });
+            const data = await response.json();
+            if (data.status === 'success') {
+                Swal.fire('Restored!', data.message || 'Employee is active again.', 'success');
+                fetchEmployees();
+            } else {
+                Swal.fire('Error', data.message || 'Restore failed.', 'error');
+            }
+        } catch (error) {
+            Swal.fire('Error', 'Unable to restore employee.', 'error');
+        }
+    };
+
+    // Initial Fetch
+    fetchEmployees();
+    loadRequirementData();
+
+    // --- Real-time Email Verification ---
+    const addEmail = document.getElementById('add_email');
+    const emailMsg = document.getElementById('email_verify_msg');
+    let emailTimer;
+
+    addEmail?.addEventListener('input', (e) => {
+        const email = e.target.value.trim();
+        clearTimeout(emailTimer);
+        
+        if (email.length < 5) {
+            emailMsg.textContent = '';
             return;
         }
 
-        const idSpan = tr.querySelector('.emp-info .email');
-        if (idSpan && idSpan.textContent.trim()) {
-            e.preventDefault();
-            window.location.href =
-                'employee-profile.php?id=' + encodeURIComponent(idSpan.textContent.trim());
-        }
+        emailTimer = setTimeout(async () => {
+            try {
+                const response = await fetch(`assets/api/employee_handler.php?action=check_email&email=${encodeURIComponent(email)}`);
+                const result = await response.json();
+                
+                if (result.status === 'success') {
+                    emailMsg.textContent = '✅ ' + result.message;
+                    emailMsg.className = 'font-11 mt-4 block text-success';
+                    addEmail.style.borderColor = '#10b981';
+                } else if (result.status === 'exited') {
+                    emailMsg.textContent = '⚠️ ' + result.message;
+                    emailMsg.className = 'font-11 mt-4 block text-warning';
+                    addEmail.style.borderColor = '#f59e0b';
+                } else {
+                    emailMsg.textContent = '⚠️ ' + result.message;
+                    emailMsg.className = 'font-11 mt-4 block text-danger';
+                    addEmail.style.borderColor = '#ef4444';
+                }
+            } catch (error) {
+                console.error('Email Verification Error:', error);
+                emailMsg.textContent = '';
+                addEmail.style.borderColor = '';
+            }
+        }, 500);
     });
 });
+
+window.deleteEmployee = async (id) => {
+    const result = await Swal.fire({
+        title: 'Are you sure?',
+        text: "You want to delete this employee record? This action can be undone by admin.",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#6c4cf1',
+        cancelButtonColor: '#94a3b8',
+        confirmButtonText: 'Yes, delete it!'
+    });
+
+    if (result.isConfirmed) {
+        try {
+            const formData = new FormData();
+            formData.append('id', id);
+            const response = await fetch('assets/api/employee_handler.php?action=delete', {
+                method: 'POST',
+                body: formData
+            });
+            const data = await response.json();
+            if (data.status === 'success') {
+                Swal.fire('Deleted!', 'Employee record has been deleted.', 'success')
+                .then(() => {
+                    // Small delay to ensure DB sync if needed
+                    setTimeout(() => window.location.reload(), 500);
+                });
+            } else {
+                Swal.fire('Error', data.message, 'error');
+            }
+        } catch (error) {
+            Swal.fire('Error', 'Unable to delete record.', 'error');
+        }
+    }
+}
+;

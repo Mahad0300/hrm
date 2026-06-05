@@ -75,6 +75,8 @@
 
         if (typeof openModal === 'function') {
             openModal('scheduleInterviewModal');
+        } else {
+            modal.classList.add('active');
         }
 
         if (typeof lucide !== 'undefined') lucide.createIcons();
@@ -323,6 +325,35 @@
         }
     }
 
+    function setButtonLoading(btn, loading, loadingLabel) {
+        if (!btn) return;
+        if (loading) {
+            if (!btn.dataset.originalHtml) {
+                btn.dataset.originalHtml = btn.innerHTML;
+            }
+            btn.disabled = true;
+            btn.innerHTML = loadingLabel || 'Saving...';
+        } else {
+            btn.disabled = false;
+            if (btn.dataset.originalHtml) {
+                btn.innerHTML = btn.dataset.originalHtml;
+            }
+        }
+        if (typeof lucide !== 'undefined') lucide.createIcons();
+    }
+
+    function notifySuccess(message) {
+        if (typeof showToast === 'function') {
+            showToast(message, 'success');
+            return;
+        }
+        Swal.fire({ icon: 'success', title: 'Success', text: message, timer: 2200, showConfirmButton: false });
+    }
+
+    function notifyError(message) {
+        Swal.fire('Error', message || 'Something went wrong.', 'error');
+    }
+
     function openStatusModal(status) {
         document.getElementById('targetStatus').value = status;
         const titleEl = document.getElementById('statusModalTitle');
@@ -348,8 +379,12 @@
 
         document.getElementById('statusFeedback').value = '';
 
-        const modal = document.getElementById('statusTransitionModal');
-        if (modal) modal.classList.add('active');
+        if (typeof openModal === 'function') {
+            openModal('statusTransitionModal');
+        } else {
+            const modal = document.getElementById('statusTransitionModal');
+            if (modal) modal.classList.add('active');
+        }
         if (typeof lucide !== 'undefined') lucide.createIcons();
     }
 
@@ -367,13 +402,16 @@
             });
             const result = await response.json();
             if (result.status === 'success') {
-                loadCandidateDetail();
-                Swal.fire('Success', 'Candidate status updated to ' + newStatus, 'success');
-            } else {
-                Swal.fire('Error', result.message, 'error');
+                await loadCandidateDetail();
+                notifySuccess('Candidate status updated to ' + newStatus);
+                return true;
             }
+            notifyError(result.message);
+            return false;
         } catch (e) {
             console.error('Status update failed:', e);
+            notifyError('Could not update status. Please try again.');
+            return false;
         }
     }
 
@@ -390,9 +428,12 @@
                 e.preventDefault();
                 const status = document.getElementById('targetStatus').value;
                 const feedback = document.getElementById('statusFeedback').value;
-                
+                const submitBtn = document.getElementById('statusModalSubmitBtn');
+
                 closeModal('statusTransitionModal');
+                setButtonLoading(submitBtn, true, 'Updating...');
                 await updateStatus(status, feedback);
+                setButtonLoading(submitBtn, false);
             });
         }
 
@@ -432,17 +473,21 @@
                 var date = document.getElementById('scheduleInterviewDate').value;
                 var time = document.getElementById('scheduleInterviewTime').value;
                 var feedback = document.getElementById('scheduleInterviewFeedback').value;
-                
+                const submitBtn = document.querySelector('button[form="scheduleInterviewForm"]');
+                const wasReschedule = !!currentInterview;
+
+                closeModal('scheduleInterviewModal');
+                setButtonLoading(submitBtn, true, wasReschedule ? 'Rescheduling...' : 'Scheduling...');
+
                 try {
                     const formData = new FormData();
-                    // Decision logic: if already has an interview, it's a reschedule
-                    if (currentInterview) {
+                    if (wasReschedule) {
                         formData.append('action', 'reschedule_interview');
                         formData.append('interview_id', currentInterview.id);
                     } else {
                         formData.append('action', 'schedule_interview');
                     }
-                    
+
                     formData.append('candidate_id', candidateId);
                     formData.append('date', date);
                     formData.append('time', time);
@@ -453,16 +498,18 @@
                         body: formData
                     });
                     const result = await response.json();
-                    
+
                     if (result.status === 'success') {
-                        closeModal('scheduleInterviewModal');
-                        loadCandidateDetail(); 
-                        Swal.fire(currentInterview ? 'Rescheduled' : 'Scheduled', result.message, 'success');
+                        await loadCandidateDetail();
+                        notifySuccess(result.message || (wasReschedule ? 'Interview rescheduled.' : 'Interview scheduled.'));
                     } else {
-                        Swal.fire('Error', result.message, 'error');
+                        notifyError(result.message);
                     }
                 } catch (err) {
                     console.error('Operation failed:', err);
+                    notifyError('Could not save interview. Please try again.');
+                } finally {
+                    setButtonLoading(submitBtn, false);
                 }
             });
         }

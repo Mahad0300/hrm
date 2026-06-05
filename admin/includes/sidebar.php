@@ -143,7 +143,7 @@ $current_page = basename($_SERVER['PHP_SELF']);
                 </a>
                 <a href="role-management.php" class="submenu-link <?= ($current_page == 'role-management.php') ? 'active' : '' ?>">
                     <i data-lucide="shield-check" size="14"></i>
-                    <span>Role Management</span>
+                    <span>Access Control</span>
                 </a>
                 <a href="policy-management.php" class="submenu-link <?= ($current_page == 'policy-management.php') ? 'active' : '' ?>">
                     <i data-lucide="file-text" size="14"></i>

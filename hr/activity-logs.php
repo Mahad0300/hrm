@@ -8,11 +8,15 @@ include 'includes/header.php';
 <!-- Filters Card -->
 <div class="card p-24 mb-24">
     <div class="filter-grid">
-        <div class="search-box">
-            <i data-lucide="search" size="18"></i>
-            <input type="text" placeholder="Search by employee name or ID...">
+        <div class="filter-item">
+            <label class="admin-form-label font-12">Search</label>
+            <div class="search-box w-full">
+                <i data-lucide="search" size="16"></i>
+                <input type="text" id="activityFilterSearch" class="form-control" placeholder="Search by employee name or ID...">
+            </div>
         </div>
         <div class="filter-item">
+            <label class="admin-form-label font-12">Module</label>
             <select class="form-control">
                 <option value="">All Modules</option>
                 <option value="employees">Employees</option>
@@ -32,6 +36,7 @@ include 'includes/header.php';
             </select>
         </div>
         <div class="filter-item">
+            <label class="admin-form-label font-12">Date</label>
             <input type="date" class="form-control">
         </div>
     </div>
@@ -69,275 +74,11 @@ include 'includes/header.php';
                 </tr>
             </thead>
             <tbody id="activityTableBody">
-                <!-- Row 1: Employee Update -->
                 <tr>
-                    <td>
-                        <div class="emp-profile">
-                            <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=150"
-                                class="emp-avatar" alt="Avatar">
-                            <div class="emp-info">
-                                <span class="name">Emma Williams</span>
-                                <span class="email font-12 text-light">EM-4820</span>
-                            </div>
-                        </div>
+                    <td colspan="6" class="text-center p-40">
+                        <div class="loading-spinner"></div>
+                        <p class="mt-10 text-light">Loading activities...</p>
                     </td>
-                    <td>
-                        <div class="flex-column">
-                            <span class="font-14 font-600">Oct 24, 2023</span>
-                            <span class="font-12 text-light">10:45 AM</span>
-                        </div>
-                    </td>
-                    <td>
-                        <span class="badge badge-light">Employees</span>
-                    </td>
-                    <td>
-                        <span class="badge badge-info">Update</span>
-                    </td>
-                    <td class="allow-wrap">Updated banking information for employee EM-5021</td>
-                    <td><code class="font-12">192.168.1.45</code></td>
-                </tr>
-
-                <!-- Row 2: Attendance Create -->
-                <tr>
-                    <td>
-                        <div class="emp-profile">
-                            <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&q=80&w=150"
-                                class="emp-avatar" alt="Avatar">
-                            <div class="emp-info">
-                                <span class="name">Oliver Mitchell</span>
-                                <span class="email font-12 text-light">EM-4821</span>
-                            </div>
-                        </div>
-                    </td>
-                    <td>
-                        <div class="flex-column">
-                            <span class="font-14 font-600">Oct 24, 2023</span>
-                            <span class="font-12 text-light">09:12 AM</span>
-                        </div>
-                    </td>
-                    <td>
-                        <span class="badge badge-light">Attendance</span>
-                    </td>
-                    <td>
-                        <span class="badge badge-success">Create</span>
-                    </td>
-                    <td class="allow-wrap">Manually added clock-in for Oct 23 (EM-4821)</td>
-                    <td><code class="font-12">182.164.3.21</code></td>
-                </tr>
-
-                <tr>
-                    <td>
-                        <div class="emp-profile">
-                            <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=150"
-                                class="emp-avatar" alt="Avatar">
-                            <div class="emp-info">
-                                <span class="name">Emma Williams</span>
-                                <span class="email font-12 text-light">EM-4820</span>
-                            </div>
-                        </div>
-                    </td>
-                    <td>
-                        <div class="flex-column">
-                            <span class="font-14 font-600">Oct 24, 2023</span>
-                            <span class="font-12 text-light">10:45 AM</span>
-                        </div>
-                    </td>
-                    <td>
-                        <span class="badge badge-light">Employees</span>
-                    </td>
-                    <td>
-                        <span class="badge badge-info">Update</span>
-                    </td>
-                    <td class="allow-wrap">Updated banking information for employee EM-5021</td>
-                    <td><code class="font-12">192.168.1.45</code></td>
-                </tr>
-                <tr>
-                    <td>
-                        <div class="emp-profile">
-                            <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=150"
-                                class="emp-avatar" alt="Avatar">
-                            <div class="emp-info">
-                                <span class="name">Emma Williams</span>
-                                <span class="email font-12 text-light">EM-4820</span>
-                            </div>
-                        </div>
-                    </td>
-                    <td>
-                        <div class="flex-column">
-                            <span class="font-14 font-600">Oct 24, 2023</span>
-                            <span class="font-12 text-light">10:45 AM</span>
-                        </div>
-                    </td>
-                    <td>
-                        <span class="badge badge-light">Employees</span>
-                    </td>
-                    <td>
-                        <span class="badge badge-info">Update</span>
-                    </td>
-                    <td class="allow-wrap">Updated banking information for employee EM-5021</td>
-                    <td><code class="font-12">192.168.1.45</code></td>
-                </tr>
-                <tr>
-                    <td>
-                        <div class="emp-profile">
-                            <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=150"
-                                class="emp-avatar" alt="Avatar">
-                            <div class="emp-info">
-                                <span class="name">Emma Williams</span>
-                                <span class="email font-12 text-light">EM-4820</span>
-                            </div>
-                        </div>
-                    </td>
-                    <td>
-                        <div class="flex-column">
-                            <span class="font-14 font-600">Oct 24, 2023</span>
-                            <span class="font-12 text-light">10:45 AM</span>
-                        </div>
-                    </td>
-                    <td>
-                        <span class="badge badge-light">Employees</span>
-                    </td>
-                    <td>
-                        <span class="badge badge-info">Update</span>
-                    </td>
-                    <td class="allow-wrap">Updated banking information for employee EM-5021</td>
-                    <td><code class="font-12">192.168.1.45</code></td>
-                </tr>
-                <tr>
-                    <td>
-                        <div class="emp-profile">
-                            <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=150"
-                                class="emp-avatar" alt="Avatar">
-                            <div class="emp-info">
-                                <span class="name">Emma Williams</span>
-                                <span class="email font-12 text-light">EM-4820</span>
-                            </div>
-                        </div>
-                    </td>
-                    <td>
-                        <div class="flex-column">
-                            <span class="font-14 font-600">Oct 24, 2023</span>
-                            <span class="font-12 text-light">10:45 AM</span>
-                        </div>
-                    </td>
-                    <td>
-                        <span class="badge badge-light">Employees</span>
-                    </td>
-                    <td>
-                        <span class="badge badge-info">Update</span>
-                    </td>
-                    <td class="allow-wrap">Updated banking information for employee EM-5021</td>
-                    <td><code class="font-12">192.168.1.45</code></td>
-                </tr>
-                <tr>
-                    <td>
-                        <div class="emp-profile">
-                            <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=150"
-                                class="emp-avatar" alt="Avatar">
-                            <div class="emp-info">
-                                <span class="name">Emma Williams</span>
-                                <span class="email font-12 text-light">EM-4820</span>
-                            </div>
-                        </div>
-                    </td>
-                    <td>
-                        <div class="flex-column">
-                            <span class="font-14 font-600">Oct 24, 2023</span>
-                            <span class="font-12 text-light">10:45 AM</span>
-                        </div>
-                    </td>
-                    <td>
-                        <span class="badge badge-light">Employees</span>
-                    </td>
-                    <td>
-                        <span class="badge badge-info">Update</span>
-                    </td>
-                    <td class="allow-wrap">Updated banking information for employee EM-5021</td>
-                    <td><code class="font-12">192.168.1.45</code></td>
-                </tr>
-
-                <!-- Row 3: Login Action -->
-                <tr>
-                    <td>
-                        <div class="emp-profile">
-                            <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&q=80&w=150"
-                                class="emp-avatar" alt="Avatar">
-                            <div class="emp-info">
-                                <span class="name">Sophia Reynolds</span>
-                                <span class="email font-12 text-light">EM-4822</span>
-                            </div>
-                        </div>
-                    </td>
-                    <td>
-                        <div class="flex-column">
-                            <span class="font-14 font-600">Oct 24, 2023</span>
-                            <span class="font-12 text-light">08:00 AM</span>
-                        </div>
-                    </td>
-                    <td>
-                        <span class="badge badge-light">Auth</span>
-                    </td>
-                    <td>
-                        <span class="badge badge-primary">Login</span>
-                    </td>
-                    <td class="allow-wrap">System login successful from Chrome v118</td>
-                    <td><code class="font-12">110.23.54.120</code></td>
-                </tr>
-
-                <!-- Row 4: Delete Action -->
-                <tr>
-                    <td>
-                        <div class="emp-profile">
-                            <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=150"
-                                class="emp-avatar" alt="Avatar">
-                            <div class="emp-info">
-                                <span class="name">James Wilson</span>
-                                <span class="email font-12 text-light">EM-4819</span>
-                            </div>
-                        </div>
-                    </td>
-                    <td>
-                        <div class="flex-column">
-                            <span class="font-14 font-600">Oct 23, 2023</span>
-                            <span class="font-12 text-light">04:30 PM</span>
-                        </div>
-                    </td>
-                    <td>
-                        <span class="badge badge-light">Settings</span>
-                    </td>
-                    <td>
-                        <span class="badge badge-danger">Delete</span>
-                    </td>
-                    <td class="allow-wrap">Deleted old shift schedule: "Summer Shift 2022"</td>
-                    <td><code class="font-12">45.210.12.8</code></td>
-                </tr>
-
-                <!-- Row 5: Payroll Action -->
-                <tr>
-                    <td>
-                        <div class="emp-profile">
-                            <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=150"
-                                class="emp-avatar" alt="Avatar">
-                            <div class="emp-info">
-                                <span class="name">Emma Williams</span>
-                                <span class="email font-12 text-light">EM-4820</span>
-                            </div>
-                        </div>
-                    </td>
-                    <td>
-                        <div class="flex-column">
-                            <span class="font-14 font-600">Oct 23, 2023</span>
-                            <span class="font-12 text-light">11:20 AM</span>
-                        </div>
-                    </td>
-                    <td>
-                        <span class="badge badge-light">Payroll</span>
-                    </td>
-                    <td>
-                        <span class="badge badge-warning">Export</span>
-                    </td>
-                    <td class="allow-wrap">Exported September 2023 payroll report (PDF)</td>
-                    <td><code class="font-12">192.168.1.45</code></td>
                 </tr>
             </tbody>
         </table>

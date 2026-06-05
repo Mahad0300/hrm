@@ -1,29 +1,194 @@
-// Event Calendar Logic
+// admin/assets/js/calendar.js
+
 document.addEventListener('DOMContentLoaded', function() {
-    let currentMonth = 2; // March (0-indexed: 0=Jan, 1=Feb, 2=Mar)
-    let currentYear = 2026;
-    
-    // Mock Data
-    let events = [
-        { id: 1, title: 'Project Kickoff', date: '2026-03-05', time: '10:00', category: 'Meeting', dept: 'Engineering', desc: 'Initial meeting for the rtg HRM project. ' },
-        { id: 2, title: 'Employee Onboarding', date: '2026-03-12', time: '09:00', category: 'Workshop', dept: 'HR', desc: 'Onboarding session for new joiners.' },
-        { id: 3, title: 'Independence Day', date: '2026-03-23', time: '', category: 'Holiday', dept: 'All', desc: 'National Holiday.' },
-        { id: 4, title: 'Code Review Sync', date: '2026-03-05', time: '14:00', category: 'Meeting', dept: 'Engineering', desc: 'Sync for recent pull requests.' },
-        { id: 5, title: 'Design Feedback', date: '2026-03-18', time: '11:00', category: 'Meeting', dept: 'Design', desc: 'Reviewing the new calendar UI designs.' }
-    ];
+    let now = new Date();
+    let currentMonth = now.getMonth();
+    let currentYear = now.getFullYear();
+    let allEvents = [];
+    let activeFilter = null;
+    let currentSearchQuery = '';
 
     const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
     const calendarGrid = document.getElementById('calendarGrid');
     const monthYearText = document.getElementById('monthYear');
 
     if (!calendarGrid) {
-        console.error('Event calendar: #calendarGrid missing');
+        console.error('Calendar Grid not found!');
         return;
     }
 
-    // Initialize Calendar
+    // Initial Rendering (Show empty calendar immediately)
+    renderCalendar();
+    
+    // Fetch Data
+    fetchDepartments();
+    fetchEvents();
+
+    if (typeof lucide !== 'undefined') lucide.createIcons();
+
+    // --- Helpers ---
+    function getEmoji(type) {
+        const t = (type || '').toUpperCase();
+        return {'MEETING': '🤝', 'CELEBRATION': '🎉', 'HOLIDAY': '📅'}[t] || '📢';
+    }
+
+    function formatDeptLabel(value) {
+        if (!value) return 'All Departments';
+        const normalized = String(value).trim();
+        if (normalized.toLowerCase() === 'everyone' || normalized.toLowerCase() === 'all') {
+            return 'All Departments';
+        }
+        return normalized.split(',').map(v => v.trim()).filter(Boolean).join(', ');
+    }
+
+    function formatEventDate(dateStr) {
+        // Parse manually to avoid timezone shifts with new Date(dateStr)
+        const [year, month, day] = dateStr.split('-').map(Number);
+        const d = new Date(year, month - 1, day);
+        if (isNaN(d.getTime())) return dateStr;
+        
+        const dayFormatted = String(d.getDate()).padStart(2, '0');
+        const monthName = monthNames[d.getMonth()];
+        const yearNum = d.getFullYear();
+        return `${monthName} ${dayFormatted} - ${yearNum}`;
+    }
+
+    function formatTime12h(timeStr) {
+        if (!timeStr) return 'All Day';
+        const parts = timeStr.split(':');
+        if (parts.length < 2) return timeStr;
+        let h = parseInt(parts[0]);
+        const m = parts[1];
+        const ampm = h >= 12 ? 'PM' : 'AM';
+        h = h % 12 || 12;
+        return `${h}:${m} ${ampm}`;
+    }
+
+    function todayIso() {
+        const now = new Date();
+        now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+        return now.toISOString().slice(0, 10);
+    }
+
+    function timeAgo(date) {
+        if (!date) return 'Just now';
+        try {
+            const seconds = Math.floor((new Date() - new Date(date)) / 1000);
+            if (seconds < 60) return "Just now";
+            let interval = Math.floor(seconds / 31536000);
+            if (interval >= 1) return interval + " years ago";
+            interval = Math.floor(seconds / 2592000);
+            if (interval >= 1) return interval + " months ago";
+            interval = Math.floor(seconds / 86400);
+            if (interval >= 1) return interval + " days ago";
+            interval = Math.floor(seconds / 3600);
+            if (interval >= 1) return interval + " hours ago";
+            interval = Math.floor(seconds / 60);
+            if (interval >= 1) return interval + " minutes ago";
+            return "Just now";
+        } catch (e) { return 'Recent'; }
+    }
+
+    // --- API Calls ---
+    function fetchDepartments() {
+        fetch('assets/api/calendar_handler.php?action=fetch_depts')
+            .then(res => res.json())
+            .then(res => {
+                const deptContainer = document.getElementById('eventDeptSelection');
+                if (res.status === 'success' && deptContainer) {
+                    const allPill = deptContainer.querySelector('[data-dept="everyone"]');
+                    deptContainer.innerHTML = '';
+                    if (allPill) {
+                        deptContainer.appendChild(allPill);
+                    }
+                    res.data.forEach(dept => {
+                        const pill = document.createElement('div');
+                        pill.className = 'category-pill';
+                        pill.dataset.dept = dept.name;
+                        pill.textContent = dept.name;
+                        deptContainer.appendChild(pill);
+                    });
+                    bindEventDeptPills();
+                    setEventDeptSelection(document.getElementById('eventDept')?.value || 'everyone');
+                }
+            }).catch(e => console.error('Dept Fetch Error:', e));
+    }
+
+    function bindEventDeptPills() {
+        const deptContainer = document.getElementById('eventDeptSelection');
+        if (!deptContainer) return;
+
+        deptContainer.querySelectorAll('.category-pill').forEach(pill => {
+            pill.onclick = () => toggleEventDeptPill(pill);
+        });
+    }
+
+    function toggleEventDeptPill(pill) {
+        const deptContainer = document.getElementById('eventDeptSelection');
+        const hiddenInput = document.getElementById('eventDept');
+        if (!deptContainer || !hiddenInput) return;
+
+        if (pill.dataset.dept === 'everyone') {
+            deptContainer.querySelectorAll('.category-pill').forEach(p => p.classList.remove('active'));
+            pill.classList.add('active');
+            hiddenInput.value = 'everyone';
+            return;
+        }
+
+        const everyonePill = deptContainer.querySelector('[data-dept="everyone"]');
+        if (everyonePill) everyonePill.classList.remove('active');
+        pill.classList.toggle('active');
+
+        const selected = Array.from(deptContainer.querySelectorAll('.category-pill.active'))
+            .map(p => p.dataset.dept)
+            .filter(Boolean);
+
+        if (selected.length === 0) {
+            if (everyonePill) everyonePill.classList.add('active');
+            hiddenInput.value = 'everyone';
+        } else {
+            hiddenInput.value = selected.join(',');
+        }
+    }
+
+    function setEventDeptSelection(value) {
+        const deptContainer = document.getElementById('eventDeptSelection');
+        const hiddenInput = document.getElementById('eventDept');
+        if (!deptContainer || !hiddenInput) return;
+
+        const normalizedValue = !value || String(value).toLowerCase() === 'all' ? 'everyone' : String(value);
+        const selected = normalizedValue.split(',').map(v => v.trim()).filter(Boolean);
+        const isEveryone = selected.some(v => v.toLowerCase() === 'everyone' || v.toLowerCase() === 'all');
+
+        deptContainer.querySelectorAll('.category-pill').forEach(pill => {
+            pill.classList.toggle('active', isEveryone ? pill.dataset.dept === 'everyone' : selected.includes(pill.dataset.dept));
+        });
+
+        hiddenInput.value = isEveryone ? 'everyone' : (selected.length ? selected.join(',') : 'everyone');
+    }
+
+    function fetchEvents() {
+        console.log('Fetching events...');
+        fetch('assets/api/calendar_handler.php?action=fetch')
+            .then(res => res.json())
+            .then(res => {
+                if (res.status === 'success') {
+                    allEvents = res.data;
+                    renderCalendar();
+                    renderRecentActivity();
+                }
+            })
+            .catch(err => {
+                console.error('Event Fetch Error:', err);
+                renderCalendar(); // Render anyway
+            });
+    }
+
     function renderCalendar() {
+        console.log('Rendering Calendar for:', currentMonth, currentYear);
+        if (!calendarGrid) return;
         calendarGrid.innerHTML = '';
+        
         if (monthYearText) {
             monthYearText.textContent = `${monthNames[currentMonth]} ${currentYear}`;
         }
@@ -32,6 +197,8 @@ document.addEventListener('DOMContentLoaded', function() {
         const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
         const daysInPrevMonth = new Date(currentYear, currentMonth, 0).getDate();
         
+        const todayStr = todayIso();
+
         // Prev Month Days
         for (let i = firstDay; i > 0; i--) {
             const dayDiv = createDayElement(daysInPrevMonth - i + 1, 'prev-month');
@@ -39,132 +206,244 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         
         // Current Month Days
-        const today = new Date();
         for (let i = 1; i <= daysInMonth; i++) {
-            const isToday = today.getDate() === i && today.getMonth() === currentMonth && today.getFullYear() === currentYear;
             const dateStr = `${currentYear}-${String(currentMonth + 1).padStart(2, '0')}-${String(i).padStart(2, '0')}`;
+            const isToday = dateStr === todayStr;
             const dayDiv = createDayElement(i, isToday ? 'today' : '', dateStr);
             
-            // Render Events for this day
-            const dayEvents = events.filter(e => e.date === dateStr);
+            const dayEvents = allEvents.filter(e => {
+                const matchesDate = e.event_date === dateStr;
+                const matchesFilter = !activeFilter || e.category === activeFilter;
+                const matchesSearch = !currentSearchQuery || e.title.toLowerCase().includes(currentSearchQuery.toLowerCase());
+                return matchesDate && matchesFilter && matchesSearch;
+            });
+
             const eventList = dayDiv.querySelector('.event-list');
-            dayEvents.forEach(event => {
+            dayEvents.slice(0, 2).forEach(event => {
                 const eventTag = document.createElement('div');
                 eventTag.className = `event-tag event-${event.category.toLowerCase()}`;
-                eventTag.textContent = event.title;
+                eventTag.textContent = `${getEmoji(event.category)} ${event.title}`;
                 eventTag.onclick = (e) => {
                     e.stopPropagation();
                     viewEventDetails(event);
                 };
                 eventList.appendChild(eventTag);
             });
+
+            if (dayEvents.length > 2) {
+                const moreTag = document.createElement('div');
+                moreTag.className = 'more-events-tag';
+                moreTag.textContent = `+${dayEvents.length - 2} more`;
+                
+                // Keep existing modal click for touch devices
+                moreTag.onclick = (e) => {
+                    e.stopPropagation();
+                    showDayEvents(dateStr, dayEvents);
+                };
+
+                // Add Hover Popover for Quick View
+                moreTag.onmouseenter = (e) => showQuickPopover(e, dayEvents, dateStr);
+                moreTag.onmouseleave = () => hideQuickPopover();
+
+                eventList.appendChild(moreTag);
+            }
             
-            dayDiv.onclick = () => openEventModal(dateStr);
+            if (dateStr >= todayStr) {
+                dayDiv.onclick = () => openEventModal(dateStr);
+            } else {
+                dayDiv.classList.add('calendar-day--past');
+                dayDiv.title = 'Past dates cannot be used for new events';
+            }
             calendarGrid.appendChild(dayDiv);
         }
         
         // Next Month Days
-        const remainingCells = 42 - (firstDay + daysInMonth);
+        const totalShown = firstDay + daysInMonth;
+        const remainingCells = totalShown > 35 ? (42 - totalShown) : (35 - totalShown); // Row check
         for (let i = 1; i <= remainingCells; i++) {
             const dayDiv = createDayElement(i, 'next-month');
             calendarGrid.appendChild(dayDiv);
         }
 
-        lucide.createIcons();
+        if (typeof lucide !== 'undefined') lucide.createIcons();
+    }
+
+    function showQuickPopover(e, events, dateStr) {
+        hideQuickPopover(); // Remove existing if any
+
+        const popover = document.createElement('div');
+        popover.id = 'eventQuickPopover';
+        popover.className = 'event-popover';
+        
+        let html = `<div class="popover-header">${formatEventDate(dateStr)}</div>`;
+        events.forEach(ev => {
+            html += `
+                <div class="popover-item ${ev.category.toLowerCase()}">
+                    <span class="dot"></span>
+                    <span class="time">${formatTime12h(ev.event_time)}</span>
+                    <span class="title">${ev.title}</span>
+                </div>
+            `;
+        });
+
+        popover.innerHTML = html;
+        popover.style.pointerEvents = 'none'; // Make it non-interactive to prevent flickering
+        document.body.appendChild(popover);
+
+        const rect = e.target.getBoundingClientRect();
+        popover.style.left = `${rect.left}px`;
+        popover.style.top = `${rect.top - popover.offsetHeight - 5}px`; 
+
+        // No need for popover mouse events if pointer-events is none
+    }
+
+    function hideQuickPopover() {
+        const popover = document.getElementById('eventQuickPopover');
+        if (popover) popover.remove();
+    }
+
+    function showDayEvents(dateStr, events) {
+        document.getElementById('dayModalTitle').textContent = `Events on ${formatEventDate(dateStr)}`;
+        const listContainer = document.getElementById('dayEventsList');
+        listContainer.innerHTML = '';
+
+        events.forEach(event => {
+            const item = document.createElement('div');
+            item.className = `day-event-item ${event.category.toLowerCase()}`;
+            item.innerHTML = `
+                <div class="event-info">
+                    <div class="event-name">${getEmoji(event.category)} ${event.title}</div>
+                    <div class="event-time">${formatTime12h(event.event_time)} • ${event.category}</div>
+                </div>
+                <i data-lucide="chevron-right" size="18"></i>
+            `;
+            item.onclick = () => {
+                closeModal('dayEventsModal');
+                viewEventDetails(event);
+            };
+            listContainer.appendChild(item);
+        });
+
+        if (typeof lucide !== 'undefined') lucide.createIcons();
+        openModal('dayEventsModal');
     }
     
-    function createDayElement(num, className, fullDate) {
+    function createDayElement(num, className, date = '') {
         const div = document.createElement('div');
         div.className = `calendar-day ${className}`;
-        div.innerHTML = `
-            <span class="day-number">${num}</span>
-            <div class="event-list"></div>
-        `;
+        div.innerHTML = `<span class="day-number">${num}</span><div class="event-list"></div>`;
         return div;
     }
-    
-    // Navigation
-    const prevMonthBtn = document.getElementById('prevMonth');
-    const nextMonthBtn = document.getElementById('nextMonth');
-    const todayBtnEl = document.getElementById('todayBtn');
-    if (prevMonthBtn) {
-        prevMonthBtn.onclick = () => {
-            currentMonth--;
-            if (currentMonth < 0) { currentMonth = 11; currentYear--; }
+
+    // --- Navigation ---
+    document.getElementById('prevMonth').onclick = () => {
+        currentMonth--;
+        if (currentMonth < 0) { currentMonth = 11; currentYear--; }
+        renderCalendar();
+    };
+    document.getElementById('nextMonth').onclick = () => {
+        currentMonth++;
+        if (currentMonth > 11) { currentMonth = 0; currentYear++; }
+        renderCalendar();
+    };
+    document.getElementById('todayBtn').onclick = () => {
+        const d = new Date();
+        currentMonth = d.getMonth();
+        currentYear = d.getFullYear();
+        renderCalendar();
+    };
+
+    // --- Sidebar Filters ---
+    const filterOptions = document.querySelectorAll('.filter-option');
+    filterOptions.forEach(opt => {
+        opt.onclick = function() {
+            const cat = this.dataset.category;
+            if (activeFilter === cat) {
+                activeFilter = null;
+                this.classList.remove('active');
+            } else {
+                filterOptions.forEach(o => o.classList.remove('active'));
+                activeFilter = cat;
+                this.classList.add('active');
+            }
             renderCalendar();
         };
-    }
-    if (nextMonthBtn) {
-        nextMonthBtn.onclick = () => {
-            currentMonth++;
-            if (currentMonth > 11) { currentMonth = 0; currentYear++; }
-            renderCalendar();
-        };
-    }
-    if (todayBtnEl) {
-        todayBtnEl.onclick = () => {
-            const d = new Date();
-            currentMonth = d.getMonth();
-            currentYear = d.getFullYear();
-            renderCalendar();
-        };
-    }
-    
-    // Modal Functions
+    });
+
+    // --- Modal Logic ---
     window.openEventModal = function(date = '') {
-        const modal = document.getElementById('eventModal');
         const form = document.getElementById('eventForm');
         form.reset();
+        
+        const dateInput = document.getElementById('eventDate');
+        const today = todayIso();
+        if (dateInput) {
+            dateInput.setAttribute('min', today);
+        }
+
         document.getElementById('eventId').value = '';
         document.getElementById('modalTitle').textContent = 'Create New Event';
-        document.getElementById('modalSubtitle').textContent = 'Schedule and manage company events';
-        document.getElementById('eventDate').value = date;
-        document.getElementById('eventShowInAccount').checked = false;
+        document.getElementById('eventDate').value = date && date >= today ? date : today;
+        setEventDeptSelection('everyone');
         openModal('eventModal');
-        lucide.createIcons();
     };
-    
-    // Save Event
+
     document.getElementById('eventForm').onsubmit = function(e) {
         e.preventDefault();
-        const id = document.getElementById('eventId').value;
-        const newEvent = {
-            id: id ? parseInt(id) : Date.now(),
-            title: document.getElementById('eventTitle').value,
-            category: document.getElementById('eventCategory').value,
-            dept: document.getElementById('eventDept').value,
-            date: document.getElementById('eventDate').value,
-            time: document.getElementById('eventTime').value,
-            desc: document.getElementById('eventDesc').value,
-            showInAccount: document.getElementById('eventShowInAccount').checked
-        };
-        
-        if (id) {
-            events = events.map(ev => ev.id === parseInt(id) ? newEvent : ev);
-        } else {
-            events.push(newEvent);
+        const event_date = document.getElementById('eventDate').value;
+        const event_time = document.getElementById('eventTime').value;
+
+        if (!event_date || !event_time) {
+            Swal.fire('Error', 'Date and Time are required.', 'error');
+            return;
         }
-        
-        closeModal('eventModal');
-        renderCalendar();
-        showToast(id ? 'Event updated successfully' : 'Event created successfully');
+
+        const selectedDateTime = new Date(`${event_date}T${event_time}`);
+        if (selectedDateTime < new Date()) {
+            Swal.fire('Error', 'Please select a future date and time.', 'error');
+            return;
+        }
+
+        const formData = new FormData();
+        formData.append('action', 'save');
+        formData.append('id', document.getElementById('eventId').value);
+        formData.append('title', document.getElementById('eventTitle').value);
+        formData.append('category', document.getElementById('eventCategory').value);
+        formData.append('target_dept', document.getElementById('eventDept').value);
+        formData.append('event_date', event_date);
+        formData.append('event_time', event_time);
+        formData.append('description', document.getElementById('eventDesc').value);
+        if (document.getElementById('eventShowInAccount').checked) {
+            formData.append('show_in_announcement', '1');
+        }
+
+        fetch('assets/api/calendar_handler.php', { method: 'POST', body: formData })
+        .then(res => res.json())
+        .then(res => {
+            if (res.status === 'success') {
+                Swal.fire('Success', res.message, 'success');
+                closeModal('eventModal');
+                fetchEvents();
+            } else {
+                Swal.fire('Error', res.message, 'error');
+            }
+        });
     };
-    
-    // View Details
+
     function viewEventDetails(event) {
-        const modal = document.getElementById('eventDetailModal');
         document.getElementById('detailTitle').textContent = event.title;
         document.getElementById('detailCategory').textContent = event.category;
         document.getElementById('detailCategory').className = `badge badge-${event.category.toLowerCase()}`;
-        document.getElementById('detailCategoryText').textContent = `${event.category} Details`;
-        document.getElementById('detailDesc').textContent = event.desc || 'No description provided.';
-        document.getElementById('detailDept').textContent = event.dept;
-        document.getElementById('detailDateTime').textContent = `${event.date} at ${event.time || 'All Day'}`;
-        
+        document.getElementById('detailDesc').textContent = event.description || 'No description provided.';
+        document.getElementById('detailDept').textContent = formatDeptLabel(event.target_dept);
+        document.getElementById('detailDateTime').textContent = `${formatEventDate(event.event_date)} at ${formatTime12h(event.event_time)}`;
+        document.getElementById('detailCreatedBy').textContent = event.author_name || 'System Admin';
+        document.getElementById('detailUpdatedAt').textContent = timeAgo(event.updated_at || event.created_at);
+
         const visibilityEl = document.getElementById('detailVisibility');
         if (visibilityEl) {
-            visibilityEl.textContent = event.showInAccount ? 'Show in Announcement' : "Don't Show in Announcement";
-            visibilityEl.className = `value font-13 ${event.showInAccount ? 'text-success' : 'text-light'}`;
+            visibilityEl.textContent = event.show_in_announcement == 1 ? 'Show in Announcement' : "Don't Show in Announcement";
+            visibilityEl.className = `value font-13 ${event.show_in_announcement == 1 ? 'text-success' : 'text-light'}`;
         }
         
         document.getElementById('editEventBtn').onclick = () => {
@@ -172,91 +451,83 @@ document.addEventListener('DOMContentLoaded', function() {
             editEvent(event);
         };
 
-        const deleteBtnDetail = document.getElementById('deleteEventBtnDetail');
-        if (deleteBtnDetail) {
-            deleteBtnDetail.onclick = () => {
-                if (confirm('Are you sure you want to delete this event?')) {
-                    events = events.filter(ev => ev.id !== event.id);
-                    closeModal('eventDetailModal');
-                    renderCalendar();
-                    showToast('Event deleted successfully');
+        document.getElementById('deleteEventBtnDetail').onclick = () => {
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "This event will be removed!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Yes, delete it!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    const fd = new FormData();
+                    fd.append('action', 'delete');
+                    fd.append('id', event.id);
+                    fetch('assets/api/calendar_handler.php', { method: 'POST', body: fd })
+                    .then(res => res.json())
+                    .then(res => {
+                        if (res.status === 'success') {
+                            Swal.fire('Deleted!', '', 'success');
+                            closeModal('eventDetailModal');
+                            fetchEvents();
+                        }
+                    });
                 }
-            };
-        }
+            });
+        };
         
         openModal('eventDetailModal');
-        lucide.createIcons();
     }
-    
+
     function editEvent(event) {
-        openEventModal(event.date);
+        openEventModal(event.event_date);
         document.getElementById('modalTitle').textContent = 'Edit Event';
-        document.getElementById('modalSubtitle').textContent = 'Update the details for this event';
         document.getElementById('eventId').value = event.id;
         document.getElementById('eventTitle').value = event.title;
         document.getElementById('eventCategory').value = event.category;
-        document.getElementById('eventDept').value = event.dept;
-        document.getElementById('eventDate').value = event.date;
-        document.getElementById('eventTime').value = event.time;
-        document.getElementById('eventDesc').value = event.desc;
-        document.getElementById('eventShowInAccount').checked = event.showInAccount || false;
-        // Removed delete button logic from here
+        setEventDeptSelection(event.target_dept);
+        document.getElementById('eventDate').value = event.event_date;
+        document.getElementById('eventTime').value = event.event_time;
+        document.getElementById('eventDesc').value = event.description;
+        document.getElementById('eventShowInAccount').checked = event.show_in_announcement == 1;
     }
-    
-    // Delete logic moved inside viewEventDetails
-    
-    // Filters & Search
-    document.getElementById('eventSearch').oninput = function() {
-        const query = this.value.toLowerCase();
-        document.querySelectorAll('.event-tag').forEach(tag => {
-            const isVisible = tag.textContent.toLowerCase().includes(query);
-            tag.style.display = isVisible ? 'block' : 'none';
-        });
-    };
-    
-    function renderCalendarFiltered(dept = '', category = null) {
-        // Simple visual filter (could be more robust)
-        document.querySelectorAll('.event-tag').forEach(tag => {
-            // This is a naive implementation, real rendering should re-filter the events array
-        });
-    }
-
-    // View Tab Toggling
-    const viewTabs = document.querySelectorAll('.view-tab');
-    viewTabs.forEach(tab => {
-        tab.onclick = function() {
-            viewTabs.forEach(t => t.classList.remove('btn-active'));
-            this.classList.add('btn-active');
-            // Here you would implement the actual view change logic
-            showToast(`Switched to ${this.dataset.view} view`);
-        };
-    });
-
-    // Mock Activity Data
-    const mockActivities = [
-        { text: "<b>Project Kickoff</b> event created by Admin", time: "2 hours ago" },
-        { text: "<b>Design Feedback</b> event updated by Sarah", time: "5 hours ago" },
-        { text: "<b>Holiday: Eid</b> event added by Admin", time: "Yesterday" }
-    ];
 
     function renderRecentActivity() {
         const container = document.getElementById('recentActivity');
         if (!container) return;
         
-        container.innerHTML = mockActivities.map(item => `
-            <div class="activity-item">
-                <p class="activity-text">${item.text}</p>
-                <span class="activity-meta">${item.time}</span>
-            </div>
-        `).join('');
+        // Sort by actual time (updated_at or created_at) DESC
+        const sorted = [...allEvents].sort((a, b) => {
+            const timeA = new Date(a.updated_at || a.created_at).getTime();
+            const timeB = new Date(b.updated_at || b.created_at).getTime();
+            return timeB - timeA;
+        });
+
+        const recent = sorted.slice(0, 3);
+        if (recent.length === 0) {
+            container.innerHTML = '<p class="text-light font-12">No recent events found.</p>';
+            return;
+        }
+
+        container.innerHTML = '';
+        recent.forEach(item => {
+            const div = document.createElement('div');
+            div.className = 'activity-item cursor-pointer';
+            div.innerHTML = `
+                <p class="activity-text"><b>${item.title}</b> was ${item.updated_at ? 'updated' : 'created'}</p>
+                <span class="activity-meta">${timeAgo(item.updated_at || item.created_at)}</span>
+            `;
+            div.onclick = () => viewEventDetails(item);
+            container.appendChild(div);
+        });
     }
 
-    // Dummy Toast
-    function showToast(msg) {
-        console.log("Toast: " + msg);
-        // You could implement a visual toast here
-    }
+    document.getElementById('eventSearch').oninput = function() {
+        currentSearchQuery = this.value;
+        renderCalendar();
+    };
 
-    renderCalendar();
-    renderRecentActivity();
 });
+
+function openModal(id) { document.getElementById(id).classList.add('active'); }
+function closeModal(id) { document.getElementById(id).classList.remove('active'); }

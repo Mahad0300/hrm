@@ -1,6 +1,6 @@
 <?php
 require_once dirname(__DIR__) . '/includes/middleware.php';
-protectModule(['Admin']);
+protectModule(['Admin', 'HR']);
 
 $page_title = 'IT Helpdesk';
 $page_subtitle = 'Monitor and manage all employee support tickets';

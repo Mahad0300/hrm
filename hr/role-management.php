@@ -1,7 +1,7 @@
-<?php 
-$page_title = "Role Management";
-$page_subtitle = "Control application access and granular permissions for each role.";
-include 'includes/header.php'; 
+<?php
+$page_title = "Access Control";
+$page_subtitle = "Control which pages and actions are allowed in the application.";
+include 'includes/header.php';
 ?>
 <?php include 'includes/sidebar.php'; ?>
 
@@ -14,16 +14,10 @@ include 'includes/header.php';
                 </div>
                 <div>
                     <h4 class="font-18 font-700 m-0">Permissions Matrix</h4>
-                    <p class="font-12 text-light m-0">Select a role to modify its access rights</p>
+                    <p class="font-12 text-light m-0">Toggle view and action rights per module or page</p>
                 </div>
             </div>
             <div class="flex-center gap-12">
-                <select class="form-control bg-white-input w-200" id="roleSelector">
-                    <option value="hr">Human Resources (HR)</option>
-                    <option value="manager">Manager</option>
-                    <option value="employee">Employee</option>
-                    <option value="intern">Intern</option>
-                </select>
                 <button class="btn-primary px-30" id="savePermissions">
                     <i data-lucide="save" size="16"></i>
                     <span>Save Changes</span>
@@ -127,7 +121,7 @@ include 'includes/header.php';
                         <td class="text-center"><input type="checkbox" class="action-check"></td>
                         <td class="text-center"><input type="checkbox" class="action-check" checked></td>
                     </tr>
-                    <tr data-page="candidates">
+                    <tr data-page="new-joining">
                         <td>
                             <div class="flex-center gap-12 permission-row-title">
                                 <i data-lucide="user-plus" size="16"></i>
@@ -201,8 +195,8 @@ include 'includes/header.php';
                     </tr>
 
                     <!-- Job Management (submenu) -->
-                    <tr class="bg-light-soft">
-                        <td colspan="6" class="font-12 font-700 text-light ls-05 p-12 px-24 uppercase text-left">Job Management</td>
+                    <tr class="perm-matrix-section">
+                        <td colspan="6" class="perm-matrix-section__cell">Job Management</td>
                     </tr>
                     <tr data-page="job-list">
                         <td>
@@ -353,6 +347,24 @@ include 'includes/header.php';
                         <td class="text-center"><input type="checkbox" class="action-check"></td>
                         <td class="text-center"><input type="checkbox" class="action-check" disabled></td>
                     </tr>
+                    <tr data-page="it-support">
+                        <td>
+                            <div class="flex-center gap-12 permission-row-title">
+                                <i data-lucide="headset" size="16"></i>
+                                <span>IT Helpdesk</span>
+                            </div>
+                        </td>
+                        <td class="text-center">
+                            <label class="switch">
+                                <input type="checkbox" class="view-toggle" checked>
+                                <span class="slider round"></span>
+                            </label>
+                        </td>
+                        <td class="text-center"><input type="checkbox" class="action-check" disabled></td>
+                        <td class="text-center"><input type="checkbox" class="action-check" checked></td>
+                        <td class="text-center"><input type="checkbox" class="action-check"></td>
+                        <td class="text-center"><input type="checkbox" class="action-check" disabled></td>
+                    </tr>
 
                     <!-- System (Settings submenu) -->
                     <tr class="perm-matrix-section">
@@ -398,7 +410,7 @@ include 'includes/header.php';
                         <td>
                             <div class="flex-center gap-12 permission-row-title">
                                 <i data-lucide="shield-check" size="16"></i>
-                                <span>Role Management</span>
+                                <span>Access Control</span>
                             </div>
                         </td>
                         <td class="text-center">
@@ -412,6 +424,155 @@ include 'includes/header.php';
                         <td class="text-center"><input type="checkbox" class="action-check"></td>
                         <td class="text-center"><input type="checkbox" class="action-check" disabled></td>
                     </tr>
+                    <tr data-page="policy-management">
+                        <td>
+                            <div class="flex-center gap-12 permission-row-title">
+                                <i data-lucide="file-text" size="16"></i>
+                                <span>Policy Management</span>
+                            </div>
+                        </td>
+                        <td class="text-center">
+                            <label class="switch">
+                                <input type="checkbox" class="view-toggle" checked>
+                                <span class="slider round"></span>
+                            </label>
+                        </td>
+                        <td class="text-center"><input type="checkbox" class="action-check" checked></td>
+                        <td class="text-center"><input type="checkbox" class="action-check" checked></td>
+                        <td class="text-center"><input type="checkbox" class="action-check"></td>
+                        <td class="text-center"><input type="checkbox" class="action-check" checked></td>
+                    </tr>
+                    <tr data-page="payroll-settings">
+                        <td>
+                            <div class="flex-center gap-12 permission-row-title">
+                                <i data-lucide="calculator" size="16"></i>
+                                <span>Payroll Cycle</span>
+                            </div>
+                        </td>
+                        <td class="text-center">
+                            <label class="switch">
+                                <input type="checkbox" class="view-toggle" checked>
+                                <span class="slider round"></span>
+                            </label>
+                        </td>
+                        <td class="text-center"><input type="checkbox" class="action-check" checked></td>
+                        <td class="text-center"><input type="checkbox" class="action-check" checked></td>
+                        <td class="text-center"><input type="checkbox" class="action-check"></td>
+                        <td class="text-center"><input type="checkbox" class="action-check" disabled></td>
+                    </tr>
+
+                    <!-- Detail & linked pages (not in sidebar) -->
+                    <tr class="perm-matrix-section">
+                        <td colspan="6" class="perm-matrix-section__cell">Detail &amp; Linked Pages</td>
+                    </tr>
+                    <tr data-page="employee-profile">
+                        <td>
+                            <div class="flex-center gap-12 permission-row-title">
+                                <i data-lucide="user" size="16"></i>
+                                <span>Employee Profile</span>
+                            </div>
+                        </td>
+                        <td class="text-center">
+                            <label class="switch">
+                                <input type="checkbox" class="view-toggle" checked>
+                                <span class="slider round"></span>
+                            </label>
+                        </td>
+                        <td class="text-center"><input type="checkbox" class="action-check" disabled></td>
+                        <td class="text-center"><input type="checkbox" class="action-check" checked></td>
+                        <td class="text-center"><input type="checkbox" class="action-check" disabled></td>
+                        <td class="text-center"><input type="checkbox" class="action-check" checked></td>
+                    </tr>
+                    <tr data-page="attendance-log">
+                        <td>
+                            <div class="flex-center gap-12 permission-row-title">
+                                <i data-lucide="clipboard-list" size="16"></i>
+                                <span>Attendance History</span>
+                            </div>
+                        </td>
+                        <td class="text-center">
+                            <label class="switch">
+                                <input type="checkbox" class="view-toggle" checked>
+                                <span class="slider round"></span>
+                            </label>
+                        </td>
+                        <td class="text-center"><input type="checkbox" class="action-check" disabled></td>
+                        <td class="text-center"><input type="checkbox" class="action-check" disabled></td>
+                        <td class="text-center"><input type="checkbox" class="action-check" disabled></td>
+                        <td class="text-center"><input type="checkbox" class="action-check" checked></td>
+                    </tr>
+                    <tr data-page="edit-job">
+                        <td>
+                            <div class="flex-center gap-12 permission-row-title">
+                                <i data-lucide="pencil" size="16"></i>
+                                <span>Edit Job</span>
+                            </div>
+                        </td>
+                        <td class="text-center">
+                            <label class="switch">
+                                <input type="checkbox" class="view-toggle" checked>
+                                <span class="slider round"></span>
+                            </label>
+                        </td>
+                        <td class="text-center"><input type="checkbox" class="action-check" disabled></td>
+                        <td class="text-center"><input type="checkbox" class="action-check" checked></td>
+                        <td class="text-center"><input type="checkbox" class="action-check"></td>
+                        <td class="text-center"><input type="checkbox" class="action-check" disabled></td>
+                    </tr>
+                    <tr data-page="candidate-detail">
+                        <td>
+                            <div class="flex-center gap-12 permission-row-title">
+                                <i data-lucide="user-search" size="16"></i>
+                                <span>Candidate Detail</span>
+                            </div>
+                        </td>
+                        <td class="text-center">
+                            <label class="switch">
+                                <input type="checkbox" class="view-toggle" checked>
+                                <span class="slider round"></span>
+                            </label>
+                        </td>
+                        <td class="text-center"><input type="checkbox" class="action-check" disabled></td>
+                        <td class="text-center"><input type="checkbox" class="action-check" checked></td>
+                        <td class="text-center"><input type="checkbox" class="action-check"></td>
+                        <td class="text-center"><input type="checkbox" class="action-check" checked></td>
+                    </tr>
+                    <tr data-page="kpi-report">
+                        <td>
+                            <div class="flex-center gap-12 permission-row-title">
+                                <i data-lucide="bar-chart-2" size="16"></i>
+                                <span>KPI Scorecard</span>
+                            </div>
+                        </td>
+                        <td class="text-center">
+                            <label class="switch">
+                                <input type="checkbox" class="view-toggle" checked>
+                                <span class="slider round"></span>
+                            </label>
+                        </td>
+                        <td class="text-center"><input type="checkbox" class="action-check" disabled></td>
+                        <td class="text-center"><input type="checkbox" class="action-check" checked></td>
+                        <td class="text-center"><input type="checkbox" class="action-check" disabled></td>
+                        <td class="text-center"><input type="checkbox" class="action-check" checked></td>
+                    </tr>
+                    <tr data-page="payslip-print">
+                        <td>
+                            <div class="flex-center gap-12 permission-row-title">
+                                <i data-lucide="file-output" size="16"></i>
+                                <span>Payslip Print</span>
+                            </div>
+                        </td>
+                        <td class="text-center">
+                            <label class="switch">
+                                <input type="checkbox" class="view-toggle" checked>
+                                <span class="slider round"></span>
+                            </label>
+                        </td>
+                        <td class="text-center"><input type="checkbox" class="action-check" disabled></td>
+                        <td class="text-center"><input type="checkbox" class="action-check" disabled></td>
+                        <td class="text-center"><input type="checkbox" class="action-check" disabled></td>
+                        <td class="text-center"><input type="checkbox" class="action-check" checked></td>
+                    </tr>
                 </tbody>
             </table>
         </div>
@@ -420,5 +581,5 @@ include 'includes/header.php';
 
 
 
-<script src="assets/js/role-management.js"></script>
+<script src="assets/js/access-control.js"></script>
 <?php include 'includes/footer.php'; ?>

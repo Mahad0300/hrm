@@ -6,6 +6,8 @@
 const ITSupport = (() => {
     const apiUrl = '../includes/api/it-support-handler.php';
 
+    const isHelpdeskAdmin = () => ['Admin', 'HR'].includes(IT_USER.role);
+
     const escapeHtml = (str) => {
         if (str == null) return '';
         return String(str)
@@ -450,7 +452,7 @@ const ITSupport = (() => {
         // Update Input Area if permission or status changes
         const isCreator = ticket.employee_id == IT_USER.emp_id;
         const isAssignedAgent = ticket.assigned_to == IT_USER.emp_id;
-        const isAdmin = IT_USER.role === 'Admin';
+        const isAdmin = isHelpdeskAdmin();
         const canChat = (ticket.status !== 'Resolved' && ticket.status !== 'Closed') && (isCreator || isAssignedAgent || isAdmin);
         
         const hasTextarea = $('#chat-message-input').length > 0;
@@ -477,7 +479,7 @@ const ITSupport = (() => {
                 `;
             } else {
                 const isAssignedAgent = ticket.assigned_to == IT_USER.emp_id;
-                const isAdmin = IT_USER.role === 'Admin';
+                const isAdmin = isHelpdeskAdmin();
                 if (isAssignedAgent || isAdmin) {
                     headerActionsHtml = `
                         <div style="display: flex; gap: 8px;">
@@ -510,7 +512,7 @@ const ITSupport = (() => {
             
             // Only user who created it (or admin) can re-open
             const isCreator = ticket.employee_id == IT_USER.emp_id;
-            const isAdmin = IT_USER.role === 'Admin';
+            const isAdmin = isHelpdeskAdmin();
             let reopenBtn = '';
             
             if (ticket.status === 'Resolved' && (isCreator || isAdmin)) {
@@ -528,7 +530,7 @@ const ITSupport = (() => {
         } else {
             const isCreator = ticket.employee_id == IT_USER.emp_id;
             const isAssignedAgent = ticket.assigned_to == IT_USER.emp_id;
-            const isAdmin = IT_USER.role === 'Admin';
+            const isAdmin = isHelpdeskAdmin();
             
             if (isCreator || isAssignedAgent || isAdmin) {
                 inputAreaHtml = `

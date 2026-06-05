@@ -7,13 +7,17 @@ include 'includes/header.php';
 
 <div class="card p-24 mb-24">
     <div class="filter-grid">
-        <div class="search-bar-wrap">
-            <i data-lucide="search" size="18"></i>
-            <input type="text" class="search-input" id="candidateSearch"
-                placeholder="Search by name, email or job title...">
+        <div class="filter-item">
+            <label class="admin-form-label font-12">Search Candidates</label>
+            <div class="search-box w-full">
+                <i data-lucide="search" size="16"></i>
+                <input type="text" id="candidateSearch" class="form-control"
+                    placeholder="Search by name, email or job title...">
+            </div>
         </div>
         <div class="filter-item">
-            <select id="filterDept" class="form-control font-13">
+            <label class="admin-form-label font-12">Department</label>
+            <select id="filterDept" class="form-control">
                 <option value="">All Departments</option>
                 <option>Engineering</option>
                 <option>Design</option>
@@ -22,7 +26,8 @@ include 'includes/header.php';
             </select>
         </div>
         <div class="filter-item">
-            <select id="filterStatus" class="form-control font-13">
+            <label class="admin-form-label font-12">Status</label>
+            <select id="filterStatus" class="form-control">
                 <option value="">All Status</option>
                 <option>New</option>
                 <option>Shortlisted</option>
@@ -35,7 +40,8 @@ include 'includes/header.php';
             </select>
         </div>
         <div class="filter-item">
-            <select id="sortBy" class="form-control font-13">
+            <label class="admin-form-label font-12">Sort By</label>
+            <select id="sortBy" class="form-control">
                 <option>Sort by: Newest</option>
                 <option>Sort by: Oldest</option>
                 <option>Sort by: Match Score</option>

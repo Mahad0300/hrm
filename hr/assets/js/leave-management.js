@@ -1,69 +1,10 @@
 (function () {
     'use strict';
 
-    var LEAVE_QUOTA_STORAGE_KEY = 'hrm_admin_leave_quotas_v1';
-
-    var defaultLeaveQuotas = {
-        sick: 10,
-        casual: 8,
-        annual: 20
-    };
-
-    function getLeaveQuotas() {
-        try {
-            var raw = localStorage.getItem(LEAVE_QUOTA_STORAGE_KEY);
-            if (!raw) {
-                return Object.assign({}, defaultLeaveQuotas);
-            }
-            var o = JSON.parse(raw);
-            return {
-                sick: Math.max(0, parseInt(o.sick, 10) || defaultLeaveQuotas.sick),
-                casual: Math.max(0, parseInt(o.casual, 10) || defaultLeaveQuotas.casual),
-                annual: Math.max(0, parseInt(o.annual, 10) || defaultLeaveQuotas.annual)
-            };
-        } catch (e) {
-            return Object.assign({}, defaultLeaveQuotas);
-        }
-    }
-
-    function saveLeaveQuotas(q) {
-        try {
-            localStorage.setItem(LEAVE_QUOTA_STORAGE_KEY, JSON.stringify(q));
-        } catch (e) {}
-    }
-
-    function loadLeaveQuotasIntoForm() {
-        var q = getLeaveQuotas();
-        var s = document.getElementById('leaveQuotaSick');
-        var c = document.getElementById('leaveQuotaCasual');
-        var a = document.getElementById('leaveQuotaAnnual');
-        if (s) s.value = String(q.sick);
-        if (c) c.value = String(q.casual);
-        if (a) a.value = String(q.annual);
-    }
-
-    function updateLeaveQuotaSummary() {
-        var q = getLeaveQuotas();
-        var el = document.getElementById('leaveQuotaSummaryText');
-        if (el) {
-            el.textContent =
-                'Sick ' +
-                q.sick +
-                ' · Casual ' +
-                q.casual +
-                ' · Annual ' +
-                q.annual +
-                ' (days each)';
-        }
-    }
-
-    window.hrmGetLeaveQuotas = getLeaveQuotas;
-
     document.addEventListener('DOMContentLoaded', function () {
         var openBtn = document.getElementById('openLeaveSettingsBtn');
         if (openBtn) {
             openBtn.addEventListener('click', function () {
-                loadLeaveQuotasIntoForm();
                 if (typeof openModal === 'function') {
                     openModal('applyLeaveModal');
                 }
@@ -75,25 +16,64 @@
 
         var saveBtn = document.getElementById('leaveQuotaSaveBtn');
         if (saveBtn) {
-            saveBtn.addEventListener('click', function () {
+            saveBtn.addEventListener('click', async function () {
                 var s = document.getElementById('leaveQuotaSick');
                 var c = document.getElementById('leaveQuotaCasual');
                 var a = document.getElementById('leaveQuotaAnnual');
-                var q = {
-                    sick: Math.min(365, Math.max(0, parseInt(s && s.value, 10) || 0)),
-                    casual: Math.min(365, Math.max(0, parseInt(c && c.value, 10) || 0)),
-                    annual: Math.min(365, Math.max(0, parseInt(a && a.value, 10) || 0))
-                };
-                saveLeaveQuotas(q);
-                updateLeaveQuotaSummary();
-                if (typeof lucide !== 'undefined') {
-                    lucide.createIcons();
+                
+                var sickVal = Math.min(365, Math.max(0, parseInt(s && s.value, 10) || 0));
+                var casualVal = Math.min(365, Math.max(0, parseInt(c && c.value, 10) || 0));
+                var annualVal = Math.min(365, Math.max(0, parseInt(a && a.value, 10) || 0));
+
+                try {
+                    // Update UI Button State
+                    var originalText = saveBtn.innerHTML;
+                    saveBtn.disabled = true;
+                    saveBtn.innerHTML = '<i data-lucide="loader" class="spin"></i> <span>Saving...</span>';
+                    if (typeof lucide !== 'undefined') lucide.createIcons();
+
+                    const formData = new FormData();
+                    formData.append('sick', sickVal);
+                    formData.append('casual', casualVal);
+                    formData.append('annual', annualVal);
+
+                    const response = await fetch('assets/api/leave_type_handler.php', {
+                        method: 'POST',
+                        body: formData
+                    });
+
+                    const result = await response.json();
+
+                    if (result.status === 'success') {
+                        // Update the UI text dynamically without reload
+                        var summaryEl = document.getElementById('leaveQuotaSummaryText');
+                        if (summaryEl) {
+                            summaryEl.innerHTML = `Sick ${sickVal} &middot; Casual ${casualVal} &middot; Annual ${annualVal} (days each)`;
+                        }
+
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Settings Saved',
+                            text: result.message,
+                            timer: 2000,
+                            showConfirmButton: false
+                        });
+                        
+                        if (typeof closeModal === 'function') {
+                            closeModal('applyLeaveModal');
+                        }
+                    } else {
+                        Swal.fire('Error', result.message, 'error');
+                    }
+                } catch (error) {
+                    Swal.fire('Error', 'Failed to save leave settings.', 'error');
+                } finally {
+                    saveBtn.disabled = false;
+                    saveBtn.innerHTML = '<i data-lucide="save"></i> <span>Save leave counts</span>';
+                    if (typeof lucide !== 'undefined') lucide.createIcons();
                 }
             });
         }
-
-        loadLeaveQuotasIntoForm();
-        updateLeaveQuotaSummary();
     });
 })();
 
@@ -117,7 +97,7 @@ function toggleLeaveView(view) {
     if(typeof lucide !== 'undefined') lucide.createIcons();
 }
 
-function openLeaveDetailModal(empName, leaveType, days, fromDate, toDate, adminComment, docUrl, docType) {
+function openLeaveDetailModal(leaveId, empName, leaveType, days, fromDate, toDate, adminComment, docUrl, docType, status) {
     var modal = document.getElementById('leaveDetailModal');
     document.getElementById('leaveDetailEmpName').textContent = empName || '—';
     document.getElementById('leaveDetailLeaveType').textContent = leaveType || '—';
@@ -126,6 +106,72 @@ function openLeaveDetailModal(empName, leaveType, days, fromDate, toDate, adminC
     document.getElementById('leaveDetailToDate').textContent = toDate || '—';
     var commentInput = document.getElementById('leaveDetailAdminCommentInput');
     if (commentInput) commentInput.value = adminComment || '';
+    
+    var approveBtn = modal.querySelector('.leave-btn-approve');
+    var rejectBtn = modal.querySelector('.leave-btn-reject');
+    var updateBtn = modal.querySelector('.leave-btn-update');
+
+    if (commentInput) commentInput.readOnly = false;
+
+    // Reset visibility
+    if (approveBtn) approveBtn.style.display = 'none';
+    if (rejectBtn) rejectBtn.style.display = 'none';
+    if (updateBtn) updateBtn.style.display = 'none';
+
+    // Show according to current status
+    if (status === 'Pending') {
+        if (approveBtn) {
+            approveBtn.style.display = 'flex';
+            approveBtn.onclick = function() { 
+                if (typeof closeModal === 'function') closeModal('leaveDetailModal');
+                else document.getElementById('leaveDetailModal').classList.remove('active');
+                confirmLeaveAction(leaveId, 'Approve', commentInput ? commentInput.value : ''); 
+            };
+        }
+        if (rejectBtn) {
+            rejectBtn.style.display = 'flex';
+            rejectBtn.onclick = function() { 
+                if (typeof closeModal === 'function') closeModal('leaveDetailModal');
+                else document.getElementById('leaveDetailModal').classList.remove('active');
+                confirmLeaveAction(leaveId, 'Reject', commentInput ? commentInput.value : ''); 
+            };
+        }
+    } else if (status === 'Approved') {
+        if (rejectBtn) {
+            rejectBtn.style.display = 'flex';
+            rejectBtn.onclick = function() { 
+                if (typeof closeModal === 'function') closeModal('leaveDetailModal');
+                else document.getElementById('leaveDetailModal').classList.remove('active');
+                confirmLeaveAction(leaveId, 'Reject', commentInput ? commentInput.value : ''); 
+            };
+        }
+        if (updateBtn) {
+            updateBtn.style.display = 'flex';
+            updateBtn.onclick = function() {
+                if (typeof closeModal === 'function') closeModal('leaveDetailModal');
+                else document.getElementById('leaveDetailModal').classList.remove('active');
+                confirmLeaveAction(leaveId, 'Update', commentInput ? commentInput.value : ''); 
+            };
+        }
+    } else if (status === 'Rejected') {
+        if (approveBtn) {
+            approveBtn.style.display = 'flex';
+            approveBtn.onclick = function() { 
+                if (typeof closeModal === 'function') closeModal('leaveDetailModal');
+                else document.getElementById('leaveDetailModal').classList.remove('active');
+                confirmLeaveAction(leaveId, 'Approve', commentInput ? commentInput.value : ''); 
+            };
+        }
+        if (updateBtn) {
+            updateBtn.style.display = 'flex';
+            updateBtn.onclick = function() {
+                if (typeof closeModal === 'function') closeModal('leaveDetailModal');
+                else document.getElementById('leaveDetailModal').classList.remove('active');
+                confirmLeaveAction(leaveId, 'Update', commentInput ? commentInput.value : ''); 
+            };
+        }
+    }
+
     if (modal) {
         modal.dataset.docUrl = docUrl || '';
         modal.dataset.docType = docType || 'pdf';
@@ -146,22 +192,61 @@ function leaveDetailViewDocument() {
     }
 }
 
-function leaveDetailSaveComment() {
-    var commentInput = document.getElementById('leaveDetailAdminCommentInput');
-    var saveBtn = document.getElementById('leaveDetailSaveBtn');
-    if (!commentInput || !saveBtn) return;
-    var comment = commentInput.value.trim();
-    var span = saveBtn.querySelector('span');
-    var originalText = span ? span.textContent : 'Save';
-    saveBtn.disabled = true;
-    if (span) span.textContent = 'Saving...';
-    if (typeof lucide !== 'undefined') lucide.createIcons();
-    setTimeout(function() {
-        saveBtn.disabled = false;
-        if (span) span.textContent = 'Saved';
-        if (typeof lucide !== 'undefined') lucide.createIcons();
-        setTimeout(function() { if (span) span.textContent = originalText; if (typeof lucide !== 'undefined') lucide.createIcons(); }, 1500);
-    }, 600);
+async function confirmLeaveAction(leaveId, action, prefilledNote = null) {
+    if (!leaveId || !action) return;
+
+    let adminNote = prefilledNote;
+
+    if (prefilledNote === null) {
+        const { value: noteText } = await Swal.fire({
+            title: `${action} Leave Request`,
+            input: 'textarea',
+            inputLabel: 'Admin Remarks (Optional)',
+            inputPlaceholder: 'Enter any remarks...',
+            showCancelButton: true,
+            confirmButtonColor: action === 'Approve' ? '#22c55e' : '#ef4444',
+            confirmButtonText: `Yes, ${action}`,
+            cancelButtonText: 'Cancel'
+        });
+        if (noteText === undefined) return; // User clicked Cancel
+        adminNote = noteText;
+    }
+
+    try {
+        const formData = new FormData();
+        formData.append('leave_id', leaveId);
+        formData.append('action', action);
+        formData.append('admin_note', adminNote);
+
+        const res = await fetch('assets/api/leave_status_handler.php', {
+            method: 'POST',
+            body: formData
+        });
+
+        const text = await res.text();
+        let data;
+        try {
+            data = JSON.parse(text);
+        } catch (e) {
+            console.error("Raw response:", text);
+            throw new Error("Invalid server response format.");
+        }
+
+        if (data.status === 'success') {
+            await Swal.fire({
+                icon: 'success',
+                title: 'Success',
+                text: data.message,
+                timer: 1500,
+                showConfirmButton: false
+            });
+            window.location.reload();
+        } else {
+            Swal.fire('Error', data.message || 'Action failed', 'error');
+        }
+    } catch (error) {
+        Swal.fire('Error', error.message || 'An unexpected error occurred.', 'error');
+    }
 }
 
 function openLeaveDocument(url, type) {

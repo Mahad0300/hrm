@@ -3,18 +3,8 @@
  * Click slot → candidate-detail.php
  */
 (function () {
-    var INTERVIEWS = [
-        { date: '2026-03-03', time: '21:30', name: 'Muhammad Mazhar Raheel Saeed', job: 'Operations Assistant' },
-        { date: '2026-03-03', time: '21:30', name: 'Arslan Khan', job: 'Operations Assistant' },
-        { date: '2026-03-03', time: '21:30', name: 'Abdul Hannan', job: 'Operations Assistant' },
-        { date: '2026-03-03', time: '21:30', name: 'Syed Aashir Salman', job: 'Operations Assistant' },
-        { date: '2026-03-10', time: '10:00', name: 'Syed Shahir Ali', job: 'Operations Assistant' },
-        { date: '2026-03-10', time: '14:30', name: 'Harmain Masood', job: 'SEO Executive' },
-        { date: '2026-03-15', time: '11:00', name: 'M Sadiq Ahmed', job: 'Final Expense Sales Executive' },
-        { date: '2026-03-18', time: '16:00', name: 'Ibad Uddin', job: 'SEO Executive' },
-        { date: '2026-03-22', time: '09:30', name: 'Muhammad Wasim', job: 'SEO Executive' },
-        { date: '2026-03-28', time: '15:00', name: 'Gohar Iqbal Khan', job: 'Final Expense Sales Executive' }
-    ];
+    var interviews = [];
+    var loading = false;
 
     var monthNames = [
         'January', 'February', 'March', 'April', 'May', 'June',
@@ -23,8 +13,25 @@
 
     var gridEl;
     var titleEl;
-    var year = 2026;
-    var month = 2;
+    var year = new Date().getFullYear();
+    var month = new Date().getMonth();
+
+    async function fetchInterviews() {
+        loading = true;
+        render(); // Show loading state
+        try {
+            const response = await fetch('assets/api/calendar_handler.php?action=fetch_interviews');
+            const result = await response.json();
+            if (result.status === 'success') {
+                interviews = result.data;
+            }
+        } catch (error) {
+            console.error('Error fetching interviews:', error);
+        } finally {
+            loading = false;
+            render();
+        }
+    }
 
     function pad(n) {
         return n < 10 ? '0' + n : '' + n;
@@ -32,10 +39,6 @@
 
     function dateKey(y, m, d) {
         return y + '-' + pad(m + 1) + '-' + pad(d);
-    }
-
-    function getInterviewList() {
-        return INTERVIEWS;
     }
 
     function interviewsForDate(key, list) {
@@ -46,38 +49,96 @@
         });
     }
 
+    function formatTime12h(timeStr) {
+        if (!timeStr) return '';
+        const parts = timeStr.split(':');
+        if (parts.length < 2) return timeStr;
+        let h = parseInt(parts[0]);
+        const m = parts[1];
+        const ampm = h >= 12 ? 'PM' : 'AM';
+        h = h % 12 || 12;
+        return `${h}:${String(m).padStart(2, '0')} ${ampm}`;
+    }
+
     function render() {
         if (!gridEl) return;
-        var filtered = getInterviewList();
+        
+        if (loading) {
+            gridEl.innerHTML = '<div class="w-full py-100 flex-center flex-column gap-16"><div class="spinner border-primary"></div><p class="text-light font-13">Fetching interviews...</p></div>';
+            return;
+        }
+
         var first = new Date(year, month, 1);
         var startPad = first.getDay();
         var daysInMonth = new Date(year, month + 1, 0).getDate();
         var html = '';
         var i;
+        
         for (i = 0; i < startPad; i++) {
             html += '<div class="interview-cal-cell interview-cal-cell--empty"></div>';
         }
+        
         for (var d = 1; d <= daysInMonth; d++) {
             var key = dateKey(year, month, d);
-            var slots = interviewsForDate(key, filtered);
+            var slots = interviewsForDate(key, interviews);
             html += '<div class="interview-cal-cell' + (slots.length ? ' interview-cal-cell--has' : '') + '">';
             html += '<div class="interview-cal-cell__num">' + d + '</div>';
             html += '<div class="interview-cal-cell__slots">';
-            slots.forEach(function (s) {
-                var label = s.time + ' - ' + s.name;
+            
+            // Show only first 3
+            var visibleSlots = slots.slice(0, 3);
+            visibleSlots.forEach(function (s) {
+                var label = formatTime12h(s.time) + ' - ' + s.name;
                 html +=
-                    '<a class="interview-slot" href="candidate-detail.php" title="' +
+                    '<a class="interview-slot" href="candidate-detail.php?id=' + s.candidate_id + '" title="' +
                     escapeAttr(s.job + ' · ' + s.name) +
                     '">' +
                     escapeHtml(label) +
                     '</a>';
             });
+
+            if (slots.length > 3) {
+                var moreCount = slots.length - 3;
+                html += '<div class="more-events-tag" onclick="event.stopPropagation(); showDayInterviews(\'' + key + '\')">+' + moreCount + ' more</div>';
+            }
+
             html += '</div></div>';
         }
         gridEl.innerHTML = html;
         if (titleEl) {
             titleEl.textContent = monthNames[month] + ' ' + year;
         }
+        if (typeof lucide !== 'undefined') lucide.createIcons();
+    }
+
+    window.showDayInterviews = function(dateStr) {
+        const slots = interviewsForDate(dateStr, interviews);
+        const [y, m, d] = dateStr.split('-').map(Number);
+        const dateObj = new Date(y, m - 1, d);
+        const dateTitle = monthNames[dateObj.getMonth()] + ' ' + d;
+        
+        document.getElementById('dayModalTitle').textContent = `Interviews on ${dateTitle}`;
+        const listContainer = document.getElementById('dayInterviewsList');
+        listContainer.innerHTML = '';
+
+        slots.forEach(s => {
+            const item = document.createElement('div');
+            // Using 'meeting' class for purple border consistency
+            item.className = `day-event-item meeting`;
+            item.innerHTML = `
+                <div class="event-info" onclick="window.location.href='candidate-detail.php?id=${s.candidate_id}'">
+                    <div class="event-name">🤝 ${s.name}</div>
+                    <div class="event-time">${formatTime12h(s.time)} • ${s.job}</div>
+                </div>
+                <div class="type-icon-box border" style="width: 28px; height: 28px; padding: 0;" onclick="window.location.href='candidate-detail.php?id=${s.candidate_id}'">
+                    <i data-lucide="chevron-right" size="14"></i>
+                </div>
+            `;
+            listContainer.appendChild(item);
+        });
+
+        if (typeof lucide !== 'undefined') lucide.createIcons();
+        openModal('dayInterviewsModal');
     }
 
     function escapeHtml(s) {
@@ -121,7 +182,12 @@
                 render();
             });
 
-        render();
+        fetchInterviews();
         if (typeof lucide !== 'undefined') lucide.createIcons();
     });
+
+    // Helper functions for modal
+    window.openModal = function(id) { document.getElementById(id).classList.add('active'); }
+    window.closeModal = function(id) { document.getElementById(id).classList.remove('active'); }
+
 })();

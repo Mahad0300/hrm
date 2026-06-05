@@ -84,20 +84,13 @@ include 'includes/header.php';
                     <div class="form-group">
                         <label class="admin-form-label">Department Manager</label>
                         <select id="deptManager" class="form-control bg-white-input">
-                            <option value="">Select Manager</option>
-                            <option>Oliver Mitchell</option>
-                            <option>Emma Williams</option>
-                            <option>James Wilson</option>
+                            <option value="">Loading managers...</option>
                         </select>
                     </div>
                     <div class="form-group">
                         <label class="admin-form-label">Department Head</label>
                         <select id="deptHead" class="form-control bg-white-input">
-                            <option value="">Select Head</option>
-                            <option>CTO</option>
-                            <option>CPO</option>
-                            <option>CHRO</option>
-                            <option>Managing Director</option>
+                            <option value="">Loading heads...</option>
                         </select>
                     </div>
                 </div>
@@ -108,7 +101,8 @@ include 'includes/header.php';
                 <i data-lucide="x" size="18"></i>
                 <span>Cancel</span>
             </button>
-            <button type="submit" form="addDeptForm" class="btn-primary px-30">Create Department</button>
+            <button type="submit" form="addDeptForm" id="addDeptFormSubmit" class="btn-primary px-30">Create
+                Department</button>
         </div>
     </div>
 </div>
@@ -135,20 +129,13 @@ include 'includes/header.php';
                     <div class="form-group">
                         <label class="admin-form-label">Department Manager</label>
                         <select id="editDeptManager" class="form-control bg-white-input">
-                            <option value="">Select Manager</option>
-                            <option>Oliver Mitchell</option>
-                            <option>Emma Williams</option>
-                            <option>James Wilson</option>
+                            <option value="">Loading managers...</option>
                         </select>
                     </div>
                     <div class="form-group">
                         <label class="admin-form-label">Department Head</label>
                         <select id="editDeptHead" class="form-control bg-white-input">
-                            <option value="">Select Head</option>
-                            <option>CTO</option>
-                            <option>CPO</option>
-                            <option>CHRO</option>
-                            <option>Managing Director</option>
+                            <option value="">Loading heads...</option>
                         </select>
                     </div>
                 </div>
@@ -159,7 +146,8 @@ include 'includes/header.php';
                 <i data-lucide="x" size="18"></i>
                 <span>Cancel</span>
             </button>
-            <button type="submit" form="editDeptForm" class="btn-primary px-30">Save Changes</button>
+            <button type="submit" form="editDeptForm" id="editDeptFormSubmit" class="btn-primary px-30">Save
+                Changes</button>
         </div>
     </div>
 </div>

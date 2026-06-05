@@ -1,159 +1,121 @@
 <?php
-$page_title = "Candidate Detail";
+$page_title = "Candidate Profile";
 $page_subtitle = "Application profile, answers, and documents.";
 include 'includes/header.php';
 include 'includes/sidebar.php';
-
-$dummy_pdf = 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf';
 ?>
 
-<div class="page-action-area page-action-area--align-start">
-    <div class="header-actions flex-center gap-12">
-        <a href="job-candidates.php" class="btn-primary no-bg border candidate-detail-back-btn">
-            <i data-lucide="arrow-left" size="18"></i>
-            <span>Back to Candidate Pool</span>
-        </a>
-    </div>
-</div>
+<div class="cand-v2-container">
+    <!-- Header Action Bar (Top) -->
+    <div class="flex-between mb-24 px-8">
+        <div class="flex-center gap-16">
 
-<div class="candidate-detail-page">
-    <div class="candidate-detail-layout">
-        <!-- Left: profile + documents -->
-        <div class="candidate-detail-col candidate-detail-col--left">
-            <div class="card p-24 mb-24 candidate-detail-summary-card">
-                <div class="candidate-detail-summary-head">
-                    <h2 class="font-22 font-700 m-0">Syed Shahir Ali</h2>
-                    <p class="font-13 text-light mt-8 m-0">Applied for: Operations Assistant</p>
-                    <div class="flex-center gap-10 mt-12 flex-wrap">
-                        <span class="badge-select interview" role="status">Interview</span>
-                        <span class="font-12 text-light">Applied: Feb 10, 2026</span>
-                    </div>
+            <a href="job-candidates.php" class="action-btn no-bg border" title="Back to Attendance">
+                <i data-lucide="arrow-left" size="18"></i>
+            </a>
+
+
+            <h2 class="font-24 font-700 m-0" style="color: #1e1b4b;">Candidate Profile</h2>
+        </div>
+        <div class="flex-center gap-12">
+            <button class="btn-light gap-8 hidden" id="rejectCandidateBtn"
+                style="background: rgba(245, 158, 11, 0.1); color: #b45309;">
+                <i data-lucide="user-x"></i> <span>Reject Candidate</span>
+            </button>
+            <button class="btn-light gap-8" id="banCandidateBtn"
+                style="background: rgba(239, 68, 68, 0.08); color: var(--danger);">
+                <i data-lucide="ban"></i> <span>Ban Candidate</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Header Action Bar (Top) -->
+    <div class="cand-v2-header-card">
+        <div class="cand-v2-avatar" id="candAvatar">—</div>
+        <div class="cand-v2-header-info">
+            <div class="cand-v2-name-row">
+                <h1 class="font-24 font-700 m-0" id="candName">Loading...</h1>
+                <span class="cand-v2-status-badge" id="candStatus">PENDING</span>
+            </div>
+            <div class="cand-v2-contact-row">
+                <div class="cand-v2-contact-item">
+                    <i data-lucide="mail" size="14"></i>
+                    <span id="candEmail">—</span>
                 </div>
-                <div class="candidate-detail-summary-contact">
-                    <h3 class="font-12 font-700 text-light uppercase ls-05 mb-16 m-0">Contact</h3>
-                    <div class="candidate-detail-stack">
-                        <div class="candidate-detail-field mb-16">
-                            <span class="candidate-detail-label">Email</span>
-                            <span class="candidate-detail-value allow-wrap">syedshahirali16@gmail.com</span>
-                        </div>
-                        <div class="candidate-detail-field mb-16">
-                            <span class="candidate-detail-label">Phone</span>
-                            <span class="candidate-detail-value">+92 333 4455667</span>
-                        </div>
-                        <div class="candidate-detail-field mb-0">
-                            <span class="candidate-detail-label">Location</span>
-                            <span class="candidate-detail-value allow-wrap">Gulistan-e-Jauhar, Karachi, Sindh</span>
-                        </div>
-                    </div>
+                <div class="cand-v2-contact-item">
+                    <i data-lucide="phone" size="14"></i>
+                    <span id="candPhone">—</span>
+                </div>
+                <div class="cand-v2-contact-item">
+                    <i data-lucide="briefcase" size="14"></i>
+                    <span id="candJobTitle">—</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Two-Column Main Layout -->
+    <div class="cand-v2-main-layout">
+        <!-- Main Content -->
+        <div class="cand-v2-content-area">
+            <!-- Application Details Grid -->
+            <div class="cand-v2-card">
+                <h3 class="cand-v2-card-title">Application Details</h3>
+                <div class="cand-v2-details-grid" id="candDetailsGrid">
+                    <!-- Questions & Answers will be injected here -->
+                    <p class="text-light italic font-13">Loading details...</p>
                 </div>
             </div>
 
-            <div class="card p-24 mb-0">
-                <h3 class="font-14 font-700 mb-20 text-dark">Resume &amp; CNIC</h3>
-                <div class="candidate-detail-docs candidate-detail-docs--stack">
-                    <div class="candidate-doc-card">
-                        <div class="candidate-doc-inner">
-                            <div class="font-13 font-600 text-dark mb-8">Resume / CV</div>
-                            <p class="font-11 text-light m-0 mb-10">Resume_Shahir.pdf</p>
-                            <div class="mt-12">
-                                <a class="btn-outline-primary font-12 px-16 py-8" href="<?= htmlspecialchars($dummy_pdf) ?>" target="_blank" rel="noopener">View / Download</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="candidate-doc-card">
-                        <div class="candidate-doc-inner">
-                            <div class="font-13 font-600 text-dark mb-8">CNIC (front)</div>
-                            <p class="font-11 text-light m-0 mb-10">CNIC_front.pdf</p>
-                            <div class="mt-12">
-                                <a class="btn-outline-primary font-12 px-16 py-8" href="<?= htmlspecialchars($dummy_pdf) ?>" target="_blank" rel="noopener">View / Download</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="candidate-doc-card">
-                        <div class="candidate-doc-inner">
-                            <div class="font-13 font-600 text-dark mb-8">CNIC (back)</div>
-                            <p class="font-11 text-light m-0 mb-10">CNIC_back.pdf</p>
-                            <div class="mt-12">
-                                <a class="btn-outline-primary font-12 px-16 py-8" href="<?= htmlspecialchars($dummy_pdf) ?>" target="_blank" rel="noopener">View / Download</a>
-                            </div>
-                        </div>
-                    </div>
+            <!-- Journey History -->
+            <div class="cand-v2-card">
+                <h3 class="cand-v2-card-title">Journey History</h3>
+                <div class="cand-v2-timeline" id="candJourney">
+                    <!-- Timeline items will be dynamically injected here -->
+                    <p class="text-light italic font-13 ml-16">Loading history...</p>
                 </div>
             </div>
         </div>
 
-        <!-- Right: Q&A + actions -->
-        <div class="candidate-detail-col candidate-detail-col--right">
-            <div class="card p-24 mb-24 candidate-detail-qa-card">
-                <h3 class="font-14 font-700 mb-20 text-dark">Application questions &amp; answers</h3>
-                <div class="candidate-detail-answers">
-                    <div class="candidate-answer-row">
-                        <div class="font-11 text-light uppercase font-600 mb-6">What is your current salary?</div>
-                        <div class="font-14 text-dark font-500 allow-wrap">PKR 38,000</div>
-                    </div>
-                    <div class="candidate-answer-row">
-                        <div class="font-11 text-light uppercase font-600 mb-6">What is your expected salary?</div>
-                        <div class="font-14 text-dark font-500 allow-wrap">PKR 50,000</div>
-                    </div>
-                    <div class="candidate-answer-row">
-                        <div class="font-11 text-light uppercase font-600 mb-6">Do you have your own laptop?</div>
-                        <div class="font-14 text-dark font-500 allow-wrap">Yes</div>
-                    </div>
-                    <div class="candidate-answer-row">
-                        <div class="font-11 text-light uppercase font-600 mb-6">What is your notice period?</div>
-                        <div class="font-14 text-dark font-500 allow-wrap">30 days</div>
-                    </div>
-                    <div class="candidate-answer-row">
-                        <div class="font-11 text-light uppercase font-600 mb-6">Total years of experience in a similar role?</div>
-                        <div class="font-14 text-dark font-500 allow-wrap">3 years</div>
-                    </div>
-                    <div class="candidate-answer-row">
-                        <div class="font-11 text-light uppercase font-600 mb-6">Are you willing to work on-site in Karachi?</div>
-                        <div class="font-14 text-dark font-500 allow-wrap">Yes</div>
-                    </div>
-                    <div class="candidate-answer-row">
-                        <div class="font-11 text-light uppercase font-600 mb-6">What is your current salary?</div>
-                        <div class="font-14 text-dark font-500 allow-wrap">PKR 38,000</div>
-                    </div>
-                    <div class="candidate-answer-row">
-                        <div class="font-11 text-light uppercase font-600 mb-6">What is your expected salary?</div>
-                        <div class="font-14 text-dark font-500 allow-wrap">PKR 50,000</div>
-                    </div>
-                    <div class="candidate-answer-row">
-                        <div class="font-11 text-light uppercase font-600 mb-6">Do you have your own laptop?</div>
-                        <div class="font-14 text-dark font-500 allow-wrap">Yes</div>
-                    </div>
-                    <div class="candidate-answer-row">
-                        <div class="font-11 text-light uppercase font-600 mb-6">What is your notice period?</div>
-                        <div class="font-14 text-dark font-500 allow-wrap">30 days</div>
-                    </div>
-                    <div class="candidate-answer-row">
-                        <div class="font-11 text-light uppercase font-600 mb-6">Total years of experience in a similar role?</div>
-                        <div class="font-14 text-dark font-500 allow-wrap">3 years</div>
-                    </div>
-                    <div class="candidate-answer-row">
-                        <div class="font-11 text-light uppercase font-600 mb-6">Are you willing to work on-site in Karachi?</div>
-                        <div class="font-14 text-dark font-500 allow-wrap">Yes</div>
+        <!-- Sidebar -->
+        <div class="cand-v2-sidebar">
+            <!-- Duplicate Warning integration -->
+            <div id="duplicateWarning" class="card p-16 hidden mb-24"
+                style="background: #fef2f2; border: 1px solid #fee2e2; border-radius: 16px;">
+                <div class="flex-start gap-12 text-danger">
+                    <i data-lucide="alert-circle" size="20" class="mt-2"></i>
+                    <div>
+                        <div class="font-13 font-700 mb-4">Potential Duplicate</div>
+                        <div class="font-11 op-08" id="duplicateText">Matches another candidate’s information.</div>
+                        <a href="#" id="duplicateOriginalLink"
+                            class="font-11 font-800 text-danger hover-underline mt-8 block">View Original Candidate</a>
                     </div>
                 </div>
             </div>
 
-            <div class="candidate-detail-actions card p-24">
-                <div class="flex-between flex-wrap gap-16 align-center w-full candidate-detail-actions-row">
-                    <div class="candidate-detail-status-wrap">
-                        <select id="candidateStatusSelect" class="form-control font-13 candidate-detail-status-select bg-white-input" aria-label="Candidate status">
-                            <option value="Shortlisted">Shortlisted</option>
-                            <option value="Interview" selected>Interview</option>
-                            <option value="Hired">Hired</option>
-                            <option value="Resource Pool">Resource Pool</option>
-                            <option value="Reject">Reject</option>
-                        </select>
-                    </div>
-                    <button type="button" class="btn-primary px-24 font-13" id="scheduleInterviewBtn">
-                        <i data-lucide="calendar" size="16"></i>
-                        <span>Schedule interview</span>
-                    </button>
+            <div class="cand-v2-card mb-24">
+                <h3 class="cand-v2-card-title font-13 text-light uppercase mb-16">Document Vault</h3>
+                <div id="candDocs">
+                    <a href="#" target="_blank" class="cand-v2-doc-card hidden" id="resumeCard">
+                        <div class="cand-v2-doc-icon">
+                            <i data-lucide="file-text" size="20"></i>
+                        </div>
+                        <div class="cand-v2-doc-info">
+                            <div class="cand-v2-doc-name">Main Resume / CV</div>
+                            <div class="cand-v2-doc-meta" id="resumeFileName">Resume_File.pdf</div>
+                        </div>
+                        <i data-lucide="external-link" size="14" class="text-light"></i>
+                    </a>
+                    <p id="noDocText" class="text-light italic font-13">No documents found.</p>
                 </div>
+            </div>
+
+            <div class="flex-column gap-12">
+                <button class="cand-v2-btn-approve" id="primaryPipelineBtn">Approve to Interview</button>
+                <button class="btn-light w-100 hidden" id="rescheduleBtn">
+                    <i data-lucide="calendar-clock"></i> 
+                    <span>Reschedule Interview</span>
+                </button>
             </div>
         </div>
     </div>
@@ -164,25 +126,61 @@ $dummy_pdf = 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dumm
     <div class="modal-content premium wide-sm">
         <div class="modal-header">
             <div>
-                <h3>Schedule interview</h3>
-                <p class="font-12 text-light mt-1 m-0" id="scheduleInterviewSubtitle">Set date and time for this candidate</p>
+                <h3>Schedule Interview</h3>
+                <p class="font-12 text-light mt-1 m-0">Set date and time for this candidate</p>
             </div>
-            <button type="button" class="icon-btn" onclick="closeModal('scheduleInterviewModal')" aria-label="Close"><i data-lucide="x" size="20"></i></button>
+            <button type="button" class="icon-btn" onclick="closeModal('scheduleInterviewModal')"><i data-lucide="x"
+                    size="20"></i></button>
         </div>
         <div class="modal-body p-30">
             <form id="scheduleInterviewForm">
                 <div class="form-group mb-20">
-                    <label class="admin-form-label">Interview date *</label>
+                    <label class="admin-form-label">Interview Date *</label>
                     <input type="date" id="scheduleInterviewDate" class="form-control bg-white-input" required>
                 </div>
                 <div class="form-group mb-0">
-                    <label class="admin-form-label">Interview time *</label>
+                    <label class="admin-form-label">Interview Time *</label>
                     <input type="time" id="scheduleInterviewTime" class="form-control bg-white-input" required>
+                </div>
+                <div class="form-group mb-0">
+                    <label class="admin-form-label">Interview Notes / Feedback</label>
+                    <textarea id="scheduleInterviewFeedback" class="form-control bg-white-input" rows="3"
+                        placeholder="Add any specific notes or initial feedback..."></textarea>
                 </div>
             </form>
         </div>
         <div class="modal-footer flex-end gap-12 p-30 border-top-0">
-            <button type="submit" form="scheduleInterviewForm" class="btn-primary px-30">Save schedule</button>
+            <button type="submit" form="scheduleInterviewForm" class="btn-primary px-30">Schedule & Notify</button>
+        </div>
+    </div>
+</div>
+
+<!-- Status transition modal (Offer, Hire, Reject etc) -->
+<div class="modal-overlay" id="statusTransitionModal">
+    <div class="modal-content premium wide-sm">
+        <div class="modal-header">
+            <div>
+                <h3 id="statusModalTitle">Update Status</h3>
+                <p class="font-12 text-light mt-1 m-0" id="statusModalSubtitle">Move candidate to the next stage</p>
+            </div>
+            <button type="button" class="icon-btn" onclick="closeModal('statusTransitionModal')"><i data-lucide="x"
+                    size="20"></i></button>
+        </div>
+        <div class="modal-body p-30">
+            <form id="statusTransitionForm">
+                <input type="hidden" id="targetStatus">
+                <div class="form-group mb-0">
+                    <label class="admin-form-label">Recruiter Feedback / Evaluation *</label>
+                    <textarea id="statusFeedback" class="form-control bg-white-input" rows="5"
+                        placeholder="Please provide a detailed evaluation or reason for this status change..."
+                        required></textarea>
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer flex-end gap-12 p-30 border-top-0">
+            <button type="button" class="btn-light px-24" onclick="closeModal('statusTransitionModal')">Cancel</button>
+            <button type="submit" form="statusTransitionForm" class="btn-primary px-30"
+                id="statusModalSubmitBtn">Confirm & Update</button>
         </div>
     </div>
 </div>

@@ -3,8 +3,13 @@ $current_page = basename($_SERVER['PHP_SELF']);
 ?>
 <aside class="sidebar" id="sidebar">
     <div class="sidebar-logo">
-        <i data-lucide="shield-check" size="28"></i>
-        <span>HRM Admin</span>
+        <a href="index.php" class="sidebar-logo-mark" aria-label="HRM Admin dashboard">
+            <img src="../images/loginimage/logo.png" alt="Richmond Tech Group" class="sidebar-logo-img" width="44" height="44">
+        </a>
+        <div class="sidebar-brand-text">
+            <span class="sidebar-brand-name">HRM</span>
+            <span class="sidebar-brand-tag">HR portal</span>
+        </div>
     </div>
     
     <div class="sidebar-menu custom-scrollbar">
@@ -36,7 +41,7 @@ $current_page = basename($_SERVER['PHP_SELF']);
             </a>
         </div>
         <div class="menu-item">
-            <a href="candidates.php" class="menu-link <?= ($current_page == 'candidates.php') ? 'active' : '' ?>">
+            <a href="new-joining.php" class="menu-link <?= ($current_page == 'new-joining.php') ? 'active' : '' ?>">
                 <i data-lucide="user-plus" size="18"></i>
                 <span>New Joining</span>
             </a>
@@ -110,11 +115,18 @@ $current_page = basename($_SERVER['PHP_SELF']);
             <a href="notifications.php" class="menu-link <?= ($current_page == 'notifications.php') ? 'active' : '' ?>">
                 <i data-lucide="bell" size="18"></i>
                 <span>Notifications</span>
+                <span class="badge badge-primary badge-pill ml-auto hidden" id="notiSidebarBadge">0</span>
             </a>
         </div>
         
+        <div class="menu-item">
+            <a href="it-support.php" class="menu-link <?= ($current_page == 'it-support.php') ? 'active' : '' ?>">
+                <i data-lucide="headset" size="18"></i>
+                <span>IT Helpdesk</span>
+            </a>
+        </div>
         <div class="menu-label">System</div>
-        <div class="menu-item has-submenu <?= in_array($current_page, ['shifts.php', 'department-management.php', 'role-management.php', 'policy-management.php']) ? 'active open' : '' ?>">
+        <div class="menu-item has-submenu <?= in_array($current_page, ['shifts.php', 'department-management.php', 'role-management.php', 'policy-management.php', 'payroll-settings.php']) ? 'active open' : '' ?>">
             <a href="javascript:void(0)" class="menu-link submenu-toggle">
                 <i data-lucide="settings" size="18"></i>
                 <span>Settings</span>
@@ -131,11 +143,15 @@ $current_page = basename($_SERVER['PHP_SELF']);
                 </a>
                 <a href="role-management.php" class="submenu-link <?= ($current_page == 'role-management.php') ? 'active' : '' ?>">
                     <i data-lucide="shield-check" size="14"></i>
-                    <span>Role Management</span>
+                    <span>Access Control</span>
                 </a>
                 <a href="policy-management.php" class="submenu-link <?= ($current_page == 'policy-management.php') ? 'active' : '' ?>">
                     <i data-lucide="file-text" size="14"></i>
                     <span>Policy Management</span>
+                </a>
+                <a href="payroll-settings.php" class="submenu-link <?= ($current_page == 'payroll-settings.php') ? 'active' : '' ?>">
+                    <i data-lucide="calculator" size="14"></i>
+                    <span>Payroll Cycle</span>
                 </a>
             </div>
         </div>
@@ -205,10 +221,13 @@ $current_page = basename($_SERVER['PHP_SELF']);
             
             <div class="user-profile-dropdown" id="userProfileDropdown">
                 <button type="button" class="user-profile user-profile-toggle" id="userProfileToggle" aria-haspopup="true" aria-expanded="false">
-                    <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&q=80&w=150" alt="Admin" class="user-avatar">
+                    <?php 
+                    $admin_avatar = !empty($_SESSION['user_profile_pic']) ? '../' . $_SESSION['user_profile_pic'] : '../images/profile-image/default-avatar.svg';
+                    ?>
+                    <img src="<?= $admin_avatar ?>" alt="Admin" class="user-avatar" onerror="this.src='../images/profile-image/default-avatar.svg'">
                     <div class="user-info">
-                        <span class="user-name"><?= htmlspecialchars($_SESSION['user_name'] ?? 'HR Manager', ENT_QUOTES, 'UTF-8') ?></span>
-                        <span class="user-role"><?= htmlspecialchars($_SESSION['user_role'] ?? 'HR', ENT_QUOTES, 'UTF-8') ?></span>
+                        <span class="user-name"><?= htmlspecialchars($_SESSION['user_name'] ?? 'Admin', ENT_QUOTES, 'UTF-8') ?></span>
+                        <span class="user-role"><?= htmlspecialchars($_SESSION['user_role'] ?? 'Super Admin', ENT_QUOTES, 'UTF-8') ?></span>
                     </div>
                     <i data-lucide="chevron-down" size="16" class="user-dropdown-chevron"></i>
                 </button>
@@ -284,5 +303,24 @@ $current_page = basename($_SERVER['PHP_SELF']);
                 parent.classList.toggle('open');
             });
         });
+
+        // Update Notification Badge
+        function refreshNotiBadge() {
+            fetch('../includes/api/notification_handler.php?action=unread_count')
+                .then(res => res.json())
+                .then(res => {
+                    const badge = document.getElementById('notiSidebarBadge');
+                    if (res.status === 'success' && res.count > 0) {
+                        badge.textContent = res.count;
+                        badge.classList.remove('hidden');
+                    } else {
+                        badge.classList.add('hidden');
+                    }
+                });
+        }
+        refreshNotiBadge();
+        // Refresh every 30 seconds for real-time feel
+        setInterval(refreshNotiBadge, 30000);
     </script>
     <div class="content-body">
+
