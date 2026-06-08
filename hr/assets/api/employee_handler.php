@@ -21,6 +21,11 @@ if ($action !== 'onboard' && $action !== 'check_email' && (!isLoggedIn() || !in_
     exit;
 }
 
+if ($action !== 'onboard' && $action !== 'check_email') {
+    require_once '../../../includes/access_control_helper.php';
+    hrGuardApiRequest($pdo, $action);
+}
+
 /**
  * Validation Helpers
  */

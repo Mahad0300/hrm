@@ -5,6 +5,16 @@ include 'includes/header.php';
 ?>
 <?php include 'includes/sidebar.php'; ?>
 
+<div class="job-list-toolbar mb-24">
+    <div class="job-list-toolbar__actions">
+        <div class="job-list-toolbar__search-wrap"></div>
+        <a href="interviews.php" class="btn-primary job-list-toolbar__create job-candidates-toolbar__interviews">
+            <i data-lucide="calendar"></i>
+            <span>View Interviews</span>
+        </a>
+    </div>
+</div>
+
 <div class="card p-24 mb-24">
     <div class="filter-grid">
         <div class="filter-item">
@@ -134,5 +144,5 @@ include 'includes/header.php';
     </div>
 </div>
 
-<script src="assets/js/job-management.js"></script>
+<script src="assets/js/job-management.js?v=<?= filemtime(__DIR__ . '/assets/js/job-management.js') ?>"></script>
 <?php include 'includes/footer.php'; ?>

@@ -1,7 +1,8 @@
 <?php
-$page_title = "Access Control";
-$page_subtitle = "Control which pages and actions are allowed in the application.";
-include 'includes/header.php';
+require_once dirname(__DIR__, 2) . '/includes/auth_helper.php';
+$_SESSION['error'] = 'Access control is managed by Admin only.';
+header('Location: index.php');
+exit;
 ?>
 <?php include 'includes/sidebar.php'; ?>
 

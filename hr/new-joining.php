@@ -19,7 +19,7 @@ include 'includes/header.php';
         </div>
     </div>
     <div class="header-actions">
-        <button class="btn-primary" type="button">
+        <button class="btn-primary" type="button" id="njRefreshBtn">
             <i data-lucide="refresh-cw"></i>
             <span>Refresh List</span>
         </button>
@@ -367,7 +367,7 @@ include 'includes/header.php';
                     <i data-lucide="x" size="18"></i> <span>Close</span>
                 </button>
                 <div class="flex-center gap-12">
-                    <button type="submit" class="btn-primary px-30" id="hireSubmitBtn">
+                    <button type="submit" class="btn-primary px-30" id="hireSubmitBtn" data-hr-perm-action="create">
                         <i data-lucide="check" size="18"></i> <span>Submit & Hire</span>
                     </button>
                 </div>

@@ -13,6 +13,9 @@ if (!isLoggedIn()) {
     exit;
 }
 
+require_once __DIR__ . '/../../../includes/access_control_helper.php';
+hrGuardApiRequest($pdo, $action);
+
 function getEventNotificationRecipients($target_dept, $sender_id) {
     global $pdo;
 

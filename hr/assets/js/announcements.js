@@ -208,6 +208,14 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     function saveAnnouncement(mode) {
+        if (window.HR_PERMS) {
+            const permType = mode === 'edit' ? 'edit' : 'create';
+            if (!HR_PERMS.can('announcements', permType)) {
+                HR_PERMS.showDenied(permType);
+                return;
+            }
+        }
+
         const prefix = mode === 'edit' ? 'edit_' : 'add_';
         const typePrefix = mode === 'edit' ? 'edit_' : '';
         const richEditor = document.querySelector(mode === 'edit' ? '#edit_ann_rich_desc' : '#announcementForm .rich-text-editor');

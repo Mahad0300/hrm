@@ -1,6 +1,7 @@
 <?php
 // admin/assets/api/job_handler.php
 require_once dirname(__DIR__, 3) . '/includes/db_connect.php';
+require_once dirname(__DIR__, 3) . '/includes/auth_helper.php';
 require_once dirname(__DIR__, 3) . '/includes/api/notification_handler.php';
 require_once dirname(__DIR__, 3) . '/includes/api/activity_helper.php';
 require_once dirname(__DIR__, 3) . '/includes/api/rate_limiter.php';
@@ -25,6 +26,26 @@ if (!in_array($action, $public_actions)) {
 }
 
 $user_id = $_SESSION['user_id'] ?? 0;
+
+if (!in_array($action, $public_actions, true)) {
+    require_once dirname(__DIR__, 3) . '/includes/access_control_helper.php';
+    if ($action === 'save_job' && isHrPortalUser()) {
+        $jobId = $_POST['id'] ?? null;
+        $permType = !empty($jobId) ? 'edit' : 'create';
+        if (!hrCan($pdo, 'job-list', $permType)) {
+            echo json_encode([
+                'status' => 'error',
+                'success' => false,
+                'message' => 'You do not have permission to perform this action.',
+            ]);
+            exit;
+        }
+    } elseif ($action === 'update_candidate_status' && isHrPortalUser()) {
+        hrGuardCandidateStatusRequest($pdo, $_POST['status'] ?? '');
+    } else {
+        hrGuardApiRequest($pdo, $action);
+    }
+}
 
 function createJobSlug($title) {
     $slug = strtolower((string) $title);

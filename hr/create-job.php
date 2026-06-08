@@ -171,7 +171,7 @@ include 'includes/header.php';
                         <i data-lucide="x" size="18"></i>
                         <span>Cancel</span>
                     </button>
-                    <button type="submit" class="btn-primary px-40">
+                    <button type="submit" class="btn-primary px-40 js-job-form-submit">
                         <i data-lucide="send" size="18"></i>
                         <span>Finalize & Post Job</span>
                     </button>
@@ -181,5 +181,5 @@ include 'includes/header.php';
     </div>
 </div>
 
-<script src="assets/js/job-management.js"></script>
+<script src="assets/js/job-management.js?v=<?= filemtime(__DIR__ . '/assets/js/job-management.js') ?>"></script>
 <?php include 'includes/footer.php'; ?>

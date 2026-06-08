@@ -5,6 +5,8 @@
 <!-- JS Scripts -->
 <script src="assets/js/script.js"></script>
 <script src="assets/js/modals.js"></script>
+<script src="assets/js/hr-permissions-ui.js"></script>
+<script src="assets/js/hr-permission-guard.js"></script>
 <?php if (!empty($load_charts_js)): ?>
 <script src="assets/js/charts.js"></script>
 <?php endif; ?>
@@ -39,6 +41,30 @@
 
     // Initialize Lucide icons
     lucide.createIcons();
+
+    // SweetAlert when redirected from a blocked page (not on no-access index landing)
+    (function () {
+        if (typeof Swal === 'undefined') return;
+        const cfg = window.HRM_CONFIG || {};
+        if (cfg.hr_no_portal_access) return;
+
+        const params = new URLSearchParams(window.location.search);
+        if (params.get('access_denied') === '1') {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Access Not Allowed',
+                text: 'You do not have permission to view this page. Please contact your Admin.',
+                confirmButtonText: 'OK',
+                confirmButtonColor: '#6c4cf1',
+                allowOutsideClick: true,
+                allowEscapeKey: true,
+            });
+            params.delete('access_denied');
+            params.delete('access_revoked');
+            const qs = params.toString();
+            window.history.replaceState({}, '', window.location.pathname + (qs ? '?' + qs : ''));
+        }
+    })();
 </script>
 </body>
 </html>

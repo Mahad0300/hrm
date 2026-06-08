@@ -14,6 +14,9 @@ if (!isset($_SESSION['user_role']) || !in_array($_SESSION['user_role'], ['Admin'
     exit;
 }
 
+require_once '../../../includes/access_control_helper.php';
+hrGuardApiRequest($pdo, 'save_leave_types');
+
 $sick = isset($_POST['sick']) ? (int)$_POST['sick'] : 0;
 $casual = isset($_POST['casual']) ? (int)$_POST['casual'] : 0;
 $annual = isset($_POST['annual']) ? (int)$_POST['annual'] : 0;

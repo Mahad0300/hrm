@@ -11,7 +11,7 @@ include 'includes/header.php';
 
 <!-- Page Action Area -->
 <div class="page-action-area">
-    <button class="btn-primary" onclick="openEventModal()">
+    <button class="btn-primary" onclick="openEventModal()" data-hr-perm-action="create">
         <i data-lucide="plus"></i>
         <span>Add New Event</span>
     </button>
@@ -162,7 +162,7 @@ include 'includes/header.php';
                 onclick="closeModal('eventModal')">
                 <i data-lucide="x"></i> Cancel
             </button>
-            <button type="submit" form="eventForm" class="btn-primary">
+            <button type="submit" form="eventForm" class="btn-primary" id="eventFormSubmitBtn">
                 <i data-lucide="calendar-plus"></i> Save Event
             </button>
         </div>
@@ -223,11 +223,11 @@ include 'includes/header.php';
         </div>
 
         <div class="modal-footer flex-between p-30 border-top-0">
-            <button type="button" class="btn-light" id="deleteEventBtnDetail" style="color: var(--danger); background: rgba(239, 68, 68, 0.08);">
+            <button type="button" class="btn-light" id="deleteEventBtnDetail" data-hr-perm-action="delete" style="color: var(--danger); background: rgba(239, 68, 68, 0.08);">
                 <i data-lucide="trash-2"></i>
                 <span>Delete Event</span>
             </button>
-            <button type="button" class="btn-primary" id="editEventBtn">
+            <button type="button" class="btn-primary" id="editEventBtn" data-hr-perm-action="edit">
                 <i data-lucide="edit-2"></i>
                 <span>Edit Event Details</span>
             </button>

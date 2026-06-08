@@ -151,5 +151,5 @@ include 'includes/header.php';
     </div>
 </div>
 
-<script src="assets/js/job-management.js"></script>
+<script src="assets/js/job-management.js?v=<?= filemtime(__DIR__ . '/assets/js/job-management.js') ?>"></script>
 <?php include 'includes/footer.php'; ?>

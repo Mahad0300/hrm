@@ -7,6 +7,11 @@ document.addEventListener('DOMContentLoaded', () => {
     // 2. Fetch Pending Cards
     fetchPendingOnboarding();
 
+    const refreshBtn = document.getElementById('njRefreshBtn');
+    if (refreshBtn) {
+        refreshBtn.addEventListener('click', () => refreshPendingList());
+    }
+
     // 2. Handle Form Submission
     const hireForm = document.getElementById('hireCandidateForm');
     const submitBtn = document.getElementById('hireSubmitBtn');
@@ -211,6 +216,39 @@ function formatJoiningCardDate(value) {
         day: 'numeric',
         year: 'numeric'
     });
+}
+
+function showPendingListLoading() {
+    const container = document.getElementById('pendingOnboardingContainer');
+    if (!container) return;
+
+    container.innerHTML = `
+        <div class="col-span-full py-50 text-center">
+            <i data-lucide="loader-2" class="spin text-primary-color mb-15" size="40"></i>
+            <p class="text-light">Scanning for new joinings...</p>
+        </div>
+    `;
+    if (typeof lucide !== 'undefined') lucide.createIcons();
+}
+
+async function refreshPendingList() {
+    const refreshBtn = document.getElementById('njRefreshBtn');
+    const originalHtml = refreshBtn ? refreshBtn.innerHTML : '';
+
+    if (refreshBtn) {
+        refreshBtn.disabled = true;
+        refreshBtn.innerHTML = '<i data-lucide="loader-2" class="spin" size="18"></i> <span>Refreshing...</span>';
+        if (typeof lucide !== 'undefined') lucide.createIcons();
+    }
+
+    showPendingListLoading();
+    await fetchPendingOnboarding();
+
+    if (refreshBtn) {
+        refreshBtn.disabled = false;
+        refreshBtn.innerHTML = originalHtml;
+        if (typeof lucide !== 'undefined') lucide.createIcons();
+    }
 }
 
 async function fetchPendingOnboarding() {

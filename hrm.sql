@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 22, 2026 at 12:35 AM
+-- Generation Time: Jun 09, 2026 at 12:19 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -229,7 +229,214 @@ INSERT INTO `activity_logs` (`id`, `employee_id`, `action`, `description`, `ip_a
 (186, 1, 'Updated Job Opening', '[Job Management] Modified the requirements and details for position: \'Test 4\'', '::1', '2026-05-21 22:24:12'),
 (187, 1, 'Updated Job Opening', '[Job Management] Modified the requirements and details for position: \'Test 5\'', '::1', '2026-05-21 22:24:25'),
 (188, 1, 'Updated Job Status', '[Job Management] Changed status for \'Test 4\' to \'Close\'.', '::1', '2026-05-21 22:32:29'),
-(189, 1, 'Updated Job Status', '[Job Management] Changed status for \'Test 2\' to \'Close\'.', '::1', '2026-05-21 22:32:32');
+(189, 1, 'Updated Job Status', '[Job Management] Changed status for \'Test 2\' to \'Close\'.', '::1', '2026-05-21 22:32:32'),
+(190, 1, 'User Login', '[Authentication] User authenticated successfully and accessed the system dashboard.', '::1', '2026-06-05 16:49:52'),
+(191, 1, 'User Login', '[Authentication] User authenticated successfully and accessed the system dashboard.', '::1', '2026-06-08 15:35:52'),
+(192, 22, 'User Login', '[Authentication] User authenticated successfully and accessed the system dashboard.', '::1', '2026-06-08 15:44:49'),
+(193, 1, 'Access Control Updated', '[Security] HR portal permissions matrix was updated by Admin.', '::1', '2026-06-08 15:51:41'),
+(194, 1, 'Access Control Updated', '[Security] HR portal permissions matrix was updated by Admin.', '::1', '2026-06-08 15:51:52'),
+(195, 1, 'Access Control Updated', '[Security] HR portal permissions matrix was updated by Admin.', '::1', '2026-06-08 15:52:51'),
+(196, 1, 'Access Control Updated', '[Security] HR portal permissions matrix was updated by Admin.', '::1', '2026-06-08 16:08:57'),
+(197, 1, 'Access Control Updated', '[Security] HR portal permissions matrix was updated by Admin.', '::1', '2026-06-08 16:18:17'),
+(198, 1, 'Access Control Updated', '[Security] HR portal permissions matrix was updated by Admin.', '::1', '2026-06-08 16:22:27'),
+(199, 1, 'Access Control Updated', '[Security] HR portal permissions matrix was updated by Admin.', '::1', '2026-06-08 16:25:19'),
+(200, 1, 'Access Control Updated', '[Security] HR portal permissions matrix was updated by Admin.', '::1', '2026-06-08 16:26:43'),
+(201, 1, 'Access Control Updated', '[Security] HR portal permissions matrix was updated by Admin.', '::1', '2026-06-08 16:27:20'),
+(202, 1, 'Access Control Updated', '[Security] HR portal permissions matrix was updated by Admin.', '::1', '2026-06-08 16:27:34'),
+(203, 1, 'Access Control Updated', '[Security] HR portal permissions matrix was updated by Admin.', '::1', '2026-06-08 16:31:08'),
+(204, 1, 'Access Control Updated', '[Security] HR portal permissions matrix was updated by Admin.', '::1', '2026-06-08 16:32:19'),
+(205, 1, 'Access Control Updated', '[Security] HR portal permissions matrix was updated by Admin.', '::1', '2026-06-08 16:36:13'),
+(206, 1, 'Access Control Updated', '[Security] HR portal permissions matrix was updated by Admin.', '::1', '2026-06-08 16:36:35'),
+(207, 1, 'Access Control Updated', '[Security] HR portal permissions matrix was updated by Admin.', '::1', '2026-06-08 16:37:00'),
+(208, 1, 'Access Control Updated', '[Security] HR portal permissions matrix was updated by Admin.', '::1', '2026-06-08 16:40:29'),
+(209, 1, 'Access Control Updated', '[Security] HR portal permissions matrix was updated by Admin.', '::1', '2026-06-08 16:40:43'),
+(210, 1, 'Access Control Updated', '[Security] HR portal permissions matrix was updated by Admin.', '::1', '2026-06-08 16:41:06'),
+(211, 1, 'Access Control Updated', '[Security] HR portal permissions matrix was updated by Admin.', '::1', '2026-06-08 16:41:54'),
+(212, 1, 'Access Control Updated', '[Security] HR portal permissions matrix was updated by Admin.', '::1', '2026-06-08 16:42:17'),
+(213, 1, 'Access Control Updated', '[Security] HR portal permissions matrix was updated by Admin.', '::1', '2026-06-08 16:42:21'),
+(214, 1, 'Access Control Updated', '[Security] HR portal permissions matrix was updated by Admin.', '::1', '2026-06-08 16:45:24'),
+(215, 1, 'Access Control Updated', '[Security] HR portal permissions matrix was updated by Admin.', '::1', '2026-06-08 16:48:21'),
+(216, 1, 'Access Control Updated', '[Security] HR portal permissions matrix was updated by Admin.', '::1', '2026-06-08 16:50:29'),
+(217, 1, 'Access Control Updated', '[Security] HR portal permissions matrix was updated by Admin.', '::1', '2026-06-08 16:50:34'),
+(218, 1, 'Access Control Updated', '[Security] HR portal permissions matrix was updated by Admin.', '::1', '2026-06-08 16:50:44'),
+(219, 1, 'Access Control Updated', '[Security] HR portal permissions matrix was updated by Admin.', '::1', '2026-06-08 16:51:59'),
+(220, 1, 'Access Control Updated', '[Security] HR portal permissions matrix was updated by Admin.', '::1', '2026-06-08 16:52:39'),
+(221, 1, 'Access Control Updated', '[Security] HR portal permissions matrix was updated by Admin.', '::1', '2026-06-08 16:53:11'),
+(222, 1, 'Access Control Updated', '[Security] HR portal permissions matrix was updated by Admin.', '::1', '2026-06-08 16:56:44'),
+(223, 1, 'Access Control Updated', '[Security] HR portal permissions matrix was updated by Admin.', '::1', '2026-06-08 16:56:54'),
+(224, 1, 'Access Control Updated', '[Security] HR portal permissions matrix was updated by Admin.', '::1', '2026-06-08 16:57:15'),
+(225, 1, 'Access Control Updated', '[Security] HR portal permissions matrix was updated by Admin.', '::1', '2026-06-08 16:57:31'),
+(226, 1, 'Access Control Updated', '[Security] HR portal permissions matrix was updated by Admin.', '::1', '2026-06-08 17:00:14'),
+(227, 1, 'Access Control Updated', '[Security] HR portal permissions matrix was updated by Admin.', '::1', '2026-06-08 17:00:22'),
+(228, 1, 'Access Control Updated', '[Security] HR portal permissions matrix was updated by Admin.', '::1', '2026-06-08 17:00:28'),
+(229, 1, 'Access Control Updated', '[Security] HR portal permissions matrix was updated by Admin.', '::1', '2026-06-08 17:00:36'),
+(230, 1, 'Access Control Updated', '[Security] HR portal permissions matrix was updated by Admin.', '::1', '2026-06-08 17:00:42'),
+(231, 1, 'Access Control Updated', '[Security] HR portal permissions matrix was updated by Admin.', '::1', '2026-06-08 17:01:58'),
+(232, 1, 'Access Control Updated', '[Security] HR portal permissions matrix was updated by Admin.', '::1', '2026-06-08 17:02:10'),
+(233, 1, 'Access Control Updated', '[Security] HR portal permissions matrix was updated by Admin.', '::1', '2026-06-08 17:06:11'),
+(234, 1, 'Access Control Updated', '[Security] HR portal permissions matrix was updated by Admin.', '::1', '2026-06-08 17:06:20'),
+(235, 1, 'Access Control Updated', '[Security] HR portal permissions matrix was updated by Admin.', '::1', '2026-06-08 17:17:30'),
+(236, 1, 'Access Control Updated', '[Security] HR portal permissions matrix was updated by Admin.', '::1', '2026-06-08 17:17:46'),
+(237, 1, 'Access Control Updated', '[Security] HR portal permissions matrix was updated by Admin.', '::1', '2026-06-08 17:17:51'),
+(238, 1, 'Access Control Updated', '[Security] HR portal permissions matrix was updated by Admin.', '::1', '2026-06-08 17:18:19'),
+(239, 1, 'Access Control Updated', '[Security] HR portal permissions matrix was updated by Admin.', '::1', '2026-06-08 17:18:25'),
+(240, 1, 'Access Control Updated', '[Security] HR portal permissions matrix was updated by Admin.', '::1', '2026-06-08 17:18:34'),
+(241, 1, 'Access Control Updated', '[Security] HR portal permissions matrix was updated by Admin.', '::1', '2026-06-08 17:18:43'),
+(242, 1, 'Access Control Updated', '[Security] HR portal permissions matrix was updated by Admin.', '::1', '2026-06-08 17:19:04'),
+(243, 1, 'Access Control Updated', '[Security] HR portal permissions matrix was updated by Admin.', '::1', '2026-06-08 17:19:11'),
+(244, 1, 'Access Control Updated', '[Security] HR portal permissions matrix was updated by Admin.', '::1', '2026-06-08 17:19:25'),
+(245, 1, 'Access Control Updated', '[Security] HR portal permissions matrix was updated by Admin.', '::1', '2026-06-08 17:19:39'),
+(246, 1, 'Access Control Updated', '[Security] HR portal permissions matrix was updated by Admin.', '::1', '2026-06-08 17:20:05'),
+(247, 1, 'Access Control Updated', '[Security] HR portal permissions matrix was updated by Admin.', '::1', '2026-06-08 17:20:26'),
+(248, 1, 'Access Control Updated', '[Security] HR portal permissions matrix was updated by Admin.', '::1', '2026-06-08 17:20:30'),
+(249, 1, 'Access Control Updated', '[Security] HR portal permissions matrix was updated by Admin.', '::1', '2026-06-08 17:21:40'),
+(250, 1, 'Access Control Updated', '[Security] HR portal permissions matrix was updated by Admin.', '::1', '2026-06-08 17:22:07'),
+(251, 1, 'Access Control Updated', '[Security] HR portal permissions matrix was updated by Admin.', '::1', '2026-06-08 17:22:35'),
+(252, 1, 'Access Control Updated', '[Security] HR portal permissions matrix was updated by Admin.', '::1', '2026-06-08 17:22:45'),
+(253, 1, 'Access Control Updated', '[Security] HR portal permissions matrix was updated by Admin.', '::1', '2026-06-08 17:29:09'),
+(254, 1, 'Access Control Updated', '[Security] HR portal permissions matrix was updated by Admin.', '::1', '2026-06-08 17:29:23'),
+(255, 1, 'Access Control Updated', '[Security] HR portal permissions matrix was updated by Admin.', '::1', '2026-06-08 17:29:43'),
+(256, 1, 'Access Control Updated', '[Security] HR portal permissions matrix was updated by Admin.', '::1', '2026-06-08 17:31:32'),
+(257, 1, 'Access Control Updated', '[Security] HR portal permissions matrix was updated by Admin.', '::1', '2026-06-08 17:31:46'),
+(258, 1, 'Access Control Updated', '[Security] HR portal permissions matrix was updated by Admin.', '::1', '2026-06-08 17:31:55'),
+(259, 1, 'Access Control Updated', '[Security] HR portal permissions matrix was updated by Admin.', '::1', '2026-06-08 17:34:12'),
+(260, 1, 'Access Control Updated', '[Security] HR portal permissions matrix was updated by Admin.', '::1', '2026-06-08 17:36:08'),
+(261, 1, 'Access Control Updated', '[Security] HR portal permissions matrix was updated by Admin.', '::1', '2026-06-08 17:36:24'),
+(262, 1, 'Access Control Updated', '[Security] HR portal permissions matrix was updated by Admin.', '::1', '2026-06-08 17:36:32'),
+(263, 1, 'Access Control Updated', '[Security] HR portal permissions matrix was updated by Admin.', '::1', '2026-06-08 17:36:39'),
+(264, 1, 'Access Control Updated', '[Security] HR portal permissions matrix was updated by Admin.', '::1', '2026-06-08 17:37:01'),
+(265, 1, 'Access Control Updated', '[Security] HR portal permissions matrix was updated by Admin.', '::1', '2026-06-08 17:39:30'),
+(266, 1, 'Access Control Updated', '[Security] HR portal permissions matrix was updated by Admin.', '::1', '2026-06-08 17:39:46'),
+(267, 1, 'Access Control Updated', '[Security] HR portal permissions matrix was updated by Admin.', '::1', '2026-06-08 17:40:06'),
+(268, 1, 'Access Control Updated', '[Security] HR portal permissions matrix was updated by Admin.', '::1', '2026-06-08 17:42:22'),
+(269, 1, 'Access Control Updated', '[Security] HR portal permissions matrix was updated by Admin.', '::1', '2026-06-08 17:42:40'),
+(270, 1, 'Access Control Updated', '[Security] HR portal permissions matrix was updated by Admin.', '::1', '2026-06-08 17:43:05'),
+(271, 1, 'Access Control Updated', '[Security] HR portal permissions matrix was updated by Admin.', '::1', '2026-06-08 17:47:30'),
+(272, 1, 'Access Control Updated', '[Security] HR portal permissions matrix was updated by Admin.', '::1', '2026-06-08 18:01:18'),
+(273, 1, 'Access Control Updated', '[Security] HR portal permissions matrix was updated by Admin.', '::1', '2026-06-08 18:01:31'),
+(274, 1, 'Access Control Updated', '[Security] HR portal permissions matrix was updated by Admin.', '::1', '2026-06-08 18:07:20'),
+(275, 1, 'Access Control Updated', '[Security] HR portal permissions matrix was updated by Admin.', '::1', '2026-06-08 18:07:48'),
+(276, 1, 'Access Control Updated', '[Security] HR portal permissions matrix was updated by Admin.', '::1', '2026-06-08 18:08:05'),
+(277, 1, 'Access Control Updated', '[Security] HR portal permissions matrix was updated by Admin.', '::1', '2026-06-08 18:08:23'),
+(278, 1, 'Access Control Updated', '[Security] HR portal permissions matrix was updated by Admin.', '::1', '2026-06-08 18:08:45'),
+(279, 1, 'Access Control Updated', '[Security] HR portal permissions matrix was updated by Admin.', '::1', '2026-06-08 18:08:55'),
+(280, 1, 'Access Control Updated', '[Security] HR portal permissions matrix was updated by Admin.', '::1', '2026-06-08 18:09:13'),
+(281, 1, 'Access Control Updated', '[Security] HR portal permissions matrix was updated by Admin.', '::1', '2026-06-08 18:12:34'),
+(282, 1, 'Access Control Updated', '[Security] HR portal permissions matrix was updated by Admin.', '::1', '2026-06-08 18:12:52'),
+(283, 1, 'Access Control Updated', '[Security] HR portal permissions matrix was updated by Admin.', '::1', '2026-06-08 18:18:14'),
+(284, 1, 'Access Control Updated', '[Security] HR portal permissions matrix was updated by Admin.', '::1', '2026-06-08 18:18:26'),
+(285, 1, 'Access Control Updated', '[Security] HR portal permissions matrix was updated by Admin.', '::1', '2026-06-08 18:20:10'),
+(286, 1, 'Access Control Updated', '[Security] HR portal permissions matrix was updated by Admin.', '::1', '2026-06-08 18:20:26'),
+(287, 1, 'Access Control Updated', '[Security] HR portal permissions matrix was updated by Admin.', '::1', '2026-06-08 18:20:45'),
+(288, 1, 'Access Control Updated', '[Security] HR portal permissions matrix was updated by Admin.', '::1', '2026-06-08 18:22:09'),
+(289, 1, 'Access Control Updated', '[Security] HR portal permissions matrix was updated by Admin.', '::1', '2026-06-08 18:26:38'),
+(290, 1, 'Access Control Updated', '[Security] HR portal permissions matrix was updated by Admin.', '::1', '2026-06-08 18:26:55'),
+(291, 1, 'Access Control Updated', '[Security] HR portal permissions matrix was updated by Admin.', '::1', '2026-06-08 18:28:24'),
+(292, 1, 'Access Control Updated', '[Security] HR portal permissions matrix was updated by Admin.', '::1', '2026-06-08 18:33:18'),
+(293, 1, 'Access Control Updated', '[Security] HR portal permissions matrix was updated by Admin.', '::1', '2026-06-08 18:33:32'),
+(294, 1, 'Access Control Updated', '[Security] HR portal permissions matrix was updated by Admin.', '::1', '2026-06-08 18:34:10'),
+(295, 1, 'Access Control Updated', '[Security] HR portal permissions matrix was updated by Admin.', '::1', '2026-06-08 18:46:40'),
+(296, 1, 'Access Control Updated', '[Security] HR portal permissions matrix was updated by Admin.', '::1', '2026-06-08 18:49:02'),
+(297, 1, 'Access Control Updated', '[Security] HR portal permissions matrix was updated by Admin.', '::1', '2026-06-08 18:49:18'),
+(298, 1, 'Access Control Updated', '[Security] HR portal permissions matrix was updated by Admin.', '::1', '2026-06-08 18:53:14'),
+(299, 1, 'Access Control Updated', '[Security] HR portal permissions matrix was updated by Admin.', '::1', '2026-06-08 18:53:25'),
+(300, 1, 'Access Control Updated', '[Security] HR portal permissions matrix was updated by Admin.', '::1', '2026-06-08 18:53:31'),
+(301, 22, 'Scheduled Interview', '[Job Management] Scheduled an interview session for candidate \'test\' on Jun 08, 2026 at 10:00.', '::1', '2026-06-08 18:53:36'),
+(302, 1, 'Access Control Updated', '[Security] HR portal permissions matrix was updated by Admin.', '::1', '2026-06-08 18:54:00'),
+(303, 1, 'Access Control Updated', '[Security] HR portal permissions matrix was updated by Admin.', '::1', '2026-06-08 18:54:09'),
+(304, 1, 'Access Control Updated', '[Security] HR portal permissions matrix was updated by Admin.', '::1', '2026-06-08 18:54:28'),
+(305, 1, 'Access Control Updated', '[Security] HR portal permissions matrix was updated by Admin.', '::1', '2026-06-08 19:04:13'),
+(306, 1, 'Access Control Updated', '[Security] HR portal permissions matrix was updated by Admin.', '::1', '2026-06-08 19:06:02'),
+(307, 1, 'Access Control Updated', '[Security] HR portal permissions matrix was updated by Admin.', '::1', '2026-06-08 19:06:59'),
+(308, 1, 'Access Control Updated', '[Security] HR portal permissions matrix was updated by Admin.', '::1', '2026-06-08 19:07:22'),
+(309, 1, 'Access Control Updated', '[Security] HR portal permissions matrix was updated by Admin.', '::1', '2026-06-08 19:07:28'),
+(310, 22, 'Rescheduled Interview', '[Job Management] Rescheduled the interview session for \'test\' to Jun 10, 2026 at 10:00.', '::1', '2026-06-08 19:07:50'),
+(311, 22, 'Rescheduled Interview', '[Job Management] Rescheduled the interview session for \'test\' to Jun 11, 2026 at 10:00.', '::1', '2026-06-08 19:08:08'),
+(312, 1, 'Access Control Updated', '[Security] HR portal permissions matrix was updated by Admin.', '::1', '2026-06-08 19:09:11'),
+(313, 1, 'Access Control Updated', '[Security] HR portal permissions matrix was updated by Admin.', '::1', '2026-06-08 19:09:18'),
+(314, 1, 'Access Control Updated', '[Security] HR portal permissions matrix was updated by Admin.', '::1', '2026-06-08 19:09:28'),
+(315, 1, 'Access Control Updated', '[Security] HR portal permissions matrix was updated by Admin.', '::1', '2026-06-08 19:09:34'),
+(316, 1, 'Access Control Updated', '[Security] HR portal permissions matrix was updated by Admin.', '::1', '2026-06-08 19:09:38'),
+(317, 22, 'Scheduled Interview', '[Job Management] Scheduled an interview session for candidate \'test\' on Jun 11, 2026 at 22:00.', '::1', '2026-06-08 19:09:51'),
+(318, 1, 'Access Control Updated', '[Security] HR portal permissions matrix was updated by Admin.', '::1', '2026-06-08 19:10:12'),
+(319, 1, 'Access Control Updated', '[Security] HR portal permissions matrix was updated by Admin.', '::1', '2026-06-08 19:10:23'),
+(320, 1, 'Access Control Updated', '[Security] HR portal permissions matrix was updated by Admin.', '::1', '2026-06-08 19:10:36'),
+(321, 1, 'Access Control Updated', '[Security] HR portal permissions matrix was updated by Admin.', '::1', '2026-06-08 19:10:42'),
+(322, 1, 'Access Control Updated', '[Security] HR portal permissions matrix was updated by Admin.', '::1', '2026-06-08 19:10:52'),
+(323, 1, 'Access Control Updated', '[Security] HR portal permissions matrix was updated by Admin.', '::1', '2026-06-08 19:11:01'),
+(324, 1, 'Access Control Updated', '[Security] HR portal permissions matrix was updated by Admin.', '::1', '2026-06-08 19:11:43'),
+(325, 1, 'Access Control Updated', '[Security] HR portal permissions matrix was updated by Admin.', '::1', '2026-06-08 19:11:50'),
+(326, 1, 'Access Control Updated', '[Security] HR portal permissions matrix was updated by Admin.', '::1', '2026-06-08 19:11:58'),
+(327, 1, 'Access Control Updated', '[Security] HR portal permissions matrix was updated by Admin.', '::1', '2026-06-08 19:12:12'),
+(328, 1, 'Access Control Updated', '[Security] HR portal permissions matrix was updated by Admin.', '::1', '2026-06-08 19:12:22'),
+(329, 1, 'Access Control Updated', '[Security] HR portal permissions matrix was updated by Admin.', '::1', '2026-06-08 19:12:42'),
+(330, 1, 'Access Control Updated', '[Security] HR portal permissions matrix was updated by Admin.', '::1', '2026-06-08 19:12:56'),
+(331, 1, 'Access Control Updated', '[Security] HR portal permissions matrix was updated by Admin.', '::1', '2026-06-08 19:13:05'),
+(332, 1, 'Access Control Updated', '[Security] HR portal permissions matrix was updated by Admin.', '::1', '2026-06-08 19:13:16'),
+(333, 1, 'Access Control Updated', '[Security] HR portal permissions matrix was updated by Admin.', '::1', '2026-06-08 19:13:29'),
+(334, 1, 'Access Control Updated', '[Security] HR portal permissions matrix was updated by Admin.', '::1', '2026-06-08 19:13:48'),
+(335, 1, 'Access Control Updated', '[Security] HR portal permissions matrix was updated by Admin.', '::1', '2026-06-08 19:14:01'),
+(336, 1, 'Access Control Updated', '[Security] HR portal permissions matrix was updated by Admin.', '::1', '2026-06-08 19:14:40'),
+(337, 1, 'Access Control Updated', '[Security] HR portal permissions matrix was updated by Admin.', '::1', '2026-06-08 19:14:54'),
+(338, 1, 'Access Control Updated', '[Security] HR portal permissions matrix was updated by Admin.', '::1', '2026-06-08 19:15:05'),
+(339, 1, 'Access Control Updated', '[Security] HR portal permissions matrix was updated by Admin.', '::1', '2026-06-08 19:19:05'),
+(340, 1, 'Access Control Updated', '[Security] HR portal permissions matrix was updated by Admin.', '::1', '2026-06-08 19:19:15'),
+(341, 1, 'Access Control Updated', '[Security] HR portal permissions matrix was updated by Admin.', '::1', '2026-06-08 19:19:25'),
+(342, 1, 'Access Control Updated', '[Security] HR portal permissions matrix was updated by Admin.', '::1', '2026-06-08 19:19:37'),
+(343, 1, 'Access Control Updated', '[Security] HR portal permissions matrix was updated by Admin.', '::1', '2026-06-08 19:19:51'),
+(344, 1, 'Access Control Updated', '[Security] HR portal permissions matrix was updated by Admin.', '::1', '2026-06-08 20:21:40'),
+(345, 1, 'Access Control Updated', '[Security] HR portal permissions matrix was updated by Admin.', '::1', '2026-06-08 20:22:34'),
+(346, 1, 'Access Control Updated', '[Security] HR portal permissions matrix was updated by Admin.', '::1', '2026-06-08 20:22:44'),
+(347, 1, 'Access Control Updated', '[Security] HR portal permissions matrix was updated by Admin.', '::1', '2026-06-08 20:23:04'),
+(348, 1, 'Access Control Updated', '[Security] HR portal permissions matrix was updated by Admin.', '::1', '2026-06-08 20:23:41'),
+(349, 1, 'Access Control Updated', '[Security] HR portal permissions matrix was updated by Admin.', '::1', '2026-06-08 20:27:13'),
+(350, 1, 'Access Control Updated', '[Security] HR portal permissions matrix was updated by Admin.', '::1', '2026-06-08 20:27:21'),
+(351, 1, 'Access Control Updated', '[Security] HR portal permissions matrix was updated by Admin.', '::1', '2026-06-08 20:29:53'),
+(352, 1, 'Access Control Updated', '[Security] HR portal permissions matrix was updated by Admin.', '::1', '2026-06-08 20:30:00'),
+(353, 1, 'Access Control Updated', '[Security] HR portal permissions matrix was updated by Admin.', '::1', '2026-06-08 20:34:03'),
+(354, 1, 'Access Control Updated', '[Security] HR portal permissions matrix was updated by Admin.', '::1', '2026-06-08 20:34:15'),
+(355, 1, 'Access Control Updated', '[Security] HR portal permissions matrix was updated by Admin.', '::1', '2026-06-08 20:34:30'),
+(356, 1, 'Access Control Updated', '[Security] HR portal permissions matrix was updated by Admin.', '::1', '2026-06-08 20:34:44'),
+(357, 1, 'Access Control Updated', '[Security] HR portal permissions matrix was updated by Admin.', '::1', '2026-06-08 20:34:55'),
+(358, 1, 'Access Control Updated', '[Security] HR portal permissions matrix was updated by Admin.', '::1', '2026-06-08 20:35:01'),
+(359, 1, 'Access Control Updated', '[Security] HR portal permissions matrix was updated by Admin.', '::1', '2026-06-08 20:41:29'),
+(360, 1, 'Access Control Updated', '[Security] HR portal permissions matrix was updated by Admin.', '::1', '2026-06-08 20:42:00');
+INSERT INTO `activity_logs` (`id`, `employee_id`, `action`, `description`, `ip_address`, `created_at`) VALUES
+(361, 1, 'Access Control Updated', '[Security] HR portal permissions matrix was updated by Admin.', '::1', '2026-06-08 20:42:12'),
+(362, 1, 'Access Control Updated', '[Security] HR portal permissions matrix was updated by Admin.', '::1', '2026-06-08 20:42:18'),
+(363, 1, 'Access Control Updated', '[Security] HR portal permissions matrix was updated by Admin.', '::1', '2026-06-08 20:42:23'),
+(364, 1, 'Access Control Updated', '[Security] HR portal permissions matrix was updated by Admin.', '::1', '2026-06-08 20:45:10'),
+(365, 1, 'Access Control Updated', '[Security] HR portal permissions matrix was updated by Admin.', '::1', '2026-06-08 20:46:24'),
+(366, 1, 'Access Control Updated', '[Security] HR portal permissions matrix was updated by Admin.', '::1', '2026-06-08 20:46:33'),
+(367, 1, 'Access Control Updated', '[Security] HR portal permissions matrix was updated by Admin.', '::1', '2026-06-08 20:46:40'),
+(368, 1, 'Access Control Updated', '[Security] HR portal permissions matrix was updated by Admin.', '::1', '2026-06-08 20:47:08'),
+(369, 1, 'Access Control Updated', '[Security] HR portal permissions matrix was updated by Admin.', '::1', '2026-06-08 20:51:05'),
+(370, 1, 'Access Control Updated', '[Security] HR portal permissions matrix was updated by Admin.', '::1', '2026-06-08 20:51:26'),
+(371, 1, 'Access Control Updated', '[Security] HR portal permissions matrix was updated by Admin.', '::1', '2026-06-08 20:51:33'),
+(372, 1, 'Access Control Updated', '[Security] HR portal permissions matrix was updated by Admin.', '::1', '2026-06-08 20:51:42'),
+(373, 1, 'Access Control Updated', '[Security] HR portal permissions matrix was updated by Admin.', '::1', '2026-06-08 20:51:45'),
+(374, 1, 'Access Control Updated', '[Security] HR portal permissions matrix was updated by Admin.', '::1', '2026-06-08 20:51:49'),
+(375, 1, 'Access Control Updated', '[Security] HR portal permissions matrix was updated by Admin.', '::1', '2026-06-08 20:51:55'),
+(376, 28, 'User Login', '[Authentication] User authenticated successfully and accessed the system dashboard.', '::1', '2026-06-08 20:58:50'),
+(377, 1, 'Access Control Updated', '[Security] HR portal permissions matrix was updated by Admin.', '::1', '2026-06-08 21:02:21'),
+(378, 1, 'Access Control Updated', '[Security] HR portal permissions matrix was updated by Admin.', '::1', '2026-06-08 21:21:54'),
+(379, 1, 'Access Control Updated', '[Security] HR portal permissions matrix was updated by Admin.', '::1', '2026-06-08 21:29:16'),
+(380, 22, 'User Login', '[Authentication] User authenticated successfully and accessed the system dashboard.', '::1', '2026-06-08 21:29:34'),
+(381, 1, 'Access Control Updated', '[Security] HR portal permissions matrix was updated by Admin.', '::1', '2026-06-08 21:29:46'),
+(382, 22, 'User Login', '[Authentication] User authenticated successfully and accessed the system dashboard.', '::1', '2026-06-08 21:29:56'),
+(383, 1, 'Access Control Updated', '[Security] HR portal permissions matrix was updated by Admin.', '::1', '2026-06-08 21:35:13'),
+(384, 22, 'User Login', '[Authentication] User authenticated successfully and accessed the system dashboard.', '::1', '2026-06-08 21:35:21'),
+(385, 22, 'User Login', '[Authentication] User authenticated successfully and accessed the system dashboard.', '::1', '2026-06-08 21:37:08'),
+(386, 1, 'Access Control Updated', '[Security] HR portal permissions matrix was updated by Admin.', '::1', '2026-06-08 21:37:16'),
+(387, 22, 'User Login', '[Authentication] User authenticated successfully and accessed the system dashboard.', '::1', '2026-06-08 21:37:22'),
+(388, 1, 'Access Control Updated', '[Security] HR portal permissions matrix was updated by Admin.', '::1', '2026-06-08 21:37:33'),
+(389, 1, 'Access Control Updated', '[Security] HR portal permissions matrix was updated by Admin.', '::1', '2026-06-08 22:00:03'),
+(390, 1, 'Access Control Updated', '[Security] HR portal permissions matrix was updated by Admin.', '::1', '2026-06-08 22:01:31'),
+(391, 22, 'User Login', '[Authentication] User authenticated successfully and accessed the system dashboard.', '::1', '2026-06-08 22:01:46'),
+(392, 22, 'User Login', '[Authentication] User authenticated successfully and accessed the system dashboard.', '::1', '2026-06-08 22:15:56'),
+(393, 22, 'User Login', '[Authentication] User authenticated successfully and accessed the system dashboard.', '::1', '2026-06-08 22:16:06'),
+(394, 1, 'Access Control Updated', '[Security] HR portal permissions matrix was updated by Admin.', '::1', '2026-06-08 22:16:18'),
+(395, 22, 'User Login', '[Authentication] User authenticated successfully and accessed the system dashboard.', '::1', '2026-06-08 22:16:27');
 
 -- --------------------------------------------------------
 
@@ -502,7 +709,9 @@ CREATE TABLE `candidates` (
 --
 
 INSERT INTO `candidates` (`id`, `name`, `email`, `phone`, `cnic_number`, `address`, `job_id`, `applied_date`, `status`, `duplicate_of`, `duplicate_reason`, `resume_path`, `created_at`, `updated_at`, `deleted_at`) VALUES
-(25, 'Test', 'test@gmail.com', '7894-6523145', '97465-3214659-7', 'Test 1', 13, '2026-05-22', 'Hired', NULL, NULL, 'uploads/candidates/resumes/RES_6a0f70a4eebcc.pdf', '2026-05-21 20:52:52', '2026-05-21 20:56:39', NULL);
+(25, 'Test', 'test@gmail.com', '7894-6523145', '97465-3214659-7', 'Test 1', 13, '2026-05-22', 'Hired', NULL, NULL, 'uploads/candidates/resumes/RES_6a0f70a4eebcc.pdf', '2026-05-21 20:52:52', '2026-05-21 20:56:39', NULL),
+(27, 'test', 'test1@gmail.com', '7864-3213246', '98798-6546548-7', 'test adresrss', 17, '2026-06-08', 'New', NULL, NULL, 'uploads/candidates/resumes/RES_6a270f8046773.pdf', '2026-06-08 18:52:48', '2026-06-08 19:06:43', NULL),
+(28, 'test', 'test3@gmail.com', '7248-3798279', '72348-7983724-7', '983472', 15, '2026-06-09', 'Interview', NULL, NULL, 'uploads/candidates/resumes/RES_6a27134414d7d.pdf', '2026-06-08 19:08:52', '2026-06-08 19:09:51', NULL);
 
 -- --------------------------------------------------------
 
@@ -555,7 +764,11 @@ INSERT INTO `candidate_history` (`id`, `candidate_id`, `status_from`, `status_to
 (36, 25, 'Interview', 'Interview', 'Interview rescheduled. Previous: May 22-2026, 8:00 PM. New: May 23-2026, 9:00 PM. Notes: new to interview', 1, '2026-05-21 20:55:18'),
 (37, 25, 'Interview', 'Shortlisted', 'interview to shortlist', 1, '2026-05-21 20:55:52'),
 (38, 25, 'Shortlisted', 'Offer', 'Shortlist to Offer', 1, '2026-05-21 20:56:24'),
-(39, 25, 'Offer', 'Hired', 'Offer to hired', 1, '2026-05-21 20:56:39');
+(39, 25, 'Offer', 'Hired', 'Offer to hired', 1, '2026-05-21 20:56:39'),
+(40, 27, 'New', 'Interview', 'Interview scheduled for June 8-2026, 10:00 AM. test', 22, '2026-06-08 18:53:36'),
+(41, 27, 'Interview', 'Interview', 'Interview rescheduled. Previous: June 8-2026, 10:00 AM. New: June 10-2026, 10:00 AM. Notes: test', 22, '2026-06-08 19:07:50'),
+(42, 27, 'Interview', 'Interview', 'Interview rescheduled. Previous: June 10-2026, 10:00 AM. New: June 11-2026, 10:00 AM. Notes: sadsasad', 22, '2026-06-08 19:08:08'),
+(43, 28, 'New', 'Interview', 'Interview scheduled for June 11-2026, 10:00 PM. SADSASAD', 22, '2026-06-08 19:09:51');
 
 -- --------------------------------------------------------
 
@@ -660,9 +873,9 @@ CREATE TABLE `employees` (
 
 INSERT INTO `employees` (`id`, `first_name`, `middle_name`, `last_name`, `email`, `password`, `role`, `gender`, `dob`, `phone`, `cnic_number`, `address`, `emergency_contact`, `emergency_relation`, `department_id`, `shift_id`, `job_title`, `job_type`, `salary`, `joining_date`, `status`, `id_card_path`, `other_docs`, `resume_path`, `profile_pic`, `created_at`, `updated_at`, `deleted_at`) VALUES
 (1, 'System', '', 'Admin', 'admin@gmail.com', '$2y$12$RKq6kP5En4KGCUYd3.hBIuE1WdPKNb7GFcnlE21gAgoiEA0i0noeS', 'Admin', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '', 0.00, '2026-04-06', 'Active', NULL, NULL, NULL, NULL, '2026-04-06 17:51:22', NULL, NULL),
-(22, 'Syed', 'Mahad', 'Bukhari', 'mahad@gmail.com', '$2y$10$MJSzzQkWueYLdZlP6A3pjOF2FtmO3h8IEpKJ./Gj0Q4dQG6LXX2D2', 'Employee', 'Male', '2002-07-05', '2222-2222227', '1111111111111', 'North Nazimabad', '33333333333', 'Test Emergency contact relation', 9, 7, 'Frontend Developer', 'Permanent', 40000.00, '2026-01-20', 'Active', 'uploads/employees/id_cards/EMP_69dffe42dcfe4.pdf', NULL, 'uploads/employees/resumes/EMP_69dffe42dd1fa.pdf', 'uploads/employees/profiles/user_22_6a0deb026430b.jpg', '2026-04-15 21:08:18', '2026-05-20 17:10:26', NULL),
+(22, 'Syed', 'Mahad', 'Bukhari', 'mahad@gmail.com', '$2y$10$MJSzzQkWueYLdZlP6A3pjOF2FtmO3h8IEpKJ./Gj0Q4dQG6LXX2D2', 'HR', 'Male', '2002-07-05', '2222-2222227', '1111111111111', 'North Nazimabad', '33333333333', 'Test Emergency contact relation', 9, 7, 'Frontend Developer', 'Permanent', 40000.00, '2026-01-20', 'Active', 'uploads/employees/id_cards/EMP_69dffe42dcfe4.pdf', NULL, 'uploads/employees/resumes/EMP_69dffe42dd1fa.pdf', 'uploads/employees/profiles/user_22_6a0deb026430b.jpg', '2026-04-15 21:08:18', '2026-06-08 15:43:54', NULL),
 (27, 'user', '', 'user', 'test2@gmail.com', '$2y$10$zG/p6Il95cae.1MWZllMyek46hyMsmafgaR8XeIRxay54zzOa68KW', 'Employee', 'Male', '2003-05-07', '3333-3333333', '4444444444444', 'test', '55555555555', 'test', 11, 5, 'Job Title Test', 'Permanent', 90000.00, '2026-05-04', 'Active', 'uploads/employees/id_cards/EMP_69f3da0719fe3.pdf', NULL, 'uploads/employees/resumes/EMP_69f3da071a1c4.pdf', NULL, '2026-04-30 22:39:03', NULL, NULL),
-(28, 'Ahmed', 'Ali', 'Khan', 'ahmed@gmail.com', '$2y$12$RKq6kP5En4KGCUYd3.hBIuE1WdPKNb7GFcnlE21gAgoiEA0i0noeS', 'Employee', 'Male', '1995-03-12', '0300-1111111', '42101-1111111-1', 'Gulshan-e-Iqbal, Karachi', '0300-9999999', 'Brother', 13, 5, 'Backend Developer', 'Permanent', 30000.00, '2026-05-01', 'Active', NULL, NULL, NULL, NULL, '2026-05-07 22:46:12', '2026-05-18 18:14:34', NULL),
+(28, 'Ahmed', 'Ali', 'Khan', 'ahmed@gmail.com', '$2y$12$RKq6kP5En4KGCUYd3.hBIuE1WdPKNb7GFcnlE21gAgoiEA0i0noeS', 'Employee', 'Male', '1995-03-12', '0300-1111111', '42101-1111111-1', 'Gulshan-e-Iqbal, Karachi', '0300-9999999', 'Brother', 9, 5, 'Backend Developer', 'Permanent', 30000.00, '2026-05-01', 'Active', NULL, NULL, NULL, NULL, '2026-05-07 22:46:12', '2026-06-08 20:59:51', NULL),
 (29, 'Sara', '', 'Ahmed', 'sara@gmail.com', '$2y$10$zG/p6Il95cae.1MWZllMyek46hyMsmafgaR8XeIRxay54zzOa68KW', 'Employee', 'Female', '1998-06-25', '0300-2222222', '42101-2222222-2', 'DHA Phase 6, Karachi', '0300-8888888', 'Father', 9, 6, 'UI/UX Designer', 'Permanent', 60000.00, '2026-05-02', 'Active', NULL, NULL, NULL, NULL, '2026-05-07 22:46:12', NULL, NULL),
 (30, 'Zain', 'Ul', 'Abidin', 'zain@gmail.com', '$2y$12$RKq6kP5En4KGCUYd3.hBIuE1WdPKNb7GFcnlE21gAgoiEA0i0noeS', 'Employee', 'Male', '1992-11-10', '0300-3333333', '42101-3333333-3', 'North Karachi', '0300-7777777', 'Mother', 13, 6, 'Full Stack Developer', 'Permanent', 85000.00, '2026-02-20', 'Active', NULL, NULL, NULL, NULL, '2026-05-07 22:46:12', '2026-05-20 17:54:51', NULL),
 (31, 'Fatima', '', 'Zehra', 'fatima@gmail.com', '$2y$10$zG/p6Il95cae.1MWZllMyek46hyMsmafgaR8XeIRxay54zzOa68KW', 'Employee', 'Female', '1996-08-15', '0300-4444444', '42101-4444444-4', 'Malir Cantt, Karachi', '0300-6666666', 'Husband', 11, 5, 'QA Engineer', 'Probation', 45000.00, '2026-05-04', 'Active', NULL, NULL, NULL, NULL, '2026-05-07 22:46:12', NULL, NULL),
@@ -673,7 +886,7 @@ INSERT INTO `employees` (`id`, `first_name`, `middle_name`, `last_name`, `email`
 (36, 'Usman', '', 'Ghani', 'usman@gmail.com', '$2y$10$zG/p6Il95cae.1MWZllMyek46hyMsmafgaR8XeIRxay54zzOa68KW', 'Employee', 'Male', '1993-02-14', '0300-9999999', '42101-9999999-9', 'Korangi, Karachi', '0300-1111111', 'Aunt', 8, 7, 'Network Engineer', 'Permanent', 70000.00, '2026-05-09', 'Active', NULL, NULL, NULL, NULL, '2026-05-07 22:46:12', NULL, NULL),
 (37, 'Hina', '', 'Pervez', 'hina@gmail.com', '$2y$10$zG/p6Il95cae.1MWZllMyek46hyMsmafgaR8XeIRxay54zzOa68KW', 'Employee', 'Female', '1991-05-20', '0300-0000000', '42101-0000000-0', 'Saddar, Karachi', '0300-0000000', 'Cousin', 9, 5, 'Marketing Head', 'Permanent', 95000.00, '2026-05-10', 'Active', NULL, NULL, NULL, NULL, '2026-05-07 22:46:12', '2026-05-19 17:43:34', NULL),
 (38, 'Shayan', NULL, 'Shaikh', 'shayan@gmail.com', '$2y$10$aw1Kb0jIU2hOOBCgYt4AqeytXt4rnJ0pQ39LG6a9tdivrG8Xs41Km', 'Employee', 'Male', '2005-05-07', '5645-6465465', '7898987987987', 'PIB', '78546213456', 'Father', 9, 6, 'Wordpress Developer', 'Permanent', 60000.00, '2026-05-18', 'Active', 'uploads/employees/id_cards/EMP_6a04fd82901fe.jpeg', NULL, 'uploads/employees/resumes/EMP_6a04fd8290448.pdf', NULL, '2026-05-13 22:38:58', '2026-05-13 22:49:43', NULL),
-(39, 'test', NULL, 'test', 'test@gmail.com', '$2y$10$ee3KRgqTJIHzr3tEgbULKevXqDlmZOUPT39g9PNbc36eYrT28kEdO', 'Employee', 'Male', '2002-05-07', '2222-2222222', '2435425245423', 'North Nazimabad', '65656356635', 'test', 10, 7, 'test', 'Permanent', 65000.00, '2026-05-20', 'Active', 'uploads/employees/id_cards/EMP_6a0f38cfaa2eb.png', NULL, 'uploads/employees/resumes/EMP_6a0f38cfaa57c.pdf', NULL, '2026-05-21 16:54:39', '2026-05-21 18:07:51', NULL),
+(39, 'test', NULL, 'test', 'test@gmail.com', '$2y$10$ee3KRgqTJIHzr3tEgbULKevXqDlmZOUPT39g9PNbc36eYrT28kEdO', 'Employee', 'Male', '2002-05-07', '2222-2222222', '2435425245423', 'North Nazimabad', '65656356635', 'test', 10, 7, 'test', 'Permanent', 65000.00, '2026-05-20', 'Pending', 'uploads/employees/id_cards/EMP_6a0f38cfaa2eb.png', NULL, 'uploads/employees/resumes/EMP_6a0f38cfaa57c.pdf', NULL, '2026-05-21 16:54:39', '2026-06-08 20:35:48', NULL),
 (42, 'test', '', 'tes', 'test1@gmail.com', '$2y$10$6xaN3LrBrss4OvKHyF6OYupaNdAZiD2Si/SVfMl8SNAzU6yDSzWg2', 'Employee', 'Male', '2026-05-04', '2222-2222222', '1111111111111', '3934 FM 1960 Rd W Suite 370', '33333333333', 'testtt', 11, 5, 'test', 'Permanent', 70000.00, '2026-05-20', 'Exit', 'uploads/employees/id_cards/EMP_6a0f426253c98.png', NULL, 'uploads/employees/resumes/EMP_6a0f426253e7f.pdf', NULL, '2026-05-21 17:35:30', '2026-05-21 18:07:58', '2026-05-21 18:07:58');
 
 -- --------------------------------------------------------
@@ -708,6 +921,77 @@ INSERT INTO `events` (`id`, `title`, `description`, `event_date`, `event_time`, 
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `hr_access_meta`
+--
+
+CREATE TABLE `hr_access_meta` (
+  `id` tinyint(1) NOT NULL DEFAULT 1,
+  `version` int(11) NOT NULL DEFAULT 1,
+  `updated_by` int(11) DEFAULT NULL,
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `hr_access_meta`
+--
+
+INSERT INTO `hr_access_meta` (`id`, `version`, `updated_by`, `updated_at`) VALUES
+(1, 1, NULL, '2026-06-05 17:02:11');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `hr_page_permissions`
+--
+
+CREATE TABLE `hr_page_permissions` (
+  `id` int(11) NOT NULL,
+  `page_key` varchar(80) NOT NULL,
+  `can_view` tinyint(1) NOT NULL DEFAULT 1,
+  `can_create` tinyint(1) NOT NULL DEFAULT 0,
+  `can_edit` tinyint(1) NOT NULL DEFAULT 0,
+  `can_delete` tinyint(1) NOT NULL DEFAULT 0,
+  `can_export` tinyint(1) NOT NULL DEFAULT 0,
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `hr_page_permissions`
+--
+
+INSERT INTO `hr_page_permissions` (`id`, `page_key`, `can_view`, `can_create`, `can_edit`, `can_delete`, `can_export`, `updated_at`) VALUES
+(1, 'index', 0, 0, 0, 0, 0, '2026-06-08 22:16:18'),
+(2, 'employees', 0, 0, 0, 0, 0, '2026-06-08 22:16:18'),
+(3, 'attendance', 0, 0, 0, 0, 0, '2026-06-08 22:16:18'),
+(4, 'leave-management', 0, 0, 0, 0, 0, '2026-06-08 22:16:18'),
+(5, 'new-joining', 1, 0, 0, 0, 0, '2026-06-08 22:16:18'),
+(6, 'hierarchy', 0, 0, 0, 0, 0, '2026-06-08 22:16:18'),
+(7, 'kpi-management', 0, 0, 0, 0, 0, '2026-06-08 22:16:18'),
+(8, 'event-calendar', 0, 0, 0, 0, 0, '2026-06-08 22:16:18'),
+(9, 'job-list', 0, 0, 0, 0, 0, '2026-06-08 22:16:18'),
+(10, 'create-job', 0, 0, 0, 0, 0, '2026-06-08 22:16:18'),
+(11, 'job-candidates', 0, 0, 0, 0, 0, '2026-06-08 22:16:18'),
+(12, 'interviews', 0, 0, 0, 0, 0, '2026-06-08 22:16:18'),
+(13, 'payroll', 0, 0, 0, 0, 0, '2026-06-08 22:16:18'),
+(14, 'activity-logs', 0, 0, 0, 0, 0, '2026-06-08 22:16:18'),
+(15, 'announcements', 0, 0, 0, 0, 0, '2026-06-08 22:16:18'),
+(16, 'notifications', 0, 0, 0, 0, 0, '2026-06-08 22:16:18'),
+(17, 'it-support', 0, 0, 0, 0, 0, '2026-06-08 22:16:18'),
+(18, 'shifts', 0, 0, 0, 0, 0, '2026-06-08 22:16:18'),
+(19, 'department-management', 0, 0, 0, 0, 0, '2026-06-08 22:16:18'),
+(20, 'role-management', 0, 0, 0, 0, 0, '2026-06-08 16:39:19'),
+(21, 'policy-management', 0, 0, 0, 0, 0, '2026-06-08 22:16:18'),
+(22, 'payroll-settings', 0, 0, 0, 0, 0, '2026-06-08 22:16:18'),
+(23, 'employee-profile', 0, 0, 0, 0, 0, '2026-06-08 22:16:18'),
+(24, 'attendance-log', 0, 0, 0, 0, 0, '2026-06-08 22:16:18'),
+(25, 'edit-job', 0, 0, 1, 0, 0, '2026-06-08 22:16:18'),
+(26, 'candidate-detail', 0, 0, 0, 0, 0, '2026-06-08 22:16:18'),
+(27, 'kpi-report', 0, 0, 0, 0, 0, '2026-06-08 22:16:18'),
+(28, 'payslip-print', 0, 0, 0, 0, 1, '2026-06-08 22:16:18');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `interviews`
 --
 
@@ -729,7 +1013,9 @@ CREATE TABLE `interviews` (
 --
 
 INSERT INTO `interviews` (`id`, `candidate_id`, `interviewer_id`, `interview_date`, `interview_type`, `location`, `status`, `feedback`, `created_at`, `updated_at`) VALUES
-(15, 25, NULL, '2026-05-23 21:00:00', 'Onsite', NULL, 'Scheduled', 'new to interview', '2026-05-21 20:54:37', '2026-05-21 20:55:18');
+(15, 25, NULL, '2026-05-23 21:00:00', 'Onsite', NULL, 'Scheduled', 'new to interview', '2026-05-21 20:54:37', '2026-05-21 20:55:18'),
+(16, 27, NULL, '2026-06-11 10:00:00', 'Onsite', NULL, 'Scheduled', 'sadsasad', '2026-06-08 18:53:36', '2026-06-08 19:08:08'),
+(17, 28, NULL, '2026-06-11 22:00:00', 'Onsite', NULL, 'Scheduled', 'SADSASAD', '2026-06-08 19:09:51', NULL);
 
 -- --------------------------------------------------------
 
@@ -960,7 +1246,10 @@ INSERT INTO `notifications` (`id`, `title`, `message`, `target_url`, `sender_id`
 (60, 'New Job Application', 'New application received from test2 for position: test job title .', 'job-candidates.php', NULL, 'Recruitment', '2026-05-21 18:59:15', NULL),
 (61, 'New Job Application', 'New application received from test3 for position: test job title .', 'job-candidates.php', NULL, 'Recruitment', '2026-05-21 19:00:31', NULL),
 (62, 'New Job Application', 'New application received from test4 for position: test job title .', 'job-candidates.php', NULL, 'Recruitment', '2026-05-21 19:02:04', NULL),
-(63, 'New Job Application', 'New application received from Test for position: Test Job.', 'job-candidates.php', NULL, 'Recruitment', '2026-05-21 20:52:53', NULL);
+(63, 'New Job Application', 'New application received from Test for position: Test Job.', 'job-candidates.php', NULL, 'Recruitment', '2026-05-21 20:52:53', NULL),
+(64, 'New Job Application', 'New application received from test for position: Test 5.', 'job-candidates.php', NULL, 'Recruitment', '2026-06-08 18:50:06', NULL),
+(65, 'New Job Application', 'New application received from test for position: Test 5.', 'job-candidates.php', NULL, 'Recruitment', '2026-06-08 18:52:48', NULL),
+(66, 'New Job Application', 'New application received from test for position: Test 3.', 'job-candidates.php', NULL, 'Recruitment', '2026-06-08 19:08:52', NULL);
 
 -- --------------------------------------------------------
 
@@ -1072,7 +1361,13 @@ INSERT INTO `notification_recipients` (`id`, `notification_id`, `employee_id`, `
 (226, 60, 1, 1, '2026-05-21 19:11:34'),
 (227, 61, 1, 1, '2026-05-21 19:11:34'),
 (228, 62, 1, 1, '2026-05-21 19:11:34'),
-(229, 63, 1, 0, NULL);
+(229, 63, 1, 0, NULL),
+(230, 64, 1, 0, NULL),
+(231, 64, 22, 0, NULL),
+(232, 65, 1, 0, NULL),
+(233, 65, 22, 0, NULL),
+(234, 66, 1, 0, NULL),
+(235, 66, 22, 0, NULL);
 
 -- --------------------------------------------------------
 
@@ -1187,7 +1482,9 @@ CREATE TABLE `settings` (
 
 INSERT INTO `settings` (`id`, `meta_key`, `meta_value`) VALUES
 (1, 'payroll_start_day', '21'),
-(2, 'payroll_end_day', '20');
+(2, 'payroll_end_day', '20'),
+(19, 'hr_permissions_revision', '197'),
+(20, 'hr_capability_migration', '7');
 
 -- --------------------------------------------------------
 
@@ -1250,7 +1547,8 @@ CREATE TABLE `support_tickets` (
 
 INSERT INTO `support_tickets` (`id`, `employee_id`, `subject`, `category`, `target_dept_id`, `assigned_to`, `description`, `status`, `created_at`, `resolved_by`, `resolved_at`, `closed_by`, `closed_at`, `resolution_duration`, `reopen_count`, `employee_unread`, `it_unread`) VALUES
 (12, 22, 'Test Ticket Subject', 'Hardware', NULL, 28, 'Test Description', 'Closed', '2026-05-18 23:11:25', 34, '2026-05-18 23:15:32', 28, '2026-05-18 23:17:35', '6 mins', 1, 0, 0),
-(13, 22, 'Test Ticket Subject', 'Test Specify Category', NULL, 30, 'Test Description', 'Closed', '2026-05-18 23:32:51', 28, '2026-05-18 23:43:32', 30, '2026-05-18 23:45:46', '12 mins', 1, 0, 0);
+(13, 22, 'Test Ticket Subject', 'Test Specify Category', NULL, 30, 'Test Description', 'Closed', '2026-05-18 23:32:51', 28, '2026-05-18 23:43:32', 30, '2026-05-18 23:45:46', '12 mins', 1, 0, 0),
+(15, 28, 'test', 'Hardware', NULL, NULL, 'testtttt', 'Open', '2026-06-08 21:27:57', NULL, NULL, NULL, NULL, NULL, 0, 0, 0);
 
 -- --------------------------------------------------------
 
@@ -1302,7 +1600,8 @@ INSERT INTO `ticket_messages` (`id`, `ticket_id`, `sender_id`, `message`, `is_in
 (128, 13, 1, 'Ticket Re-opened. Previously resolved by Ahmed Ali Khan in 10 mins.', 0, 1, '2026-05-18 23:44:09'),
 (129, 13, 1, 'Ticket handed over to Zain Ul Abidin.', 1, 1, '2026-05-18 23:44:34'),
 (130, 13, 1, 'admin handover ticket to zain', 1, 0, '2026-05-18 23:44:46'),
-(131, 13, 30, 'hello Im here', 0, 0, '2026-05-18 23:45:28');
+(131, 13, 30, 'hello Im here', 0, 0, '2026-05-18 23:45:28'),
+(133, 15, 28, 'testtttt', 0, 0, '2026-06-08 21:27:57');
 
 --
 -- Indexes for dumped tables
@@ -1398,6 +1697,19 @@ ALTER TABLE `employees`
 ALTER TABLE `events`
   ADD PRIMARY KEY (`id`),
   ADD KEY `idx_event_date` (`event_date`);
+
+--
+-- Indexes for table `hr_access_meta`
+--
+ALTER TABLE `hr_access_meta`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `hr_page_permissions`
+--
+ALTER TABLE `hr_page_permissions`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `uq_hr_page_permissions_key` (`page_key`);
 
 --
 -- Indexes for table `interviews`
@@ -1528,7 +1840,7 @@ ALTER TABLE `ticket_messages`
 -- AUTO_INCREMENT for table `activity_logs`
 --
 ALTER TABLE `activity_logs`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=190;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=396;
 
 --
 -- AUTO_INCREMENT for table `announcements`
@@ -1552,7 +1864,7 @@ ALTER TABLE `banking_info`
 -- AUTO_INCREMENT for table `candidates`
 --
 ALTER TABLE `candidates`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
 
 --
 -- AUTO_INCREMENT for table `candidate_answers`
@@ -1564,7 +1876,7 @@ ALTER TABLE `candidate_answers`
 -- AUTO_INCREMENT for table `candidate_history`
 --
 ALTER TABLE `candidate_history`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=40;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=44;
 
 --
 -- AUTO_INCREMENT for table `departments`
@@ -1591,10 +1903,16 @@ ALTER TABLE `events`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
 
 --
+-- AUTO_INCREMENT for table `hr_page_permissions`
+--
+ALTER TABLE `hr_page_permissions`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5167;
+
+--
 -- AUTO_INCREMENT for table `interviews`
 --
 ALTER TABLE `interviews`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
 
 --
 -- AUTO_INCREMENT for table `jobs`
@@ -1636,13 +1954,13 @@ ALTER TABLE `leave_types`
 -- AUTO_INCREMENT for table `notifications`
 --
 ALTER TABLE `notifications`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=64;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=67;
 
 --
 -- AUTO_INCREMENT for table `notification_recipients`
 --
 ALTER TABLE `notification_recipients`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=230;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=236;
 
 --
 -- AUTO_INCREMENT for table `payroll`
@@ -1666,7 +1984,7 @@ ALTER TABLE `salary_history`
 -- AUTO_INCREMENT for table `settings`
 --
 ALTER TABLE `settings`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
 
 --
 -- AUTO_INCREMENT for table `shifts`
@@ -1678,13 +1996,13 @@ ALTER TABLE `shifts`
 -- AUTO_INCREMENT for table `support_tickets`
 --
 ALTER TABLE `support_tickets`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- AUTO_INCREMENT for table `ticket_messages`
 --
 ALTER TABLE `ticket_messages`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=132;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=134;
 
 --
 -- Constraints for dumped tables

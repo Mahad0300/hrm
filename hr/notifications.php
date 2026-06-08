@@ -101,6 +101,10 @@ include 'includes/header.php';
         }
 
         window.markRead = function(id) {
+            if (typeof HR_PERMS !== 'undefined' && !HR_PERMS.can('notifications', 'mark_read')) {
+                HR_PERMS.showDenied('mark_read');
+                return;
+            }
             const fd = new FormData();
             fd.append('action', 'mark_read');
             fd.append('id', id);
@@ -112,6 +116,10 @@ include 'includes/header.php';
         };
 
         window.removeNotification = function(id, btn) {
+            if (typeof HR_PERMS !== 'undefined' && !HR_PERMS.can('notifications', 'delete')) {
+                HR_PERMS.showDenied('delete');
+                return;
+            }
             const item = btn.closest('.noti-item');
             item.classList.add('noti-item--swipe-out');
             setTimeout(() => {
@@ -124,6 +132,10 @@ include 'includes/header.php';
         };
 
         document.getElementById('markAllReadBtn').onclick = function() {
+            if (typeof HR_PERMS !== 'undefined' && !HR_PERMS.can('notifications', 'mark_read')) {
+                HR_PERMS.showDenied('mark_read');
+                return;
+            }
             const fd = new FormData();
             fd.append('action', 'mark_all_read');
             fetch('../includes/api/notification_handler.php', { method: 'POST', body: fd })
@@ -131,6 +143,10 @@ include 'includes/header.php';
         };
 
         document.getElementById('clearAllBtn').onclick = function() {
+            if (typeof HR_PERMS !== 'undefined' && !HR_PERMS.can('notifications', 'delete')) {
+                HR_PERMS.showDenied('delete');
+                return;
+            }
             Swal.fire({
                 title: 'Clear all notifications?',
                 icon: 'warning',

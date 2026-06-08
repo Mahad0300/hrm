@@ -9145,3 +9145,26 @@ a.candidate-detail-back-btn.btn-primary.no-bg.border svg {
  text-align: left;
  }
 }
+
+/* HR permission-blocked controls (click → SweetAlert) */
+.hr-perm-blocked {
+    opacity: 0.45 !important;
+    cursor: not-allowed !important;
+    pointer-events: auto !important;
+    filter: grayscale(0.35);
+    position: relative;
+}
+
+.hr-perm-blocked:hover,
+.hr-perm-blocked:focus {
+    opacity: 0.45 !important;
+}
+
+.btn-primary.hr-perm-blocked,
+.btn-primary:disabled,
+.btn-primary[disabled] {
+    opacity: 0.45 !important;
+    cursor: not-allowed !important;
+    filter: grayscale(0.35);
+    pointer-events: auto !important;
+}

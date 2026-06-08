@@ -11,6 +11,9 @@ if (!isLoggedIn() || !in_array($_SESSION['user_role'], ['Admin', 'HR'])) {
 
 $action = $_GET['action'] ?? 'fetch';
 
+require_once '../../../includes/access_control_helper.php';
+hrGuardApiRequest($pdo, $action);
+
 try {
     if ($action === 'fetch') {
         $search = $_GET['search'] ?? '';

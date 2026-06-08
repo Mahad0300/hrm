@@ -1,5 +1,21 @@
 <?php
 $current_page = basename($_SERVER['PHP_SELF']);
+
+if (!function_exists('hrShowMenu')) {
+    function hrShowMenu(string $pageKey): bool
+    {
+        global $pdo;
+        if (!isset($pdo)) {
+            return true;
+        }
+        return hrCanViewSidebarPage($pdo, $pageKey);
+    }
+}
+
+$hrShowJobsMenu = hrShowMenu('job-list') || hrShowMenu('create-job') || hrShowMenu('job-candidates') || hrShowMenu('interviews');
+$hrShowSettingsMenu = hrShowMenu('shifts') || hrShowMenu('department-management') || hrShowMenu('policy-management') || hrShowMenu('payroll-settings');
+$hrShowOrgSection = hrShowMenu('employees') || hrShowMenu('attendance') || hrShowMenu('leave-management') || hrShowMenu('new-joining') || hrShowMenu('hierarchy') || hrShowMenu('kpi-management') || hrShowMenu('event-calendar');
+$hrShowAdminSection = hrShowMenu('payroll') || hrShowMenu('activity-logs') || hrShowMenu('announcements') || hrShowMenu('notifications') || hrShowMenu('it-support');
 ?>
 <aside class="sidebar" id="sidebar">
     <div class="sidebar-logo">
@@ -13,58 +29,77 @@ $current_page = basename($_SERVER['PHP_SELF']);
     </div>
     
     <div class="sidebar-menu custom-scrollbar">
+        <?php if (hrShowMenu('index')): ?>
         <div class="menu-label">Main Menu</div>
-        <div class="menu-item">
+        <div class="menu-item" data-hr-page="index">
             <a href="index.php" class="menu-link <?= ($current_page == 'index.php') ? 'active' : '' ?>">
                 <i data-lucide="layout-dashboard" size="18"></i>
                 <span>Dashboard</span>
             </a>
         </div>
+        <?php endif; ?>
         
+        <?php if ($hrShowOrgSection): ?>
         <div class="menu-label">Organization</div>
-        <div class="menu-item">
+        <?php endif; ?>
+        <?php if (hrShowMenu('employees')): ?>
+        <div class="menu-item" data-hr-page="employees">
             <a href="employees.php" class="menu-link <?= ($current_page == 'employees.php') ? 'active' : '' ?>">
                 <i data-lucide="users" size="18"></i>
                 <span>Employees</span>
             </a>
         </div>
-        <div class="menu-item">
+        <?php endif; ?>
+        <?php if (hrShowMenu('attendance')): ?>
+        <div class="menu-item" data-hr-page="attendance">
             <a href="attendance.php" class="menu-link <?= ($current_page == 'attendance.php') ? 'active' : '' ?>">
                 <i data-lucide="calendar-check" size="18"></i>
                 <span>Attendance</span>
             </a>
         </div>
-        <div class="menu-item">
+        <?php endif; ?>
+        <?php if (hrShowMenu('leave-management')): ?>
+        <div class="menu-item" data-hr-page="leave-management">
             <a href="leave-management.php" class="menu-link <?= ($current_page == 'leave-management.php') ? 'active' : '' ?>">
                 <i data-lucide="clock" size="18"></i>
                 <span>Leave Management</span>
             </a>
         </div>
-        <div class="menu-item">
+        <?php endif; ?>
+        <?php if (hrShowMenu('new-joining')): ?>
+        <div class="menu-item" data-hr-page="new-joining">
             <a href="new-joining.php" class="menu-link <?= ($current_page == 'new-joining.php') ? 'active' : '' ?>">
                 <i data-lucide="user-plus" size="18"></i>
                 <span>New Joining</span>
             </a>
         </div>
-        <div class="menu-item">
+        <?php endif; ?>
+        <?php if (hrShowMenu('hierarchy')): ?>
+        <div class="menu-item" data-hr-page="hierarchy">
             <a href="hierarchy.php" class="menu-link <?= ($current_page == 'hierarchy.php') ? 'active' : '' ?>">
                 <i data-lucide="network" size="18"></i>
                 <span>Hierarchy</span>
             </a>
         </div>
-        <div class="menu-item">
+        <?php endif; ?>
+        <?php if (hrShowMenu('kpi-management')): ?>
+        <div class="menu-item" data-hr-page="kpi-management">
             <a href="kpi-management.php" class="menu-link <?= ($current_page == 'kpi-management.php') ? 'active' : '' ?>">
                 <i data-lucide="line-chart" size="18"></i>
                 <span>KPI Management</span>
             </a>
         </div>
-        <div class="menu-item">
+        <?php endif; ?>
+        <?php if (hrShowMenu('event-calendar')): ?>
+        <div class="menu-item" data-hr-page="event-calendar">
             <a href="event-calendar.php" class="menu-link <?= ($current_page == 'event-calendar.php') ? 'active' : '' ?>">
                 <i data-lucide="calendar" size="18"></i>
                 <span>Event Calendar</span>
             </a>
         </div>
+        <?php endif; ?>
         
+        <?php if ($hrShowJobsMenu): ?>
         <div class="menu-label">Job Management</div>
         <div class="menu-item has-submenu <?= in_array($current_page, ['job-list.php', 'create-job.php', 'job-candidates.php', 'candidate-detail.php', 'interviews.php']) ? 'active open' : '' ?>">
             <a href="javascript:void(0)" class="menu-link submenu-toggle">
@@ -73,88 +108,115 @@ $current_page = basename($_SERVER['PHP_SELF']);
                 <i data-lucide="chevron-down" size="14" class="chevron"></i>
             </a>
             <div class="submenu">
-                <a href="job-list.php" class="submenu-link <?= ($current_page == 'job-list.php') ? 'active' : '' ?>">
+                <?php if (hrShowMenu('job-list')): ?>
+                <a href="job-list.php" class="submenu-link <?= ($current_page == 'job-list.php') ? 'active' : '' ?>" data-hr-page="job-list">
                     <i data-lucide="list" size="14"></i>
                     <span>Job Postings</span>
                 </a>
-                <a href="create-job.php" class="submenu-link <?= ($current_page == 'create-job.php') ? 'active' : '' ?>">
+                <?php endif; ?>
+                <?php if (hrShowMenu('create-job')): ?>
+                <a href="create-job.php" class="submenu-link <?= ($current_page == 'create-job.php') ? 'active' : '' ?>" data-hr-page="create-job">
                     <i data-lucide="plus-circle" size="14"></i>
                     <span>Create New Job</span>
                 </a>
-                <a href="job-candidates.php" class="submenu-link <?= ($current_page == 'job-candidates.php') ? 'active' : '' ?>">
+                <?php endif; ?>
+                <?php if (hrShowMenu('job-candidates')): ?>
+                <a href="job-candidates.php" class="submenu-link <?= ($current_page == 'job-candidates.php') ? 'active' : '' ?>" data-hr-page="job-candidates">
                     <i data-lucide="users" size="14"></i>
                     <span>Candidate Pool</span>
                 </a>
-                <a href="interviews.php" class="submenu-link <?= ($current_page == 'interviews.php') ? 'active' : '' ?>">
+                <?php endif; ?>
+                <?php if (hrShowMenu('interviews')): ?>
+                <a href="interviews.php" class="submenu-link <?= ($current_page == 'interviews.php') ? 'active' : '' ?>" data-hr-page="interviews">
                     <i data-lucide="calendar" size="14"></i>
                     <span>Interviews</span>
                 </a>
+                <?php endif; ?>
             </div>
         </div>
+        <?php endif; ?>
 
+        <?php if ($hrShowAdminSection): ?>
         <div class="menu-label">Administration</div>
-        <div class="menu-item">
+        <?php endif; ?>
+        <?php if (hrShowMenu('payroll')): ?>
+        <div class="menu-item" data-hr-page="payroll">
             <a href="payroll.php" class="menu-link <?= ($current_page == 'payroll.php') ? 'active' : '' ?>">
                 <i data-lucide="banknote" size="18"></i>
                 <span>Payroll</span>
             </a>
         </div>
-        <div class="menu-item">
+        <?php endif; ?>
+        <?php if (hrShowMenu('activity-logs')): ?>
+        <div class="menu-item" data-hr-page="activity-logs">
             <a href="activity-logs.php" class="menu-link <?= ($current_page == 'activity-logs.php') ? 'active' : '' ?>">
                 <i data-lucide="history" size="18"></i>
                 <span>Activity Logs</span>
             </a>
         </div>
-        <div class="menu-item">
+        <?php endif; ?>
+        <?php if (hrShowMenu('announcements')): ?>
+        <div class="menu-item" data-hr-page="announcements">
             <a href="announcements.php" class="menu-link <?= ($current_page == 'announcements.php') ? 'active' : '' ?>">
                 <i data-lucide="megaphone" size="18"></i>
                 <span>Announcements</span>
             </a>
         </div>
-        <div class="menu-item">
+        <?php endif; ?>
+        <?php if (hrShowMenu('notifications')): ?>
+        <div class="menu-item" data-hr-page="notifications">
             <a href="notifications.php" class="menu-link <?= ($current_page == 'notifications.php') ? 'active' : '' ?>">
                 <i data-lucide="bell" size="18"></i>
                 <span>Notifications</span>
                 <span class="badge badge-primary badge-pill ml-auto hidden" id="notiSidebarBadge">0</span>
             </a>
         </div>
-        
-        <div class="menu-item">
+        <?php endif; ?>
+        <?php if (hrShowMenu('it-support')): ?>
+        <div class="menu-item" data-hr-page="it-support">
             <a href="it-support.php" class="menu-link <?= ($current_page == 'it-support.php') ? 'active' : '' ?>">
                 <i data-lucide="headset" size="18"></i>
                 <span>IT Helpdesk</span>
             </a>
         </div>
+        <?php endif; ?>
+
+        <?php if ($hrShowSettingsMenu): ?>
         <div class="menu-label">System</div>
-        <div class="menu-item has-submenu <?= in_array($current_page, ['shifts.php', 'department-management.php', 'role-management.php', 'policy-management.php', 'payroll-settings.php']) ? 'active open' : '' ?>">
+        <div class="menu-item has-submenu <?= in_array($current_page, ['shifts.php', 'department-management.php', 'policy-management.php', 'payroll-settings.php']) ? 'active open' : '' ?>">
             <a href="javascript:void(0)" class="menu-link submenu-toggle">
                 <i data-lucide="settings" size="18"></i>
                 <span>Settings</span>
                 <i data-lucide="chevron-down" size="14" class="chevron"></i>
             </a>
             <div class="submenu">
-                <a href="shifts.php" class="submenu-link <?= ($current_page == 'shifts.php') ? 'active' : '' ?>">
+                <?php if (hrShowMenu('shifts')): ?>
+                <a href="shifts.php" class="submenu-link <?= ($current_page == 'shifts.php') ? 'active' : '' ?>" data-hr-page="shifts">
                     <i data-lucide="plus-circle" size="14"></i>
                     <span>Add Shift</span>
                 </a>
-                <a href="department-management.php" class="submenu-link <?= ($current_page == 'department-management.php') ? 'active' : '' ?>">
+                <?php endif; ?>
+                <?php if (hrShowMenu('department-management')): ?>
+                <a href="department-management.php" class="submenu-link <?= ($current_page == 'department-management.php') ? 'active' : '' ?>" data-hr-page="department-management">
                     <i data-lucide="building-2" size="14"></i>
                     <span>Dept Management</span>
                 </a>
-                <a href="role-management.php" class="submenu-link <?= ($current_page == 'role-management.php') ? 'active' : '' ?>">
-                    <i data-lucide="shield-check" size="14"></i>
-                    <span>Access Control</span>
-                </a>
-                <a href="policy-management.php" class="submenu-link <?= ($current_page == 'policy-management.php') ? 'active' : '' ?>">
+                <?php endif; ?>
+                <?php if (hrShowMenu('policy-management')): ?>
+                <a href="policy-management.php" class="submenu-link <?= ($current_page == 'policy-management.php') ? 'active' : '' ?>" data-hr-page="policy-management">
                     <i data-lucide="file-text" size="14"></i>
                     <span>Policy Management</span>
                 </a>
-                <a href="payroll-settings.php" class="submenu-link <?= ($current_page == 'payroll-settings.php') ? 'active' : '' ?>">
+                <?php endif; ?>
+                <?php if (hrShowMenu('payroll-settings')): ?>
+                <a href="payroll-settings.php" class="submenu-link <?= ($current_page == 'payroll-settings.php') ? 'active' : '' ?>" data-hr-page="payroll-settings">
                     <i data-lucide="calculator" size="14"></i>
                     <span>Payroll Cycle</span>
                 </a>
+                <?php endif; ?>
             </div>
         </div>
+        <?php endif; ?>
     </div>
 
     <div class="sidebar-footer">
@@ -304,23 +366,25 @@ $current_page = basename($_SERVER['PHP_SELF']);
             });
         });
 
-        // Update Notification Badge
-        function refreshNotiBadge() {
-            fetch('../includes/api/notification_handler.php?action=unread_count')
-                .then(res => res.json())
-                .then(res => {
-                    const badge = document.getElementById('notiSidebarBadge');
-                    if (res.status === 'success' && res.count > 0) {
-                        badge.textContent = res.count;
-                        badge.classList.remove('hidden');
-                    } else {
-                        badge.classList.add('hidden');
-                    }
-                });
+        // Update Notification Badge (only when user has notifications menu access)
+        const notiSidebarBadge = document.getElementById('notiSidebarBadge');
+        if (notiSidebarBadge) {
+            function refreshNotiBadge() {
+                fetch('../includes/api/notification_handler.php?action=unread_count')
+                    .then(res => res.json())
+                    .then(res => {
+                        if (res.status === 'success' && res.count > 0) {
+                            notiSidebarBadge.textContent = res.count;
+                            notiSidebarBadge.classList.remove('hidden');
+                        } else {
+                            notiSidebarBadge.classList.add('hidden');
+                        }
+                    })
+                    .catch(() => { /* silent — badge is non-critical */ });
+            }
+            refreshNotiBadge();
+            setInterval(refreshNotiBadge, 30000);
         }
-        refreshNotiBadge();
-        // Refresh every 30 seconds for real-time feel
-        setInterval(refreshNotiBadge, 30000);
     </script>
     <div class="content-body">
 

@@ -2,6 +2,13 @@
  * KPI Management Hub Logic
  */
 
+function kpiPermDenied(type) {
+    if (typeof HR_PERMS === 'undefined') return false;
+    if (HR_PERMS.can('kpi-management', type)) return false;
+    HR_PERMS.showDenied(type);
+    return true;
+}
+
 document.addEventListener('DOMContentLoaded', function () {
     initSummary();
     initKpiTable();
@@ -284,6 +291,7 @@ function initFormLogic() {
     const form = document.getElementById('addReviewForm');
     form.addEventListener('submit', function (e) {
         e.preventDefault();
+        if (kpiPermDenied('create')) return;
 
         const formData = new FormData(form);
         formData.append('action', 'add_review');

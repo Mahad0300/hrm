@@ -6,6 +6,7 @@
 
 require_once dirname(__FILE__, 2) . '/db_connect.php';
 require_once dirname(__FILE__, 2) . '/auth_helper.php';
+require_once dirname(__FILE__, 2) . '/access_control_helper.php';
 
 /**
  * Creates a notification and links it to specified recipients.
@@ -61,6 +62,12 @@ if (!isLoggedIn()) {
 
 $user_id = $_SESSION['user_id'];
 $action  = $_POST['action'] ?? $_GET['action'] ?? '';
+
+// unread_count is a silent sidebar poll — not a page action
+$hr_guard_skip = ['unread_count'];
+if (isHrPortalUser() && $action !== '' && !in_array($action, $hr_guard_skip, true)) {
+    hrGuardApiRequest($pdo, $action, basename(__FILE__));
+}
 
 try {
     switch ($action) {

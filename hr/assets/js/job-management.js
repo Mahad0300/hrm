@@ -1,8 +1,8 @@
 // Job Management Logic
 document.addEventListener('DOMContentLoaded', function() {
-    const isPublic = !window.location.pathname.includes('/admin/');
-    const API_HANDLER = isPublic ? 'admin/assets/api/job_handler.php' : 'assets/api/job_handler.php';
+    const API_HANDLER = 'assets/api/job_handler.php';
     let jobs = [];
+    let jobsRenderCallback = null;
 
     function escapeHtml(value) {
         return String(value ?? '')
@@ -43,13 +43,21 @@ document.addEventListener('DOMContentLoaded', function() {
     async function loadJobs() {
         try {
             const response = await fetch(`${API_HANDLER}?action=fetch_jobs`);
+            if (!response.ok) {
+                throw new Error(`HTTP ${response.status} — ${API_HANDLER}`);
+            }
             const result = await response.json();
             if (result.status === 'success') {
                 jobs = result.data;
-                if (typeof renderJobs === 'function') renderJobs();
+                if (jobsRenderCallback) jobsRenderCallback();
+                return;
             }
         } catch (e) {
             console.error('Error loading jobs:', e);
+        }
+        const grid = document.getElementById('jobGridBody');
+        if (grid) {
+            grid.innerHTML = '<p class="text-center p-40 text-light italic" style="grid-column:1/-1;">Could not load job postings. Please refresh the page.</p>';
         }
     }
 
@@ -130,6 +138,16 @@ document.addEventListener('DOMContentLoaded', function() {
 
         createJobForm.onsubmit = async function(e) {
             e.preventDefault();
+
+            if (typeof HR_PERMS !== 'undefined') {
+                const isUpdate = !!document.getElementById('jobId')?.value;
+                const permType = isUpdate ? 'edit' : 'create';
+                if (!HR_PERMS.can('job-list', permType)) {
+                    HR_PERMS.showDenied(permType);
+                    return;
+                }
+            }
+
             const questionCards = document.querySelectorAll('.form-builder-card:not(.locked)');
             const questions = Array.from(questionCards).map(card => ({
                 text: card.querySelector('.question-input').value,
@@ -247,7 +265,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         <div class="job-post-card__actions">
                             <button type="button" class="action-btn" title="View Details" onclick="viewJobDetails('${safeJobId}')"><i data-lucide="eye"></i></button>
                             <a href="edit-job.php?id=${safeJobId}" class="action-btn" title="Edit Job"><i data-lucide="edit-2"></i></a>
-                            <button type="button" class="action-btn" title="${lockTitle}" onclick="toggleJobStatus('${safeJobId}', '${nextStatus}')"><i data-lucide="${lockIcon}"></i></button>
+                            <button type="button" class="action-btn js-toggle-job-status" title="${lockTitle}" onclick="toggleJobStatus('${safeJobId}', '${nextStatus}')"><i data-lucide="${lockIcon}"></i></button>
                             <button type="button" class="action-btn" title="${isClosed ? 'Job Closed' : 'Copy Apply Link'}"
                                 data-job-id="${safeJobId}"
                                 data-job-title="${safeJobTitle}"
@@ -361,10 +379,15 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         }
 
+        jobsRenderCallback = renderJobs;
         loadJobs();
     }
 
     window.toggleJobStatus = async function(id, newStatus) {
+        if (typeof HR_PERMS !== 'undefined' && !HR_PERMS.can('job-list', 'toggle_status')) {
+            HR_PERMS.showDenied('toggle_status');
+            return;
+        }
         const confirmText = newStatus === 'Close' ? 'Are you sure you want to close this job?' : 'Are you sure you want to reactivate this job?';
         const result = await Swal.fire({
             title: 'Confirm Status Change',
@@ -388,8 +411,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 });
                 const res = await response.json();
                 if (res.status === 'success') {
-                    showToast(res.message);
-                    loadJobs();
+                    if (typeof showToast === 'function') showToast(res.message);
+                    await loadJobs();
                 } else {
                     Swal.fire('Error', res.message, 'error');
                 }

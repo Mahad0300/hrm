@@ -19,6 +19,9 @@ if (!in_array($user_role, ['Employee', 'Admin', 'HR'], true)) {
 
 $action = $_POST['action'] ?? $_GET['action'] ?? '';
 
+require_once __DIR__ . '/../access_control_helper.php';
+hrGuardApiRequest($pdo, $action);
+
 $is_admin = in_array($user_role, ['Admin', 'HR'], true);
 $is_it_staff = $is_admin;
 $stmt = $pdo->prepare("SELECT d.name FROM employees e LEFT JOIN departments d ON e.department_id = d.id WHERE e.id = ?");

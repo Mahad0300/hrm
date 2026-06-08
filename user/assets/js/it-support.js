@@ -8,6 +8,26 @@ const ITSupport = (() => {
 
     const isHelpdeskAdmin = () => ['Admin', 'HR'].includes(IT_USER.role);
 
+    const itSupportPermDenied = (type) => {
+        if (typeof HR_PERMS === 'undefined') return false;
+        if (HR_PERMS.can('it-support', type)) return false;
+        HR_PERMS.showDenied(type);
+        return true;
+    };
+
+    const isHelpdeskViewOnly = () => typeof HR_PERMS !== 'undefined' && !HR_PERMS.can('it-support', 'edit');
+
+    const viewOnlyNoticeHtml = () => `
+        <div class="p-4 text-center text-muted" style="background: #f8f9fa; border-top: 1px solid var(--it-border); border-radius: 0 0 16px 16px; font-size: 13px;">
+            <i class="fas fa-eye mb-2" style="font-size: 20px; opacity: 0.5;"></i><br>
+            You have <strong>view-only</strong> access. You cannot reply or manage tickets.
+        </div>
+    `;
+
+    const refreshHrPerms = () => {
+        if (typeof HR_PERMS !== 'undefined') HR_PERMS.refresh();
+    };
+
     const escapeHtml = (str) => {
         if (str == null) return '';
         return String(str)
@@ -162,6 +182,8 @@ const ITSupport = (() => {
         
         // Status change button (Resolve / Close)
         $(document).on('click', '.btn-change-status', function() {
+            if (itSupportPermDenied('edit')) return;
+
             const status = $(this).data('status');
             
             if (status === 'Resolved' || status === 'Closed') {
@@ -188,6 +210,8 @@ const ITSupport = (() => {
 
         // Reopen Ticket
         $(document).on('click', '#btn-reopen-ticket', function() {
+            if (itSupportPermDenied('edit')) return;
+
             Swal.fire({
                 title: 'Re-open Ticket?',
                 text: 'The issue is not fixed?',
@@ -204,11 +228,14 @@ const ITSupport = (() => {
 
         // Claim Ticket
         $(document).on('click', '#btn-claim-ticket', function() {
+            if (itSupportPermDenied('edit')) return;
             performAction('claim_ticket', { ticket_id: currentTicketId });
         });
         
         // Handover Ticket
         $(document).on('click', '#btn-handover-ticket', function() {
+            if (itSupportPermDenied('edit')) return;
+
             // First fetch IT staff members
             $.ajax({
                 url: apiUrl,
@@ -266,6 +293,8 @@ const ITSupport = (() => {
     };
 
     const sendMessage = () => {
+        if (itSupportPermDenied('edit')) return;
+
         const input = $('#chat-message-input');
         const msg = input.val().trim();
         if(msg && currentTicketId) {
@@ -302,6 +331,8 @@ const ITSupport = (() => {
     };
 
     const performAction = (action, data) => {
+        if (itSupportPermDenied('edit')) return;
+
         data.action = action;
         $.ajax({
             url: apiUrl,
@@ -453,11 +484,14 @@ const ITSupport = (() => {
         const isCreator = ticket.employee_id == IT_USER.emp_id;
         const isAssignedAgent = ticket.assigned_to == IT_USER.emp_id;
         const isAdmin = isHelpdeskAdmin();
-        const canChat = (ticket.status !== 'Resolved' && ticket.status !== 'Closed') && (isCreator || isAssignedAgent || isAdmin);
+        const canChat = !isHelpdeskViewOnly()
+            && (ticket.status !== 'Resolved' && ticket.status !== 'Closed')
+            && (isCreator || isAssignedAgent || isAdmin);
         
         const hasTextarea = $('#chat-message-input').length > 0;
+        const hasViewOnlyNotice = $('#ticket-input-area-wrapper').text().includes('view-only');
         
-        if (canChat !== hasTextarea) {
+        if (canChat !== hasTextarea || (isHelpdeskViewOnly() && hasTextarea) || (isHelpdeskViewOnly() && !hasViewOnlyNotice && ticket.status !== 'Resolved' && ticket.status !== 'Closed')) {
             const internalToggleHtml = isIT ? `
                 <div class="it-chat-internal-toggle">
                     <input type="checkbox" id="is-internal-note">
@@ -466,14 +500,17 @@ const ITSupport = (() => {
             ` : '';
             $('#ticket-input-area-wrapper').html(getInputAreaHtml(ticket, internalToggleHtml));
         }
+        refreshHrPerms();
     };
 
     const getHeaderActionsHtml = (ticket, isIT) => {
+        if (isHelpdeskViewOnly()) return '';
+
         let headerActionsHtml = '';
         if(isIT && ticket.status !== 'Resolved' && ticket.status !== 'Closed') {
             if(!ticket.assigned_to) {
                 headerActionsHtml = `
-                    <button type="button" id="btn-claim-ticket" style="background: #6C4CF1; border: 1px solid #6C4CF1; color: white; padding: 6px 16px; border-radius: 6px; font-weight: 600; font-size: 13px; cursor: pointer; transition: all 0.2s;" onmouseover="this.style.opacity='0.9';" onmouseout="this.style.opacity='1';">
+                    <button type="button" id="btn-claim-ticket" data-hr-perm-action="edit" style="background: #6C4CF1; border: 1px solid #6C4CF1; color: white; padding: 6px 16px; border-radius: 6px; font-weight: 600; font-size: 13px; cursor: pointer; transition: all 0.2s;" onmouseover="this.style.opacity='0.9';" onmouseout="this.style.opacity='1';">
                         <i class="fas fa-hand-pointer"></i> Claim Ticket
                     </button>
                 `;
@@ -483,13 +520,13 @@ const ITSupport = (() => {
                 if (isAssignedAgent || isAdmin) {
                     headerActionsHtml = `
                         <div style="display: flex; gap: 8px;">
-                            <button type="button" id="btn-handover-ticket" style="background: transparent; border: 1px solid #6C4CF1; color: #6C4CF1; padding: 6px 16px; border-radius: 6px; font-weight: 600; font-size: 13px; cursor: pointer; transition: all 0.2s;" onmouseover="this.style.background='rgba(108, 76, 241, 0.1)';" onmouseout="this.style.background='transparent';">
+                            <button type="button" id="btn-handover-ticket" data-hr-perm-action="edit" style="background: transparent; border: 1px solid #6C4CF1; color: #6C4CF1; padding: 6px 16px; border-radius: 6px; font-weight: 600; font-size: 13px; cursor: pointer; transition: all 0.2s;" onmouseover="this.style.background='rgba(108, 76, 241, 0.1)';" onmouseout="this.style.background='transparent';">
                                 <i class="fas fa-exchange-alt"></i> Handover
                             </button>
-                            <button type="button" class="btn-change-status" data-status="Resolved" style="background: #10B981; border: 1px solid #10B981; color: white; padding: 6px 16px; border-radius: 6px; font-weight: 600; font-size: 13px; cursor: pointer; transition: all 0.2s;" onmouseover="this.style.opacity='0.9';" onmouseout="this.style.opacity='1';">
+                            <button type="button" class="btn-change-status" data-hr-perm-action="edit" data-status="Resolved" style="background: #10B981; border: 1px solid #10B981; color: white; padding: 6px 16px; border-radius: 6px; font-weight: 600; font-size: 13px; cursor: pointer; transition: all 0.2s;" onmouseover="this.style.opacity='0.9';" onmouseout="this.style.opacity='1';">
                                 <i class="fas fa-check"></i> Mark Resolved
                             </button>
-                            <button type="button" class="btn-change-status" data-status="Closed" style="background: #EF4444; border: 1px solid #EF4444; color: white; padding: 6px 16px; border-radius: 6px; font-weight: 600; font-size: 13px; cursor: pointer; transition: all 0.2s;" onmouseover="this.style.opacity='0.9';" onmouseout="this.style.opacity='1';">
+                            <button type="button" class="btn-change-status" data-hr-perm-action="edit" data-status="Closed" style="background: #EF4444; border: 1px solid #EF4444; color: white; padding: 6px 16px; border-radius: 6px; font-weight: 600; font-size: 13px; cursor: pointer; transition: all 0.2s;" onmouseover="this.style.opacity='0.9';" onmouseout="this.style.opacity='1';">
                                 <i class="fas fa-times"></i> Close
                             </button>
                         </div>
@@ -510,13 +547,12 @@ const ITSupport = (() => {
                 resTime = `<div class="font-600 mt-2 mb-2" style="font-size: 13px; background: rgba(108, 76, 241, 0.1); color: #6C4CF1; display: inline-block; padding: 4px 12px; border-radius: 12px;"><i class="fas fa-stopwatch"></i> ${actionWord} by ${assignedAgentName} in: ${ticket.resolution_time}</div>`;
             }
             
-            // Only user who created it (or admin) can re-open
             const isCreator = ticket.employee_id == IT_USER.emp_id;
             const isAdmin = isHelpdeskAdmin();
             let reopenBtn = '';
             
-            if (ticket.status === 'Resolved' && (isCreator || isAdmin)) {
-                reopenBtn = `<div class="mt-3"><button type="button" id="btn-reopen-ticket" style="border: 1px solid #EF4444; color: #EF4444; background: transparent; padding: 8px 16px; border-radius: 6px; font-weight: 600; font-size: 13px; cursor: pointer; transition: all 0.3s;" onmouseover="this.style.background='#EF4444'; this.style.color='#fff';" onmouseout="this.style.background='transparent'; this.style.color='#EF4444';"><i class="fas fa-undo"></i> Issue not fixed? Re-open Ticket</button></div>`;
+            if (!isHelpdeskViewOnly() && ticket.status === 'Resolved' && (isCreator || isAdmin)) {
+                reopenBtn = `<div class="mt-3"><button type="button" id="btn-reopen-ticket" data-hr-perm-action="edit" style="border: 1px solid #EF4444; color: #EF4444; background: transparent; padding: 8px 16px; border-radius: 6px; font-weight: 600; font-size: 13px; cursor: pointer; transition: all 0.3s;" onmouseover="this.style.background='#EF4444'; this.style.color='#fff';" onmouseout="this.style.background='transparent'; this.style.color='#EF4444';"><i class="fas fa-undo"></i> Issue not fixed? Re-open Ticket</button></div>`;
             }
 
             inputAreaHtml = `
@@ -527,6 +563,8 @@ const ITSupport = (() => {
                     ${reopenBtn}
                 </div>
             `;
+        } else if (isHelpdeskViewOnly()) {
+            inputAreaHtml = viewOnlyNoticeHtml();
         } else {
             const isCreator = ticket.employee_id == IT_USER.emp_id;
             const isAssignedAgent = ticket.assigned_to == IT_USER.emp_id;
@@ -655,6 +693,7 @@ const ITSupport = (() => {
         `;
         $('#main-content-area').html(html);
         scrollToBottom();
+        refreshHrPerms();
     };
 
     const showPlaceholder = () => {

@@ -19,10 +19,12 @@ include 'includes/sidebar.php';
         </div>
         <div class="flex-center gap-12">
             <button class="btn-light gap-8 hidden" id="rejectCandidateBtn"
+                data-hr-perm-action="reject_ban"
                 style="background: rgba(245, 158, 11, 0.1); color: #b45309;">
                 <i data-lucide="user-x"></i> <span>Reject Candidate</span>
             </button>
             <button class="btn-light gap-8" id="banCandidateBtn"
+                data-hr-perm-action="reject_ban"
                 style="background: rgba(239, 68, 68, 0.08); color: var(--danger);">
                 <i data-lucide="ban"></i> <span>Ban Candidate</span>
             </button>
@@ -112,7 +114,7 @@ include 'includes/sidebar.php';
 
             <div class="flex-column gap-12">
                 <button class="cand-v2-btn-approve" id="primaryPipelineBtn">Approve to Interview</button>
-                <button class="btn-light w-100 hidden" id="rescheduleBtn">
+                <button class="btn-light w-100 hidden" id="rescheduleBtn" data-hr-perm-action="schedule_interview">
                     <i data-lucide="calendar-clock"></i> 
                     <span>Reschedule Interview</span>
                 </button>
@@ -185,5 +187,5 @@ include 'includes/sidebar.php';
     </div>
 </div>
 
-<script src="assets/js/candidate-detail.js"></script>
+<script src="assets/js/candidate-detail.js?v=2"></script>
 <?php include 'includes/footer.php'; ?>

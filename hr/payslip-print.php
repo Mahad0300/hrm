@@ -1,10 +1,14 @@
 <?php
 require_once '../includes/db_connect.php';
 require_once '../includes/auth_helper.php';
+require_once '../includes/access_control_helper.php';
 
 if (!isLoggedIn() || !in_array($_SESSION['user_role'], ['Admin', 'HR'])) {
     die("Unauthorized access.");
 }
+
+hrSeedPermissionsIfEmpty($pdo);
+hrEnforceExportPageAccess($pdo, 'payslip-print');
 
 $employee_id = $_GET['id'] ?? '';
 $month = $_GET['month'] ?? date('Y-m');

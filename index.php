@@ -8,10 +8,20 @@ require_once 'includes/api/activity_helper.php';
 if (isLoggedIn()) {
     $role = $_SESSION['user_role'];
     switch ($role) {
-        case 'Admin': header('Location: admin/index.php'); break;
-        case 'HR': header('Location: hr/index.php'); break;
-        case 'Employee': header('Location: user/index.php'); break;
-        default: header('Location: index.php'); break;
+        case 'Admin':
+            header('Location: admin/index.php');
+            break;
+        case 'HR':
+            require_once 'includes/access_control_helper.php';
+            hrSeedPermissionsIfEmpty($pdo);
+            header('Location: ' . hrHrPortalLoginPath($pdo));
+            break;
+        case 'Employee':
+            header('Location: user/index.php');
+            break;
+        default:
+            header('Location: index.php');
+            break;
     }
     exit;
 }
@@ -47,7 +57,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     // TODO: Implement secure token-based remember me if needed in future.
 
                     // Redirect based on role
-                    redirectByRole($user['role']);
+                    redirectByRole($user['role'], $pdo);
                 } else {
                     $error = 'Invalid password. Please try again.';
                 }
@@ -70,7 +80,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
-        href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap"
         rel="stylesheet">
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
@@ -95,7 +105,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         body.auth-v2 {
             margin: 0;
             min-height: 100vh;
-            font-family: 'DM Sans', system-ui, sans-serif;
+            font-family: 'Outfit', sans-serif;
             font-size: 15px;
             color: var(--login-text);
             background: #0f172a;

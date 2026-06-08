@@ -19,7 +19,7 @@ include 'includes/header.php';
         </div>
     </div>
     <div class="header-actions">
-        <button class="btn-primary" type="button">
+        <button class="btn-primary" type="button" id="njRefreshBtn">
             <i data-lucide="refresh-cw"></i>
             <span>Refresh List</span>
         </button>

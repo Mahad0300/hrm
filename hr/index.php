@@ -8,6 +8,17 @@ include 'includes/header.php';
 ?>
 <?php include 'includes/sidebar.php'; ?>
 
+<?php if (!empty($GLOBALS['hr_access_denied'])): ?>
+<div class="card p-30 flex-column flex-center gap-8" style="text-align: center;">
+    <div class="stat-icon primary mb-0" style="width:56px;height:56px;">
+        <i data-lucide="shield-off"></i>
+    </div>
+    <h3 class="font-18 font-700">No Portal Access</h3>
+    <p class="text-light font-14 m-0 mb-16">Your HR account does not have access to any portal pages. Please contact your Admin.</p>
+    <a href="../logout.php" class="btn-primary px-24">Logout</a>
+</div>
+<?php else: ?>
+
 <header class="dashboard-greeting mb-25">
     <div class="greeting-content">
         <h2 class="font-700 mb-5">Welcome back, <span class="text-primary"><?php echo $_SESSION['user_name'] ?? 'Admin'; ?></span></h2>
@@ -513,6 +524,7 @@ include 'includes/header.php';
     </div>
 </section>
 
+<?php endif; ?>
 
 <script src="assets/js/dashboard.js"></script>
 <?php include 'includes/footer.php'; ?>

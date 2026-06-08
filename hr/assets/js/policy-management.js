@@ -47,6 +47,14 @@
         });
     }
 
+    function policyPermDenied(type) {
+        if (!window.HR_PERMS || HR_PERMS.can('policy-management', type)) {
+            return false;
+        }
+        HR_PERMS.showDenied(type);
+        return true;
+    }
+
     async function loadPolicies() {
         try {
             const response = await fetch('assets/api/policy_handler.php?action=fetch_policies');
@@ -168,8 +176,8 @@
                     '<i data-lucide="calendar" class="policy-tile__meta-icon" width="14" height="14"></i>' +
                     'Effective <span class="policy-tile__meta-val">' + ed + '</span></p>' +
                     '<div class="policy-tile__actions">' +
-                    '<button type="button" class="action-btn primary policy-btn-edit" data-id="' + escapeHtml(p.id) + '" title="Edit"><i data-lucide="edit-2" width="14" height="14"></i></button>' +
-                    '<button type="button" class="action-btn danger policy-btn-del" data-id="' + escapeHtml(p.id) + '" title="Delete"><i data-lucide="trash-2" width="14" height="14"></i></button>' +
+                    '<button type="button" class="action-btn primary policy-btn-edit" data-hr-perm-action="edit" data-id="' + escapeHtml(p.id) + '" title="Edit"><i data-lucide="edit-2" width="14" height="14"></i></button>' +
+                    '<button type="button" class="action-btn danger policy-btn-del" data-hr-perm-action="delete" data-id="' + escapeHtml(p.id) + '" title="Delete"><i data-lucide="trash-2" width="14" height="14"></i></button>' +
                     '</div>' +
                     '</div>' +
                     '</article>'
@@ -178,20 +186,35 @@
             .join('');
 
         root.querySelectorAll('.policy-btn-edit').forEach(function (btn) {
-            btn.addEventListener('click', function () {
+            btn.addEventListener('click', function (e) {
+                if (btn.dataset.hrPermBlocked === '1') {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    return;
+                }
                 openEdit(btn.getAttribute('data-id'));
             });
         });
         root.querySelectorAll('.policy-btn-del').forEach(function (btn) {
-            btn.addEventListener('click', function () {
+            btn.addEventListener('click', function (e) {
+                if (btn.dataset.hrPermBlocked === '1') {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    return;
+                }
                 removePolicy(btn.getAttribute('data-id'));
             });
         });
 
         if (typeof lucide !== 'undefined') lucide.createIcons();
+
+        if (window.HR_PERMS && typeof HR_PERMS.refresh === 'function') {
+            HR_PERMS.refresh();
+        }
     }
 
     function openAdd() {
+        if (policyPermDenied('create')) return;
         editingId = null;
         var form = document.getElementById('policyAddForm');
         if (form) form.reset();
@@ -215,6 +238,7 @@
     }
 
     function openEdit(id) {
+        if (policyPermDenied('edit')) return;
         var p = allPolicies.find(x => x.id == id);
         if (!p) return;
         editingId = id;
@@ -241,6 +265,7 @@
     }
 
     async function removePolicy(id) {
+        if (policyPermDenied('delete')) return;
         Swal.fire({
             title: 'Are you sure?',
             text: "This policy will be permanently deleted!",
@@ -283,7 +308,16 @@
 
     document.addEventListener('DOMContentLoaded', function () {
         var btnAdd = document.getElementById('policyBtnOpenAdd');
-        if (btnAdd) btnAdd.addEventListener('click', openAdd);
+        if (btnAdd) {
+            btnAdd.addEventListener('click', function (e) {
+                if (btnAdd.dataset.hrPermBlocked === '1') {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    return;
+                }
+                openAdd();
+            });
+        }
 
         bindPolicyRichToolbar(document.getElementById('policyAddModal'));
         bindPolicyRichToolbar(document.getElementById('policyEditModal'));
@@ -296,6 +330,9 @@
             if (form) {
                 form.addEventListener('submit', async function (e) {
                     e.preventDefault();
+                    const permType = config.id.includes('Add') ? 'create' : 'edit';
+                    if (policyPermDenied(permType)) return;
+
                     const prefix = config.id.includes('Add') ? 'policyAdd' : 'policyEdit';
                     const title = document.getElementById(prefix + 'Title').value.trim();
                     const status = document.getElementById(prefix + 'Status').value;

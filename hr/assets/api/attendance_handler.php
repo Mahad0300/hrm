@@ -12,7 +12,10 @@ if (!isLoggedIn() || !in_array($_SESSION['user_role'], ['Admin', 'HR'])) {
     exit;
 }
 
-$action = $_GET['action'] ?? '';
+$action = $_GET['action'] ?? ($_POST['action'] ?? '');
+
+require_once '../../../includes/access_control_helper.php';
+hrGuardApiRequest($pdo, $action);
 
 switch ($action) {
     case 'fetch_daily':

@@ -7,7 +7,7 @@ include 'includes/header.php';
 <?php include 'includes/sidebar.php'; ?>
 
 <div class="page-action-area">
-    <button type="button" class="btn-primary" id="policyBtnOpenAdd">
+    <button type="button" class="btn-primary" id="policyBtnOpenAdd" data-hr-perm-action="create">
         <i data-lucide="plus"></i>
         <span>Add Policy</span>
     </button>
@@ -102,7 +102,7 @@ include 'includes/header.php';
         </div>
         <div class="modal-footer modal-footer--policy-actions">
             <button type="button" class="btn-ghost js-modal-close">Cancel</button>
-            <button type="submit" form="policyAddForm" class="btn-primary">Add Policy</button>
+            <button type="submit" form="policyAddForm" class="btn-primary" data-hr-perm-action="create">Add Policy</button>
         </div>
     </div>
 </div>
@@ -167,7 +167,7 @@ include 'includes/header.php';
         </div>
         <div class="modal-footer modal-footer--policy-actions">
             <button type="button" class="btn-ghost js-modal-close">Cancel</button>
-            <button type="submit" form="policyEditForm" class="btn-primary">Update Policy</button>
+            <button type="submit" form="policyEditForm" class="btn-primary" data-hr-perm-action="edit">Update Policy</button>
         </div>
     </div>
 </div>

@@ -22,6 +22,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         echo json_encode(['status' => 'error', 'message' => 'Invalid parameters.']);
         exit;
     }
+
+    require_once __DIR__ . '/../../../includes/access_control_helper.php';
+    hrGuardApiRequest($pdo, $action);
     
     try {
         $stmt = $pdo->prepare("SELECT id, status, employee_id, start_date, end_date FROM leave_requests WHERE id = ?");

@@ -15,7 +15,7 @@ include 'includes/header.php';
             </div>
             <p class="text-light font-14 m-0">Detailed performance indicators and historical feedback.</p>
         </div>
-        <button type="button" class="btn-primary py-8 px-16 flex-center gap-8 font-13" onclick="openReviewModal()">
+        <button type="button" class="btn-primary py-8 px-16 flex-center gap-8 font-13" data-hr-perm-action="create" onclick="openReviewModal()">
             <i data-lucide="plus-circle" size="16"></i>
             <span>Add New Review</span>
         </button>
@@ -214,8 +214,8 @@ include 'includes/header.php';
             </div>
         </div>
         <div class="modal-footer review-detail-modal__footer">
-            <button class="btn-danger-light" id="viewDetailDeleteBtn">Delete</button>
-            <button class="btn-primary" id="viewDetailEditBtn">Edit Record</button>
+            <button class="btn-danger-light" id="viewDetailDeleteBtn" data-hr-perm-action="delete">Delete</button>
+            <button class="btn-primary" id="viewDetailEditBtn" data-hr-perm-action="edit">Edit Record</button>
         </div>
     </div>
 </div>

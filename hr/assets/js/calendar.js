@@ -370,8 +370,28 @@ document.addEventListener('DOMContentLoaded', function() {
         };
     });
 
+    function eventPermDenied(type) {
+        if (!window.HR_PERMS || HR_PERMS.can('event-calendar', type)) {
+            return false;
+        }
+        HR_PERMS.showDenied(type);
+        return true;
+    }
+
+    function syncEventModalPermMode(mode) {
+        const modal = document.getElementById('eventModal');
+        const saveBtn = document.getElementById('eventFormSubmitBtn');
+        if (modal) modal.setAttribute('data-hr-mode', mode);
+        if (saveBtn) saveBtn.setAttribute('data-hr-perm-action', mode === 'edit' ? 'edit' : 'create');
+        if (window.HR_PERMS && typeof HR_PERMS.refresh === 'function') {
+            HR_PERMS.refresh();
+        }
+    }
+
     // --- Modal Logic ---
     window.openEventModal = function(date = '') {
+        if (eventPermDenied('create')) return;
+
         const form = document.getElementById('eventForm');
         form.reset();
         
@@ -385,11 +405,15 @@ document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('modalTitle').textContent = 'Create New Event';
         document.getElementById('eventDate').value = date && date >= today ? date : today;
         setEventDeptSelection('everyone');
+        syncEventModalPermMode('create');
         openModal('eventModal');
     };
 
     document.getElementById('eventForm').onsubmit = function(e) {
         e.preventDefault();
+        const isEdit = !!document.getElementById('eventId').value;
+        if (eventPermDenied(isEdit ? 'edit' : 'create')) return;
+
         const event_date = document.getElementById('eventDate').value;
         const event_time = document.getElementById('eventTime').value;
 
@@ -447,11 +471,13 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         
         document.getElementById('editEventBtn').onclick = () => {
+            if (eventPermDenied('edit')) return;
             closeModal('eventDetailModal');
             editEvent(event);
         };
 
         document.getElementById('deleteEventBtnDetail').onclick = () => {
+            if (eventPermDenied('delete')) return;
             Swal.fire({
                 title: 'Are you sure?',
                 text: "This event will be removed!",
@@ -477,10 +503,21 @@ document.addEventListener('DOMContentLoaded', function() {
         };
         
         openModal('eventDetailModal');
+
+        if (window.HR_PERMS && typeof HR_PERMS.refresh === 'function') {
+            HR_PERMS.refresh();
+        }
     }
 
     function editEvent(event) {
-        openEventModal(event.event_date);
+        if (eventPermDenied('edit')) return;
+
+        const dateInput = document.getElementById('eventDate');
+        const today = todayIso();
+        if (dateInput) {
+            dateInput.setAttribute('min', today);
+        }
+
         document.getElementById('modalTitle').textContent = 'Edit Event';
         document.getElementById('eventId').value = event.id;
         document.getElementById('eventTitle').value = event.title;
@@ -490,6 +527,8 @@ document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('eventTime').value = event.event_time;
         document.getElementById('eventDesc').value = event.description;
         document.getElementById('eventShowInAccount').checked = event.show_in_announcement == 1;
+        syncEventModalPermMode('edit');
+        openModal('eventModal');
     }
 
     function renderRecentActivity() {

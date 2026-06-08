@@ -7164,6 +7164,18 @@ input:checked+.slider:before {
     accent-color: var(--primary-color);
 }
 
+.role-management-container .data-table td.perm-na {
+    color: #cbd5e1;
+    user-select: none;
+}
+
+.role-management-container .data-table .perm-na-label {
+    display: inline-block;
+    font-size: 16px;
+    line-height: 1;
+    font-weight: 500;
+}
+
 .role-management-container .data-table .action-check:disabled {
     opacity: 0.3;
     cursor: not-allowed;

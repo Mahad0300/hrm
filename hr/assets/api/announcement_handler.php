@@ -13,6 +13,13 @@ if (!isLoggedIn() || !in_array($_SESSION['user_role'], ['Admin', 'HR'])) {
     exit;
 }
 
+require_once '../../../includes/access_control_helper.php';
+$guardAction = $action;
+if ($action === 'save') {
+    $guardAction = !empty($_POST['id']) ? 'edit' : 'add';
+}
+hrGuardApiRequest($pdo, $guardAction);
+
 $today = date('Y-m-d');
 
 try {

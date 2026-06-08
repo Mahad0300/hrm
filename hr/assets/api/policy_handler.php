@@ -12,6 +12,9 @@ if (!isLoggedIn()) {
     exit;
 }
 
+require_once '../../../includes/access_control_helper.php';
+hrGuardApiRequest($pdo, $action);
+
 $user_id = $_SESSION['user_id'] ?? 1; // Fallback to 1 if not set
 
 function notifyEmployeesAboutPolicy($title, $sender_id) {

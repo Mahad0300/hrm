@@ -7,14 +7,20 @@ if (session_status() === PHP_SESSION_NONE) {
 
 /**
  * Redirect user based on their role
+ * @param PDO|null $pdo Pass when already connected (required for HR permission-based landing).
  */
-function redirectByRole($role) {
+function redirectByRole($role, ?PDO $pdo = null) {
     switch ($role) {
         case 'Admin':
             header('Location: admin/index.php');
             break;
         case 'HR':
-            header('Location: hr/index.php');
+            if (!$pdo instanceof PDO) {
+                require_once __DIR__ . '/db_connect.php';
+            }
+            require_once __DIR__ . '/access_control_helper.php';
+            hrSeedPermissionsIfEmpty($pdo);
+            header('Location: ' . hrHrPortalLoginPath($pdo));
             break;
         case 'Employee':
             header('Location: user/index.php');

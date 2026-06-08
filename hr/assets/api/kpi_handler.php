@@ -13,6 +13,9 @@ if (!isLoggedIn() || !in_array($_SESSION['user_role'], ['Admin', 'HR'])) {
 
 $action = $_POST['action'] ?? $_GET['action'] ?? '';
 
+require_once '../../../includes/access_control_helper.php';
+hrGuardApiRequest($pdo, $action);
+
 switch ($action) {
     case 'fetch_summary':
         try {

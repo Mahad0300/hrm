@@ -1,11 +1,24 @@
 // admin/assets/js/new-joining.js
 
+function newJoiningPermDenied(type) {
+    if (!window.HR_PERMS || HR_PERMS.can('new-joining', type)) {
+        return false;
+    }
+    HR_PERMS.showDenied(type);
+    return true;
+}
+
 document.addEventListener('DOMContentLoaded', () => {
     // 1. Load Requirements (Departments & Shifts)
     loadRequirementData();
     
     // 2. Fetch Pending Cards
     fetchPendingOnboarding();
+
+    const refreshBtn = document.getElementById('njRefreshBtn');
+    if (refreshBtn) {
+        refreshBtn.addEventListener('click', () => refreshPendingList());
+    }
 
     // 2. Handle Form Submission
     const hireForm = document.getElementById('hireCandidateForm');
@@ -14,6 +27,8 @@ document.addEventListener('DOMContentLoaded', () => {
     if (hireForm && submitBtn) {
         hireForm.addEventListener('submit', async function(e) {
             e.preventDefault();
+
+            if (newJoiningPermDenied('create')) return;
             
             // Prevent multiple submissions
             if (submitBtn.disabled) return;
@@ -46,6 +61,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const formData = new FormData(this);
             formData.append('status', 'Active'); // Finalizing the hire makes them Active
+            formData.append('context', 'new-joining');
 
             try {
                 // We use the same update logic because we're essentially finalizing the Pending record
@@ -76,7 +92,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 console.error('Hiring Error:', error);
                 Swal.fire('Error', 'Connection failed. Please try again.', 'error');
             } finally {
-                submitBtn.disabled = false;
+                if (submitBtn.dataset.hrPermBlocked !== '1') {
+                    submitBtn.disabled = false;
+                }
                 submitBtn.innerHTML = originalBtnContent;
                 lucide.createIcons();
             }
@@ -213,6 +231,39 @@ function formatJoiningCardDate(value) {
     });
 }
 
+function showPendingListLoading() {
+    const container = document.getElementById('pendingOnboardingContainer');
+    if (!container) return;
+
+    container.innerHTML = `
+        <div class="col-span-full py-50 text-center">
+            <i data-lucide="loader-2" class="spin text-primary-color mb-15" size="40"></i>
+            <p class="text-light">Scanning for new joinings...</p>
+        </div>
+    `;
+    if (typeof lucide !== 'undefined') lucide.createIcons();
+}
+
+async function refreshPendingList() {
+    const refreshBtn = document.getElementById('njRefreshBtn');
+    const originalHtml = refreshBtn ? refreshBtn.innerHTML : '';
+
+    if (refreshBtn) {
+        refreshBtn.disabled = true;
+        refreshBtn.innerHTML = '<i data-lucide="loader-2" class="spin" size="18"></i> <span>Refreshing...</span>';
+        if (typeof lucide !== 'undefined') lucide.createIcons();
+    }
+
+    showPendingListLoading();
+    await fetchPendingOnboarding();
+
+    if (refreshBtn) {
+        refreshBtn.disabled = false;
+        refreshBtn.innerHTML = originalHtml;
+        if (typeof lucide !== 'undefined') lucide.createIcons();
+    }
+}
+
 async function fetchPendingOnboarding() {
     const container = document.getElementById('pendingOnboardingContainer');
     if (!container) return;
@@ -221,7 +272,7 @@ async function fetchPendingOnboarding() {
         const response = await fetch('assets/api/employee_handler.php?action=fetch_pending');
         const result = await response.json();
 
-        if (result.status === 'success' && result.data.length > 0) {
+        if (result.status === 'success' && result.data && result.data.length > 0) {
             container.innerHTML = result.data.map(emp => `
                 <div class="announcement-card it-dept new-joining-card">
                     <div class="card-shape shape-1"></div>
@@ -251,10 +302,10 @@ async function fetchPendingOnboarding() {
                             <span>${formatJoiningCardDate(emp.created_at)}</span>
                         </div>
                         <div class="new-joining-actions">
-                            <button class="action-btn action-btn-view" onclick="openHiringModal(${emp.id})" title="Finalize Hire">
+                            <button class="action-btn action-btn-view" data-hr-perm-action="create" onclick="openHiringModal(${emp.id})" title="Finalize Hire">
                                 <i data-lucide="user-check"></i>
                             </button>
-                            <button class="action-btn action-btn-delete" type="button" title="Reject candidate">
+                            <button class="action-btn action-btn-delete" data-hr-perm-action="delete" type="button" title="Reject candidate">
                                 <i data-lucide="trash-2"></i>
                             </button>
                         </div>
@@ -262,7 +313,10 @@ async function fetchPendingOnboarding() {
                 </div>
             `).join('');
             lucide.createIcons();
-        } else {
+            if (window.HR_PERMS && typeof HR_PERMS.refresh === 'function') {
+                HR_PERMS.refresh();
+            }
+        } else if (result.status === 'success') {
             container.innerHTML = `
                 <div style="grid-column: 1 / -1; width: 100%; margin-top: 10px;">
                     <div class="empty-state-container">
@@ -275,6 +329,8 @@ async function fetchPendingOnboarding() {
                 </div>
             `;
             lucide.createIcons();
+        } else {
+            container.innerHTML = `<p class="text-danger p-20">${result.message || 'Unable to load pending records.'}</p>`;
         }
     } catch (error) {
         console.error('Fetch Pending Error:', error);
@@ -283,8 +339,10 @@ async function fetchPendingOnboarding() {
 }
 
 async function openHiringModal(empId) {
+    if (newJoiningPermDenied('create')) return;
+
     try {
-        const response = await fetch(`assets/api/employee_handler.php?action=get_employee&id=${empId}`);
+        const response = await fetch(`assets/api/employee_handler.php?action=get_employee&id=${empId}&context=new-joining`);
         const result = await response.json();
 
         if (result.status === 'success') {
@@ -343,6 +401,10 @@ async function openHiringModal(empId) {
             // Open Modal
             const modal = document.getElementById('candidateEmployeeModal');
             if (modal) modal.classList.add('active');
+
+            if (window.HR_PERMS && typeof HR_PERMS.refresh === 'function') {
+                HR_PERMS.refresh();
+            }
             
             lucide.createIcons();
         } else {

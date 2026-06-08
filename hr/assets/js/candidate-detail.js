@@ -142,6 +142,7 @@
                         pipelineBtn.style.opacity = '1';
                         pipelineBtn.style.cursor = 'pointer';
                         pipelineBtn.onclick = () => openScheduleInterviewModal();
+                        setPipelinePermAction('schedule_interview');
                     } else if (s === 'interview') {
                         pipelineBtn.textContent = 'Move to Shortlisted';
                         pipelineBtn.disabled = false;
@@ -149,6 +150,7 @@
                         pipelineBtn.style.opacity = '1';
                         pipelineBtn.style.cursor = 'pointer';
                         pipelineBtn.onclick = () => openStatusModal('Shortlisted');
+                        setPipelinePermAction('update_pipeline');
 
                         if (rescheduleBtn) {
                             rescheduleBtn.classList.remove('hidden');
@@ -169,6 +171,7 @@
                         pipelineBtn.style.opacity = '1';
                         pipelineBtn.style.cursor = 'pointer';
                         pipelineBtn.onclick = () => openStatusModal('Offer');
+                        setPipelinePermAction('update_pipeline');
                     } else if (s === 'offer') {
                         pipelineBtn.textContent = 'Confirm Hiring';
                         pipelineBtn.disabled = false;
@@ -176,20 +179,28 @@
                         pipelineBtn.style.opacity = '1';
                         pipelineBtn.style.cursor = 'pointer';
                         pipelineBtn.onclick = () => openStatusModal('Hired');
+                        setPipelinePermAction('update_pipeline');
                     } else if (s === 'hired') {
                         pipelineBtn.textContent = 'Hired & Active';
                         pipelineBtn.disabled = true;
                         pipelineBtn.style.opacity = '0.6';
                         pipelineBtn.style.cursor = 'not-allowed';
+                        setPipelinePermAction(null);
                         syncRejectCandidateButton('hired');
                     } else if (s === 'rejected' || s === 'banned' || s === 'duplicated') {
                         pipelineBtn.textContent = s.toUpperCase();
                         pipelineBtn.disabled = true;
                         pipelineBtn.style.opacity = '0.6';
                         pipelineBtn.style.cursor = 'not-allowed';
+                        setPipelinePermAction(null);
                     } else {
                         pipelineBtn.style.display = 'none';
+                        setPipelinePermAction(null);
                     }
+                }
+
+                if (window.HR_PERMS && typeof HR_PERMS.refresh === 'function') {
+                    HR_PERMS.refresh();
                 }
 
                 // --- Application Details Grid ---
@@ -354,6 +365,36 @@
         Swal.fire('Error', message || 'Something went wrong.', 'error');
     }
 
+    function candidatePermTypeForStatus(status) {
+        const key = normalizeStatusKey(status);
+        return ['rejected', 'banned'].includes(key) ? 'reject_ban' : 'update_pipeline';
+    }
+
+    function canCandidateAction(type) {
+        return !window.HR_PERMS || HR_PERMS.can('job-candidates', type);
+    }
+
+    function denyCandidateAction(type) {
+        if (canCandidateAction(type)) return false;
+        if (window.HR_PERMS && typeof HR_PERMS.showDenied === 'function') {
+            HR_PERMS.showDenied(type);
+        }
+        return true;
+    }
+
+    function setPipelinePermAction(actionType) {
+        const pipelineBtn = document.getElementById('primaryPipelineBtn');
+        if (!pipelineBtn) return;
+        if (actionType) {
+            pipelineBtn.setAttribute('data-hr-perm-action', actionType);
+        } else {
+            pipelineBtn.removeAttribute('data-hr-perm-action');
+        }
+        if (window.HR_PERMS && typeof HR_PERMS.refresh === 'function') {
+            HR_PERMS.refresh();
+        }
+    }
+
     function openStatusModal(status) {
         document.getElementById('targetStatus').value = status;
         const titleEl = document.getElementById('statusModalTitle');
@@ -389,6 +430,11 @@
     }
 
     async function updateStatus(newStatus, feedback = '') {
+        const permType = candidatePermTypeForStatus(newStatus);
+        if (denyCandidateAction(permType)) {
+            return false;
+        }
+
         try {
             const formData = new FormData();
             formData.append('action', 'update_candidate_status');
@@ -430,6 +476,10 @@
                 const feedback = document.getElementById('statusFeedback').value;
                 const submitBtn = document.getElementById('statusModalSubmitBtn');
 
+                if (denyCandidateAction(candidatePermTypeForStatus(status))) {
+                    return;
+                }
+
                 closeModal('statusTransitionModal');
                 setButtonLoading(submitBtn, true, 'Updating...');
                 await updateStatus(status, feedback);
@@ -442,6 +492,9 @@
                 if (REJECT_HIDDEN_STATUSES.includes(normalizeStatusKey(currentCandidateStatus))) {
                     return;
                 }
+                if (denyCandidateAction('reject_ban')) {
+                    return;
+                }
                 openStatusModal('Rejected');
             });
         }
@@ -449,6 +502,9 @@
         if (banBtn) {
             banBtn.addEventListener('click', () => {
                 if (currentCandidateStatus === 'banned') {
+                    return;
+                }
+                if (denyCandidateAction('reject_ban')) {
                     return;
                 }
                 Swal.fire({
@@ -470,6 +526,9 @@
         if (interviewForm) {
             interviewForm.addEventListener('submit', async function (e) {
                 e.preventDefault();
+                if (denyCandidateAction('schedule_interview')) {
+                    return;
+                }
                 var date = document.getElementById('scheduleInterviewDate').value;
                 var time = document.getElementById('scheduleInterviewTime').value;
                 var feedback = document.getElementById('scheduleInterviewFeedback').value;

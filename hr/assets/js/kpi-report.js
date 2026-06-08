@@ -2,6 +2,13 @@
  * KPI Report Logic - Dedicated Page for Employee Scores
  */
 
+function kpiPermDenied(type) {
+    if (typeof HR_PERMS === 'undefined') return false;
+    if (HR_PERMS.can('kpi-management', type)) return false;
+    HR_PERMS.showDenied(type);
+    return true;
+}
+
 document.addEventListener('DOMContentLoaded', function () {
     const urlParams = new URLSearchParams(window.location.search);
     const empId = urlParams.get('id');
@@ -123,10 +130,10 @@ function renderHistory(history) {
                             <span class="font-11 font-700">${parseFloat(item.overall_rating).toFixed(1)} / 5.0</span>
                         </div>
                         <div class="kpi-history-actions">
-                            <button class="action-btn action-btn-edit" title="Edit Review" onclick="event.stopPropagation(); openEditReview(${item.id})">
+                            <button class="action-btn action-btn-edit" data-hr-perm-action="edit" title="Edit Review" onclick="event.stopPropagation(); openEditReview(${item.id})">
                                 <i data-lucide="edit-2" size="14"></i>
                             </button>
-                            <button class="action-btn action-btn-delete" title="Delete Review" onclick="event.stopPropagation(); deleteReview(${item.id})">
+                            <button class="action-btn action-btn-delete" data-hr-perm-action="delete" title="Delete Review" onclick="event.stopPropagation(); deleteReview(${item.id})">
                                 <i data-lucide="trash-2" size="14"></i>
                             </button>
                         </div>
@@ -137,6 +144,7 @@ function renderHistory(history) {
     });
 
     if (typeof lucide !== 'undefined') lucide.createIcons();
+    if (typeof HR_PERMS !== 'undefined') HR_PERMS.refresh();
 }
 
 function renderTrendChart(history) {
@@ -212,6 +220,8 @@ const urlParams = new URLSearchParams(window.location.search);
 const currentEmpId = urlParams.get('id');
 
 window.openReviewModal = function () {
+    if (kpiPermDenied('create')) return;
+
     const modal = document.getElementById('addReviewModal');
     modal.classList.add('active');
 
@@ -301,6 +311,8 @@ window.openViewDetail = function (id) {
 };
 
 window.openEditReview = function (id) {
+    if (kpiPermDenied('edit')) return;
+
     fetch(`assets/api/kpi_handler.php?action=fetch_review_details&id=${id}`)
         .then(res => res.json())
         .then(res => {
@@ -344,6 +356,7 @@ window.openEditReview = function (id) {
 
 window.deleteReview = function (id) {
     if (!id) return;
+    if (kpiPermDenied('delete')) return;
 
     Swal.fire({
         title: 'Are you sure?',
@@ -452,6 +465,9 @@ function initFormLogic() {
     
     form.addEventListener('submit', function (e) {
         e.preventDefault();
+
+        const reviewId = document.getElementById('modalReviewId')?.value || '';
+        if (kpiPermDenied(reviewId ? 'edit' : 'create')) return;
 
         const formData = new FormData(form);
         formData.append('action', 'add_review');
