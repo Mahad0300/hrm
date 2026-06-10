@@ -21,7 +21,7 @@ include 'includes/header.php';
                 </div>
                 <div>
                     <h4 class="font-18 font-700 m-0">Permissions Matrix</h4>
-                    <p class="font-12 text-light m-0">Only actions available on each page are shown. <span class="perm-na-label">—</span> = not available. Custom labels: Notifications = <strong>Mark as Read</strong>, Job Postings = <strong>Active / Close</strong>, Candidate Pool = <strong>Schedule Interview</strong>, <strong>Update Pipeline</strong>, <strong>Reject / Ban</strong>. Interviews page uses <strong>Candidate Pool</strong> permissions (View + Schedule Interview).</p>
+                    <p class="font-12 text-light m-0">Configure page-level access for the HR portal. Each module shows only the permissions it supports; unavailable actions are marked with <span class="perm-na-label">—</span>. Edit permissions may use context-specific labels—<strong>Mark as Read</strong> (Notifications), <strong>Active / Close</strong> (Job Postings), and <strong>Schedule Interview</strong>, <strong>Update Pipeline</strong>, or <strong>Reject / Ban</strong> (Candidate Pool). The Interviews page inherits access from Candidate Pool (View + Schedule Interview).</p>
                 </div>
             </div>
             <div class="flex-center gap-12">

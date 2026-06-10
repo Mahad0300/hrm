@@ -446,7 +446,7 @@ label,
     justify-content: space-between;
     align-items: baseline;
     gap: 12px;
-    margin-bottom: 6px;
+    margin-bottom: 3px;
 }
 
 .hiring-funnel-stage {
@@ -478,9 +478,7 @@ label,
 }
 
 .hiring-funnel-total {
-    margin-top: 14px;
-    padding-top: 12px;
-    border-top: 1px solid rgba(15, 23, 42, 0.06);
+    margin-top: 8px;
 }
 
 /* Leave by type — vibrant horizontal bars */
@@ -7157,11 +7155,31 @@ input:checked+.slider:before {
     border-bottom: 1px solid #f1f5f9;
 }
 
+.role-management-container .data-table .perm-action-cell {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    cursor: pointer;
+    margin: 0;
+    vertical-align: middle;
+}
+
+.role-management-container .data-table .perm-action-cell__text {
+    font-size: 10px;
+    font-weight: 500;
+    color: var(--text-light);
+    line-height: 1.2;
+    white-space: nowrap;
+}
+
 .role-management-container .data-table .action-check {
     width: 18px;
     height: 18px;
     cursor: pointer;
     accent-color: var(--primary-color);
+    flex-shrink: 0;
+    margin: 0;
 }
 
 .role-management-container .data-table td.perm-na {

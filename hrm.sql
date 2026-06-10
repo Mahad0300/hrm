@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jun 09, 2026 at 12:19 AM
+-- Generation Time: Jun 10, 2026 at 07:16 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -436,7 +436,19 @@ INSERT INTO `activity_logs` (`id`, `employee_id`, `action`, `description`, `ip_a
 (392, 22, 'User Login', '[Authentication] User authenticated successfully and accessed the system dashboard.', '::1', '2026-06-08 22:15:56'),
 (393, 22, 'User Login', '[Authentication] User authenticated successfully and accessed the system dashboard.', '::1', '2026-06-08 22:16:06'),
 (394, 1, 'Access Control Updated', '[Security] HR portal permissions matrix was updated by Admin.', '::1', '2026-06-08 22:16:18'),
-(395, 22, 'User Login', '[Authentication] User authenticated successfully and accessed the system dashboard.', '::1', '2026-06-08 22:16:27');
+(395, 22, 'User Login', '[Authentication] User authenticated successfully and accessed the system dashboard.', '::1', '2026-06-08 22:16:27'),
+(396, 1, 'User Login', '[Authentication] User authenticated successfully and accessed the system dashboard.', '::1', '2026-06-08 22:53:28'),
+(397, 1, 'Access Control Updated', '[Security] HR portal permissions matrix was updated by Admin.', '::1', '2026-06-08 23:26:19'),
+(398, 1, 'User Login', '[Authentication] User authenticated successfully and accessed the system dashboard.', '::1', '2026-06-10 16:03:38'),
+(399, 1, 'Restored Employee Profile', '[Employees] Reactivated team member: test tes', '::1', '2026-06-10 16:22:35'),
+(400, 22, 'User Login', '[Authentication] User authenticated successfully and accessed the system dashboard.', '::1', '2026-06-10 16:36:05'),
+(401, 22, 'Deleted Employee Profile', '[Employees] Moved team member: test tes to the Exit list.', '::1', '2026-06-10 16:42:42'),
+(402, 22, 'Restored Employee Profile', '[Employees] Reactivated team member: test tes', '::1', '2026-06-10 16:42:47'),
+(403, 22, 'Completed Employee Onboarding', '[Employees] Formally completed and finalized the onboarding profile for new team member: test tes', '::1', '2026-06-10 16:43:05'),
+(404, 22, 'Updated Performance Review', '[KPI Management] Modified the performance appraisal details for team member: Ahmed Khan (Period: monthly)', '::1', '2026-06-10 16:44:52'),
+(405, 22, 'Updated Performance Review', '[KPI Management] Modified the performance appraisal details for team member: Ahmed Khan (Period: monthly)', '::1', '2026-06-10 16:45:50'),
+(406, 28, 'User Login', '[Authentication] User authenticated successfully and accessed the system dashboard.', '::1', '2026-06-10 17:10:46'),
+(407, 30, 'User Login', '[Authentication] User authenticated successfully and accessed the system dashboard.', '::1', '2026-06-10 17:13:21');
 
 -- --------------------------------------------------------
 
@@ -648,7 +660,23 @@ INSERT INTO `attendance` (`id`, `employee_id`, `date`, `shift_id`, `clock_in`, `
 (381, 30, '2026-05-18', 6, '2026-05-18 20:09:04', '2026-05-19 04:00:38', '7h 51m', 'ON TIME', NULL, '2026-05-18 15:09:04', '2026-05-18 23:00:38'),
 (382, 30, '2026-05-19', 6, NULL, NULL, '—', 'LEAVE', 'Approved Casual Leave', '2026-05-20 20:17:04', NULL),
 (383, 30, '2026-05-20', 6, NULL, NULL, '—', 'LEAVE', 'Approved Casual Leave', '2026-05-20 20:17:04', NULL),
-(384, 22, '2026-05-21', 7, '2026-05-21 20:37:28', NULL, NULL, 'ON TIME', NULL, '2026-05-21 15:37:28', NULL);
+(384, 22, '2026-05-21', 7, '2026-05-21 20:37:28', NULL, NULL, 'ON TIME', NULL, '2026-05-21 15:37:28', NULL),
+(385, 28, '2026-06-10', 5, '2026-06-10 22:12:07', NULL, NULL, 'LATE IN', NULL, '2026-06-10 17:12:07', NULL),
+(386, 30, '2026-05-21', 6, NULL, NULL, NULL, 'ABSENT', NULL, '2026-06-10 17:13:25', NULL),
+(387, 30, '2026-05-22', 6, NULL, NULL, NULL, 'ABSENT', NULL, '2026-06-10 17:13:25', NULL),
+(388, 30, '2026-05-25', 6, NULL, NULL, NULL, 'ABSENT', NULL, '2026-06-10 17:13:25', NULL),
+(389, 30, '2026-05-26', 6, NULL, NULL, NULL, 'ABSENT', NULL, '2026-06-10 17:13:25', NULL),
+(390, 30, '2026-05-27', 6, NULL, NULL, NULL, 'ABSENT', NULL, '2026-06-10 17:13:25', NULL),
+(391, 30, '2026-05-28', 6, NULL, NULL, NULL, 'ABSENT', NULL, '2026-06-10 17:13:25', NULL),
+(392, 30, '2026-05-29', 6, NULL, NULL, NULL, 'ABSENT', NULL, '2026-06-10 17:13:25', NULL),
+(393, 30, '2026-06-01', 6, NULL, NULL, NULL, 'ABSENT', NULL, '2026-06-10 17:13:25', NULL),
+(394, 30, '2026-06-02', 6, NULL, NULL, NULL, 'ABSENT', NULL, '2026-06-10 17:13:25', NULL),
+(395, 30, '2026-06-03', 6, NULL, NULL, NULL, 'ABSENT', NULL, '2026-06-10 17:13:25', NULL),
+(396, 30, '2026-06-04', 6, NULL, NULL, NULL, 'ABSENT', NULL, '2026-06-10 17:13:25', NULL),
+(397, 30, '2026-06-05', 6, NULL, NULL, NULL, 'ABSENT', NULL, '2026-06-10 17:13:25', NULL),
+(398, 30, '2026-06-08', 6, NULL, NULL, NULL, 'ABSENT', NULL, '2026-06-10 17:13:25', NULL),
+(399, 30, '2026-06-09', 6, NULL, NULL, NULL, 'ABSENT', NULL, '2026-06-10 17:13:25', NULL),
+(400, 30, '2026-06-10', 6, '2026-06-10 22:13:25', NULL, NULL, 'LATE IN', NULL, '2026-06-10 17:13:25', NULL);
 
 -- --------------------------------------------------------
 
@@ -873,7 +901,7 @@ CREATE TABLE `employees` (
 
 INSERT INTO `employees` (`id`, `first_name`, `middle_name`, `last_name`, `email`, `password`, `role`, `gender`, `dob`, `phone`, `cnic_number`, `address`, `emergency_contact`, `emergency_relation`, `department_id`, `shift_id`, `job_title`, `job_type`, `salary`, `joining_date`, `status`, `id_card_path`, `other_docs`, `resume_path`, `profile_pic`, `created_at`, `updated_at`, `deleted_at`) VALUES
 (1, 'System', '', 'Admin', 'admin@gmail.com', '$2y$12$RKq6kP5En4KGCUYd3.hBIuE1WdPKNb7GFcnlE21gAgoiEA0i0noeS', 'Admin', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '', 0.00, '2026-04-06', 'Active', NULL, NULL, NULL, NULL, '2026-04-06 17:51:22', NULL, NULL),
-(22, 'Syed', 'Mahad', 'Bukhari', 'mahad@gmail.com', '$2y$10$MJSzzQkWueYLdZlP6A3pjOF2FtmO3h8IEpKJ./Gj0Q4dQG6LXX2D2', 'HR', 'Male', '2002-07-05', '2222-2222227', '1111111111111', 'North Nazimabad', '33333333333', 'Test Emergency contact relation', 9, 7, 'Frontend Developer', 'Permanent', 40000.00, '2026-01-20', 'Active', 'uploads/employees/id_cards/EMP_69dffe42dcfe4.pdf', NULL, 'uploads/employees/resumes/EMP_69dffe42dd1fa.pdf', 'uploads/employees/profiles/user_22_6a0deb026430b.jpg', '2026-04-15 21:08:18', '2026-06-08 15:43:54', NULL),
+(22, 'Syed', 'Mahad', 'Bukhari', 'mahad@gmail.com', '$2y$10$MJSzzQkWueYLdZlP6A3pjOF2FtmO3h8IEpKJ./Gj0Q4dQG6LXX2D2', 'HR', 'Male', '2002-07-05', '2222-2222227', '1111111111111', 'North Nazimabad', '33333333333', 'Test Emergency contact relation', 9, 7, 'Frontend Developer', 'Permanent', 40000.00, '2026-01-20', 'Active', 'uploads/employees/id_cards/EMP_69dffe42dcfe4.pdf', NULL, 'uploads/employees/resumes/EMP_69dffe42dd1fa.pdf', 'uploads/employees/profiles/user_22_6a0deb026430b.jpg', '2026-04-15 21:08:18', '2026-06-10 17:09:31', NULL),
 (27, 'user', '', 'user', 'test2@gmail.com', '$2y$10$zG/p6Il95cae.1MWZllMyek46hyMsmafgaR8XeIRxay54zzOa68KW', 'Employee', 'Male', '2003-05-07', '3333-3333333', '4444444444444', 'test', '55555555555', 'test', 11, 5, 'Job Title Test', 'Permanent', 90000.00, '2026-05-04', 'Active', 'uploads/employees/id_cards/EMP_69f3da0719fe3.pdf', NULL, 'uploads/employees/resumes/EMP_69f3da071a1c4.pdf', NULL, '2026-04-30 22:39:03', NULL, NULL),
 (28, 'Ahmed', 'Ali', 'Khan', 'ahmed@gmail.com', '$2y$12$RKq6kP5En4KGCUYd3.hBIuE1WdPKNb7GFcnlE21gAgoiEA0i0noeS', 'Employee', 'Male', '1995-03-12', '0300-1111111', '42101-1111111-1', 'Gulshan-e-Iqbal, Karachi', '0300-9999999', 'Brother', 9, 5, 'Backend Developer', 'Permanent', 30000.00, '2026-05-01', 'Active', NULL, NULL, NULL, NULL, '2026-05-07 22:46:12', '2026-06-08 20:59:51', NULL),
 (29, 'Sara', '', 'Ahmed', 'sara@gmail.com', '$2y$10$zG/p6Il95cae.1MWZllMyek46hyMsmafgaR8XeIRxay54zzOa68KW', 'Employee', 'Female', '1998-06-25', '0300-2222222', '42101-2222222-2', 'DHA Phase 6, Karachi', '0300-8888888', 'Father', 9, 6, 'UI/UX Designer', 'Permanent', 60000.00, '2026-05-02', 'Active', NULL, NULL, NULL, NULL, '2026-05-07 22:46:12', NULL, NULL),
@@ -886,8 +914,8 @@ INSERT INTO `employees` (`id`, `first_name`, `middle_name`, `last_name`, `email`
 (36, 'Usman', '', 'Ghani', 'usman@gmail.com', '$2y$10$zG/p6Il95cae.1MWZllMyek46hyMsmafgaR8XeIRxay54zzOa68KW', 'Employee', 'Male', '1993-02-14', '0300-9999999', '42101-9999999-9', 'Korangi, Karachi', '0300-1111111', 'Aunt', 8, 7, 'Network Engineer', 'Permanent', 70000.00, '2026-05-09', 'Active', NULL, NULL, NULL, NULL, '2026-05-07 22:46:12', NULL, NULL),
 (37, 'Hina', '', 'Pervez', 'hina@gmail.com', '$2y$10$zG/p6Il95cae.1MWZllMyek46hyMsmafgaR8XeIRxay54zzOa68KW', 'Employee', 'Female', '1991-05-20', '0300-0000000', '42101-0000000-0', 'Saddar, Karachi', '0300-0000000', 'Cousin', 9, 5, 'Marketing Head', 'Permanent', 95000.00, '2026-05-10', 'Active', NULL, NULL, NULL, NULL, '2026-05-07 22:46:12', '2026-05-19 17:43:34', NULL),
 (38, 'Shayan', NULL, 'Shaikh', 'shayan@gmail.com', '$2y$10$aw1Kb0jIU2hOOBCgYt4AqeytXt4rnJ0pQ39LG6a9tdivrG8Xs41Km', 'Employee', 'Male', '2005-05-07', '5645-6465465', '7898987987987', 'PIB', '78546213456', 'Father', 9, 6, 'Wordpress Developer', 'Permanent', 60000.00, '2026-05-18', 'Active', 'uploads/employees/id_cards/EMP_6a04fd82901fe.jpeg', NULL, 'uploads/employees/resumes/EMP_6a04fd8290448.pdf', NULL, '2026-05-13 22:38:58', '2026-05-13 22:49:43', NULL),
-(39, 'test', NULL, 'test', 'test@gmail.com', '$2y$10$ee3KRgqTJIHzr3tEgbULKevXqDlmZOUPT39g9PNbc36eYrT28kEdO', 'Employee', 'Male', '2002-05-07', '2222-2222222', '2435425245423', 'North Nazimabad', '65656356635', 'test', 10, 7, 'test', 'Permanent', 65000.00, '2026-05-20', 'Pending', 'uploads/employees/id_cards/EMP_6a0f38cfaa2eb.png', NULL, 'uploads/employees/resumes/EMP_6a0f38cfaa57c.pdf', NULL, '2026-05-21 16:54:39', '2026-06-08 20:35:48', NULL),
-(42, 'test', '', 'tes', 'test1@gmail.com', '$2y$10$6xaN3LrBrss4OvKHyF6OYupaNdAZiD2Si/SVfMl8SNAzU6yDSzWg2', 'Employee', 'Male', '2026-05-04', '2222-2222222', '1111111111111', '3934 FM 1960 Rd W Suite 370', '33333333333', 'testtt', 11, 5, 'test', 'Permanent', 70000.00, '2026-05-20', 'Exit', 'uploads/employees/id_cards/EMP_6a0f426253c98.png', NULL, 'uploads/employees/resumes/EMP_6a0f426253e7f.pdf', NULL, '2026-05-21 17:35:30', '2026-05-21 18:07:58', '2026-05-21 18:07:58');
+(39, 'test ', NULL, 'count', 'test@gmail.com', '$2y$10$ee3KRgqTJIHzr3tEgbULKevXqDlmZOUPT39g9PNbc36eYrT28kEdO', 'Employee', 'Male', '2002-05-07', '2222-2222222', '2435425245423', 'North Nazimabad', '65656356635', 'test', 10, 7, 'test', 'Permanent', 65000.00, '2026-05-20', 'Pending', 'uploads/employees/id_cards/EMP_6a0f38cfaa2eb.png', NULL, 'uploads/employees/resumes/EMP_6a0f38cfaa57c.pdf', NULL, '2026-05-21 16:54:39', '2026-06-10 16:25:03', NULL),
+(42, 'test', 'inggggg', 'tes', 'test1@gmail.com', '$2y$10$6xaN3LrBrss4OvKHyF6OYupaNdAZiD2Si/SVfMl8SNAzU6yDSzWg2', 'Employee', 'Male', '2026-05-04', '2222-2222222', '1111111111111', '3934 FM 1960 Rd W Suite 370', '33333333333', 'testtt', 11, 5, 'test', 'Permanent', 70000.00, '2026-05-20', 'Active', 'uploads/employees/id_cards/EMP_6a0f426253c98.png', NULL, 'uploads/employees/resumes/EMP_6a0f426253e7f.pdf', NULL, '2026-05-21 17:35:30', '2026-06-10 16:43:05', NULL);
 
 -- --------------------------------------------------------
 
@@ -960,34 +988,34 @@ CREATE TABLE `hr_page_permissions` (
 --
 
 INSERT INTO `hr_page_permissions` (`id`, `page_key`, `can_view`, `can_create`, `can_edit`, `can_delete`, `can_export`, `updated_at`) VALUES
-(1, 'index', 0, 0, 0, 0, 0, '2026-06-08 22:16:18'),
-(2, 'employees', 0, 0, 0, 0, 0, '2026-06-08 22:16:18'),
-(3, 'attendance', 0, 0, 0, 0, 0, '2026-06-08 22:16:18'),
-(4, 'leave-management', 0, 0, 0, 0, 0, '2026-06-08 22:16:18'),
-(5, 'new-joining', 1, 0, 0, 0, 0, '2026-06-08 22:16:18'),
-(6, 'hierarchy', 0, 0, 0, 0, 0, '2026-06-08 22:16:18'),
-(7, 'kpi-management', 0, 0, 0, 0, 0, '2026-06-08 22:16:18'),
-(8, 'event-calendar', 0, 0, 0, 0, 0, '2026-06-08 22:16:18'),
-(9, 'job-list', 0, 0, 0, 0, 0, '2026-06-08 22:16:18'),
-(10, 'create-job', 0, 0, 0, 0, 0, '2026-06-08 22:16:18'),
-(11, 'job-candidates', 0, 0, 0, 0, 0, '2026-06-08 22:16:18'),
-(12, 'interviews', 0, 0, 0, 0, 0, '2026-06-08 22:16:18'),
-(13, 'payroll', 0, 0, 0, 0, 0, '2026-06-08 22:16:18'),
-(14, 'activity-logs', 0, 0, 0, 0, 0, '2026-06-08 22:16:18'),
-(15, 'announcements', 0, 0, 0, 0, 0, '2026-06-08 22:16:18'),
-(16, 'notifications', 0, 0, 0, 0, 0, '2026-06-08 22:16:18'),
-(17, 'it-support', 0, 0, 0, 0, 0, '2026-06-08 22:16:18'),
-(18, 'shifts', 0, 0, 0, 0, 0, '2026-06-08 22:16:18'),
-(19, 'department-management', 0, 0, 0, 0, 0, '2026-06-08 22:16:18'),
+(1, 'index', 1, 0, 0, 0, 0, '2026-06-08 23:26:19'),
+(2, 'employees', 1, 1, 1, 1, 0, '2026-06-08 23:26:19'),
+(3, 'attendance', 1, 0, 1, 0, 0, '2026-06-08 23:26:19'),
+(4, 'leave-management', 1, 0, 1, 0, 0, '2026-06-08 23:26:19'),
+(5, 'new-joining', 1, 1, 0, 1, 0, '2026-06-08 23:26:19'),
+(6, 'hierarchy', 1, 0, 0, 0, 0, '2026-06-08 23:26:19'),
+(7, 'kpi-management', 1, 1, 1, 1, 0, '2026-06-08 23:26:19'),
+(8, 'event-calendar', 1, 1, 1, 1, 0, '2026-06-08 23:26:19'),
+(9, 'job-list', 1, 1, 1, 1, 0, '2026-06-08 23:26:19'),
+(10, 'create-job', 0, 0, 0, 0, 0, '2026-06-08 23:26:19'),
+(11, 'job-candidates', 1, 1, 1, 1, 0, '2026-06-08 23:26:19'),
+(12, 'interviews', 0, 0, 0, 0, 0, '2026-06-08 23:26:19'),
+(13, 'payroll', 1, 1, 1, 0, 1, '2026-06-08 23:26:19'),
+(14, 'activity-logs', 1, 0, 0, 0, 0, '2026-06-08 23:26:19'),
+(15, 'announcements', 1, 1, 1, 1, 0, '2026-06-08 23:26:19'),
+(16, 'notifications', 1, 0, 1, 1, 0, '2026-06-08 23:26:19'),
+(17, 'it-support', 1, 0, 1, 0, 0, '2026-06-08 23:26:19'),
+(18, 'shifts', 1, 1, 1, 1, 0, '2026-06-08 23:26:19'),
+(19, 'department-management', 1, 1, 1, 1, 0, '2026-06-08 23:26:19'),
 (20, 'role-management', 0, 0, 0, 0, 0, '2026-06-08 16:39:19'),
-(21, 'policy-management', 0, 0, 0, 0, 0, '2026-06-08 22:16:18'),
-(22, 'payroll-settings', 0, 0, 0, 0, 0, '2026-06-08 22:16:18'),
-(23, 'employee-profile', 0, 0, 0, 0, 0, '2026-06-08 22:16:18'),
-(24, 'attendance-log', 0, 0, 0, 0, 0, '2026-06-08 22:16:18'),
-(25, 'edit-job', 0, 0, 1, 0, 0, '2026-06-08 22:16:18'),
-(26, 'candidate-detail', 0, 0, 0, 0, 0, '2026-06-08 22:16:18'),
-(27, 'kpi-report', 0, 0, 0, 0, 0, '2026-06-08 22:16:18'),
-(28, 'payslip-print', 0, 0, 0, 0, 1, '2026-06-08 22:16:18');
+(21, 'policy-management', 1, 1, 1, 1, 0, '2026-06-08 23:26:19'),
+(22, 'payroll-settings', 1, 0, 1, 0, 0, '2026-06-08 23:26:19'),
+(23, 'employee-profile', 0, 0, 0, 0, 0, '2026-06-08 23:26:19'),
+(24, 'attendance-log', 0, 0, 0, 0, 0, '2026-06-08 23:26:19'),
+(25, 'edit-job', 0, 0, 1, 0, 0, '2026-06-08 23:26:19'),
+(26, 'candidate-detail', 0, 0, 0, 0, 0, '2026-06-08 23:26:19'),
+(27, 'kpi-report', 0, 0, 0, 0, 0, '2026-06-08 23:26:19'),
+(28, 'payslip-print', 0, 0, 0, 0, 1, '2026-06-08 23:26:19');
 
 -- --------------------------------------------------------
 
@@ -1105,7 +1133,13 @@ INSERT INTO `kpi_goals` (`id`, `review_id`, `goal_name`, `target_score`, `achiev
 (53, 10, 'Test 1', 100, 95, 'Answer 1'),
 (54, 10, 'Test 3', 100, 40, 'Answer 3'),
 (55, 10, 'Test 4', 100, 65, 'Answer 4'),
-(56, 10, 'Test 5', 100, 34, 'Answer 5');
+(56, 10, 'Test 5', 100, 34, 'Answer 5'),
+(57, 11, 'Test', 100, 80, 'answer'),
+(58, 11, 'Test 1', 100, 80, 'answer 1'),
+(59, 11, 'Test 2', 100, 80, 'answer 2'),
+(60, 12, 'Test', 100, 50, 'answer 111111111'),
+(61, 12, 'Test 1', 100, 35, 'answer 2222222222'),
+(62, 12, 'Test 2', 100, 65, 'answer 33333');
 
 -- --------------------------------------------------------
 
@@ -1131,7 +1165,9 @@ CREATE TABLE `kpi_reviews` (
 --
 
 INSERT INTO `kpi_reviews` (`id`, `employee_id`, `reviewer_id`, `period`, `review_date`, `overall_rating`, `status`, `feedback`, `created_at`, `updated_at`) VALUES
-(10, 33, 1, 'Monthly', '2026-05-14', 3.00, 'On Track', 'General Feedback / Comments Test\r\nGeneral Feedback / Comments Test 1\r\nGeneral Feedback / Comments Test 2\r\nGeneral Feedback / Comments Test 3', '2026-05-13 22:02:48', '2026-05-13 22:32:14');
+(10, 33, 1, 'Monthly', '2026-05-14', 3.00, 'On Track', 'General Feedback / Comments Test\r\nGeneral Feedback / Comments Test 1\r\nGeneral Feedback / Comments Test 2\r\nGeneral Feedback / Comments Test 3', '2026-05-13 22:02:48', '2026-05-13 22:32:14'),
+(11, 28, 22, 'Monthly', '2026-06-10', 3.00, 'On Track', 'testing', '2026-06-10 16:44:52', NULL),
+(12, 28, 22, 'Monthly', '2026-06-10', 3.00, 'On Track', '', '2026-06-10 16:45:50', NULL);
 
 -- --------------------------------------------------------
 
@@ -1280,7 +1316,7 @@ INSERT INTO `notification_recipients` (`id`, `notification_id`, `employee_id`, `
 (132, 38, 37, 0, NULL),
 (133, 39, 22, 1, '2026-05-13 20:28:37'),
 (136, 39, 27, 0, NULL),
-(137, 39, 28, 0, NULL),
+(137, 39, 28, 1, '2026-06-08 23:43:36'),
 (138, 39, 29, 0, NULL),
 (139, 39, 30, 0, NULL),
 (140, 39, 31, 0, NULL),
@@ -1291,7 +1327,7 @@ INSERT INTO `notification_recipients` (`id`, `notification_id`, `employee_id`, `
 (145, 39, 36, 0, NULL),
 (146, 40, 22, 0, NULL),
 (149, 40, 27, 0, NULL),
-(150, 40, 28, 0, NULL),
+(150, 40, 28, 1, '2026-06-08 23:43:44'),
 (151, 40, 29, 0, NULL),
 (152, 40, 30, 0, NULL),
 (153, 40, 31, 0, NULL),
@@ -1483,7 +1519,7 @@ CREATE TABLE `settings` (
 INSERT INTO `settings` (`id`, `meta_key`, `meta_value`) VALUES
 (1, 'payroll_start_day', '21'),
 (2, 'payroll_end_day', '20'),
-(19, 'hr_permissions_revision', '197'),
+(19, 'hr_permissions_revision', '198'),
 (20, 'hr_capability_migration', '7');
 
 -- --------------------------------------------------------
@@ -1840,7 +1876,7 @@ ALTER TABLE `ticket_messages`
 -- AUTO_INCREMENT for table `activity_logs`
 --
 ALTER TABLE `activity_logs`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=396;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=408;
 
 --
 -- AUTO_INCREMENT for table `announcements`
@@ -1852,13 +1888,13 @@ ALTER TABLE `announcements`
 -- AUTO_INCREMENT for table `attendance`
 --
 ALTER TABLE `attendance`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=385;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=401;
 
 --
 -- AUTO_INCREMENT for table `banking_info`
 --
 ALTER TABLE `banking_info`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=87;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=88;
 
 --
 -- AUTO_INCREMENT for table `candidates`
@@ -1888,7 +1924,7 @@ ALTER TABLE `departments`
 -- AUTO_INCREMENT for table `education_experience`
 --
 ALTER TABLE `education_experience`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=87;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=88;
 
 --
 -- AUTO_INCREMENT for table `employees`
@@ -1906,7 +1942,7 @@ ALTER TABLE `events`
 -- AUTO_INCREMENT for table `hr_page_permissions`
 --
 ALTER TABLE `hr_page_permissions`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5167;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5194;
 
 --
 -- AUTO_INCREMENT for table `interviews`
@@ -1930,13 +1966,13 @@ ALTER TABLE `job_questions`
 -- AUTO_INCREMENT for table `kpi_goals`
 --
 ALTER TABLE `kpi_goals`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=57;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=63;
 
 --
 -- AUTO_INCREMENT for table `kpi_reviews`
 --
 ALTER TABLE `kpi_reviews`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT for table `leave_requests`

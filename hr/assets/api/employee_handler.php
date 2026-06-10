@@ -263,13 +263,11 @@ switch ($action) {
                 $where[] = "e.department_id = ?";
                 $params[] = $dept;
             }
-            // 4. Role Filter
-            if (!empty($role)) {
-                $where[] = "e.role = ?";
-                $params[] = $role;
-            } elseif (empty($id_search) && empty($name_search)) {
-                // Default view (no search): only HR/Employee
-                $where[] = "e.role IN ('Employee', 'HR')";
+            // 4. Role Filter — HR portal directory: Employee role only
+            if (!empty($role) && $role !== 'Employee') {
+                $where[] = "1 = 0";
+            } else {
+                $where[] = "e.role = 'Employee'";
             }
 
             // 5. Status Filter

@@ -29,10 +29,13 @@ try {
         $params = [];
 
         if ($search) {
-            $where .= " AND (e.first_name LIKE ? OR e.last_name LIKE ? OR e.employee_id LIKE ?)";
-            $params[] = "%$search%";
-            $params[] = "%$search%";
-            $params[] = "%$search%";
+            $searchParam = '%' . $search . '%';
+            $where .= " AND (e.first_name LIKE ? OR e.middle_name LIKE ? OR e.last_name LIKE ? OR CAST(e.id AS CHAR) LIKE ? OR CONCAT('EMP-0', e.id) LIKE ?)";
+            $params[] = $searchParam;
+            $params[] = $searchParam;
+            $params[] = $searchParam;
+            $params[] = $searchParam;
+            $params[] = $searchParam;
         }
         
         // Since 'module' column doesn't exist, we search inside description [Module]
@@ -57,7 +60,7 @@ try {
 
         // 2. Get Data
         $query = "
-            SELECT al.*, al.description as details, e.first_name, e.last_name, e.id as emp_code, e.id_card_path, e.profile_pic
+            SELECT al.*, al.description as details, e.first_name, e.middle_name, e.last_name, e.id as emp_code, e.id_card_path, e.profile_pic
             FROM activity_logs al
             JOIN employees e ON al.employee_id = e.id
             $where

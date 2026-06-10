@@ -129,6 +129,7 @@ function renderActivityTable(logs) {
 
         // Format ID as EMP-0 + ID (matching the rest of the HRM system)
         const formattedId = `EMP-0${log.emp_code}`;
+        const employeeName = [log.first_name, log.middle_name, log.last_name].filter(v => v && String(v).trim() !== '').join(' ');
 
         return `
             <tr>
@@ -136,7 +137,7 @@ function renderActivityTable(logs) {
                     <div class="emp-profile">
                         <img src="${avatar}" class="emp-avatar" alt="Avatar" onerror="this.src='${defaultAvatar}'">
                         <div class="emp-info">
-                            <span class="name">${log.first_name} ${log.last_name}</span>
+                            <span class="name">${employeeName}</span>
                             <span class="email font-12 text-light">${formattedId}</span>
                         </div>
                     </div>

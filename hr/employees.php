@@ -20,7 +20,7 @@ include 'includes/header.php';
 
 <!-- Filters Card -->
 <div class="card p-24 mb-24">
-    <div class="filter-grid grid-4">
+    <div class="filter-grid-3 filter-grid-3-equal">
         <div class="filter-item">
             <label class="admin-form-label font-12">Search by ID</label>
             <div class="search-box w-full">
@@ -39,14 +39,6 @@ include 'includes/header.php';
             <label class="admin-form-label font-12">Department</label>
             <select class="form-control" id="filterDept">
                 <option value="">All Departments</option>
-            </select>
-        </div>
-        <div class="filter-item">
-            <label class="admin-form-label font-12">Role</label>
-            <select class="form-control" id="filterRole">
-                <option value="">All Roles</option>
-                <option value="HR">HR</option>
-                <option value="Employee">Employee</option>
             </select>
         </div>
     </div>

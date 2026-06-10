@@ -35,7 +35,7 @@ if (!function_exists('buildTodayAttendanceMix')) {
             INNER JOIN employees e ON e.id = a.employee_id
             WHERE a.date = ?
             AND a.status IN ('ON TIME', 'LATE IN', 'HALF DAY', 'ABSENT')
-            AND e.role NOT IN ('Admin', 'HR')
+            AND e.role = 'Employee'
             AND e.deleted_at IS NULL
             AND e.status = 'Active'
             AND (e.joining_date IS NULL OR e.joining_date <= ?)
@@ -50,7 +50,7 @@ if (!function_exists('buildTodayAttendanceMix')) {
 
         $stmt = $pdo->prepare("
             SELECT COUNT(*) FROM employees e
-            WHERE e.role NOT IN ('Admin', 'HR')
+            WHERE e.role = 'Employee'
             AND e.deleted_at IS NULL
             AND e.status = 'Active'
             AND (e.joining_date IS NULL OR e.joining_date <= ?)
@@ -92,7 +92,7 @@ if (!function_exists('buildPayrollWeeklyAttendanceTrend')) {
             INNER JOIN employees e ON e.id = a.employee_id
             WHERE a.date = ?
             AND a.status IN ('ON TIME', 'LATE IN', 'HALF DAY')
-            AND e.role NOT IN ('Admin', 'HR')
+            AND e.role = 'Employee'
             AND e.deleted_at IS NULL
             AND e.status = 'Active'
             AND (e.joining_date IS NULL OR e.joining_date <= ?)
@@ -143,7 +143,7 @@ if (!function_exists('buildAdminDashboardPayload')) {
         // —— Active workforce (matches admin attendance scope) ——
         $activeSql = "
             SELECT COUNT(*) FROM employees e
-            WHERE e.role NOT IN ('Admin', 'HR')
+            WHERE e.role = 'Employee'
             AND e.deleted_at IS NULL
             AND e.status = 'Active'
             AND (e.joining_date IS NULL OR e.joining_date <= ?)
@@ -158,7 +158,7 @@ if (!function_exists('buildAdminDashboardPayload')) {
             INNER JOIN employees e ON e.id = a.employee_id
             WHERE a.date = ?
             AND a.status IN ('ON TIME', 'LATE IN', 'HALF DAY')
-            AND e.role NOT IN ('Admin', 'HR')
+            AND e.role = 'Employee'
             AND e.deleted_at IS NULL
             AND e.status = 'Active'
             AND (e.joining_date IS NULL OR e.joining_date <= ?)
@@ -172,7 +172,7 @@ if (!function_exists('buildAdminDashboardPayload')) {
             INNER JOIN employees e ON e.id = lr.employee_id
             WHERE lr.status = 'Approved'
             AND ? BETWEEN lr.start_date AND lr.end_date
-            AND e.role NOT IN ('Admin', 'HR')
+            AND e.role = 'Employee'
             AND e.deleted_at IS NULL
             AND e.status = 'Active'
         ");
@@ -183,9 +183,9 @@ if (!function_exists('buildAdminDashboardPayload')) {
 
         $present_pct = $active_count > 0 ? round(($present_today / $active_count) * 100) : 0;
 
-        // Total employees — Employee role only (excludes Admin & HR)
+        // Total employees — Employee role only (excludes Admin, HR, Pending, Exit)
         $total_employees = (int) $pdo->query(
-            "SELECT COUNT(*) FROM employees WHERE role = 'Employee' AND status NOT IN ('Terminated', 'Exit') AND deleted_at IS NULL"
+            "SELECT COUNT(*) FROM employees WHERE role = 'Employee' AND status IN ('Active', 'On Leave') AND deleted_at IS NULL"
         )->fetchColumn();
 
         $pending_leaves = (int) $pdo->query(
@@ -201,7 +201,7 @@ if (!function_exists('buildAdminDashboardPayload')) {
         $stmt = $pdo->prepare("
             SELECT COUNT(*) FROM employees
             WHERE role = 'Employee'
-            AND status NOT IN ('Terminated', 'Exit')
+            AND status IN ('Active', 'On Leave')
             AND deleted_at IS NULL
             AND created_at < ?
         ");
@@ -284,7 +284,7 @@ if (!function_exists('buildAdminDashboardPayload')) {
                 COALESCE(SUM(e.salary), 0) AS salary_total
             FROM departments d
             LEFT JOIN employees e ON e.department_id = d.id
-                AND e.role NOT IN ('Admin', 'HR')
+                AND e.role = 'Employee'
                 AND e.deleted_at IS NULL
                 AND e.status = 'Active'
             WHERE d.deleted_at IS NULL
@@ -391,7 +391,7 @@ if (!function_exists('buildAdminDashboardPayload')) {
         $stmt = $pdo->query("
             SELECT COALESCE(SUM(salary), 0) AS salary_pool, COUNT(*) AS eligible_staff
             FROM employees
-            WHERE role NOT IN ('Admin', 'HR')
+            WHERE role = 'Employee'
             AND deleted_at IS NULL
             AND status = 'Active'
         ");
@@ -412,7 +412,7 @@ if (!function_exists('buildAdminDashboardPayload')) {
                 SUM(CASE WHEN p.id IS NULL OR p.status != 'Paid' THEN 1 ELSE 0 END) AS pending_count
             FROM employees e
             LEFT JOIN payroll p ON p.employee_id = e.id AND p.month_year = ?
-            WHERE e.role NOT IN ('Admin', 'HR')
+            WHERE e.role = 'Employee'
             AND e.deleted_at IS NULL
             AND e.status = 'Active'
         ");

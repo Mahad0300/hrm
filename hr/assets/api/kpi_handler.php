@@ -20,23 +20,34 @@ switch ($action) {
     case 'fetch_summary':
         try {
             // Average Score
-            $avgStmt = $pdo->query("SELECT AVG(overall_rating) as avg_score FROM kpi_reviews");
+            $avgStmt = $pdo->query("
+                SELECT AVG(r.overall_rating) as avg_score
+                FROM kpi_reviews r
+                INNER JOIN employees e ON e.id = r.employee_id
+                WHERE e.deleted_at IS NULL AND e.role = 'Employee' AND e.status = 'Active'
+            ");
             $avg = $avgStmt->fetch();
 
             // Total Employees Rated (Distinct)
-            $ratedStmt = $pdo->query("SELECT COUNT(DISTINCT employee_id) as rated_count FROM kpi_reviews");
+            $ratedStmt = $pdo->query("
+                SELECT COUNT(DISTINCT r.employee_id) as rated_count
+                FROM kpi_reviews r
+                INNER JOIN employees e ON e.id = r.employee_id
+                WHERE e.deleted_at IS NULL AND e.role = 'Employee' AND e.status = 'Active'
+            ");
             $rated = $ratedStmt->fetch();
 
-            // Total Employees for context
-            $totalStmt = $pdo->query("SELECT COUNT(*) as total_count FROM employees WHERE deleted_at IS NULL AND role != 'Admin'");
+            // Total Employees for context (Employee role only)
+            $totalStmt = $pdo->query("SELECT COUNT(*) as total_count FROM employees WHERE deleted_at IS NULL AND role = 'Employee' AND status = 'Active'");
             $total = $totalStmt->fetch();
 
-            // Top Department (by Avg Score)
+            // Top Department (by Avg Score, Employee role only)
             $topDeptStmt = $pdo->query("
                 SELECT d.name as dept_name 
                 FROM kpi_reviews r 
                 JOIN employees e ON r.employee_id = e.id 
                 JOIN departments d ON e.department_id = d.id 
+                WHERE e.deleted_at IS NULL AND e.role = 'Employee' AND e.status = 'Active'
                 GROUP BY d.id 
                 ORDER BY AVG(r.overall_rating) DESC 
                 LIMIT 1
@@ -78,7 +89,7 @@ switch ($action) {
                         GROUP BY employee_id
                     ) r2 ON r1.id = r2.max_id
                 ) r ON e.id = r.employee_id
-                WHERE e.deleted_at IS NULL AND e.role != 'Admin'
+                WHERE e.deleted_at IS NULL AND e.role = 'Employee' AND e.status = 'Active'
                 ORDER BY e.first_name ASC
             ");
             echo json_encode(['status' => 'success', 'data' => $stmt->fetchAll()]);
@@ -89,7 +100,7 @@ switch ($action) {
 
     case 'fetch_employees':
         try {
-            $stmt = $pdo->query("SELECT id, first_name, middle_name, last_name, profile_pic FROM employees WHERE deleted_at IS NULL AND role != 'Admin'");
+            $stmt = $pdo->query("SELECT id, first_name, middle_name, last_name, profile_pic FROM employees WHERE deleted_at IS NULL AND role = 'Employee' AND status = 'Active'");
             echo json_encode(['status' => 'success', 'data' => $stmt->fetchAll()]);
         } catch (PDOException $e) {
             echo json_encode(['status' => 'error', 'message' => 'A server error occurred. Please try again.']);
@@ -121,13 +132,13 @@ switch ($action) {
                 SELECT e.first_name, e.middle_name, e.last_name, e.profile_pic, e.job_title, d.name as dept_name
                 FROM employees e
                 LEFT JOIN departments d ON e.department_id = d.id
-                WHERE e.id = ?
+                WHERE e.id = ? AND e.deleted_at IS NULL AND e.role = 'Employee' AND e.status = 'Active'
             ");
             $empStmt->execute([$empId]);
             $employee = $empStmt->fetch();
 
             if (!$employee) {
-                echo json_encode(['status' => 'error', 'message' => 'Employee not found.']);
+                echo json_encode(['status' => 'error', 'message' => 'Employee not found or not eligible for KPI review.']);
                 exit;
             }
 
@@ -166,6 +177,14 @@ switch ($action) {
 
             $employee_id = $_POST['employee_id'];
             $review_id = $_POST['review_id'] ?? null;
+
+            $empCheck = $pdo->prepare("SELECT id FROM employees WHERE id = ? AND deleted_at IS NULL AND role = 'Employee' AND status = 'Active' LIMIT 1");
+            $empCheck->execute([$employee_id]);
+            if (!$empCheck->fetchColumn()) {
+                echo json_encode(['status' => 'error', 'message' => 'Only active employees with the Employee role can receive KPI reviews.']);
+                exit;
+            }
+
             $period = $_POST['period'];
             $review_date = date('Y-m-d');
             $overall_rating = $_POST['overall_rating'];

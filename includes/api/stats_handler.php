@@ -20,8 +20,8 @@ $today = date('H') < 7 ? date('Y-m-d', strtotime('-1 day')) : date('Y-m-d');
 try {
     switch ($action) {
         case 'get_overview':
-            // 1. Total Active Employees
-            $stmt = $pdo->query("SELECT COUNT(*) FROM employees WHERE status NOT IN ('Terminated', 'Exit') AND deleted_at IS NULL");
+            // 1. Total Active Employees (Employee role only — excludes Admin & HR)
+            $stmt = $pdo->query("SELECT COUNT(*) FROM employees WHERE role = 'Employee' AND status IN ('Active', 'On Leave') AND deleted_at IS NULL");
             $total_employees = $stmt->fetchColumn();
 
             // 2. Present Today

@@ -57,18 +57,12 @@ foreach ($matrixSections as $sectionTitle => $pageKeys):
                 $capLabel = hrMatrixCapabilityLabel($cap);
 ?>
                         <td class="text-center">
-                            <input type="checkbox" class="action-check" data-cap="<?= htmlspecialchars($cap) ?>" checked title="<?= htmlspecialchars($capLabel) ?>">
-                            <?php if ($cap === 'mark_read'): ?>
-                                <span class="font-10 text-light d-block mt-4">Mark as Read</span>
-                            <?php elseif ($cap === 'toggle_status'): ?>
-                                <span class="font-10 text-light d-block mt-4">Active / Close</span>
-                            <?php elseif ($cap === 'schedule_interview'): ?>
-                                <span class="font-10 text-light d-block mt-4">Schedule Interview</span>
-                            <?php elseif ($cap === 'update_pipeline'): ?>
-                                <span class="font-10 text-light d-block mt-4">Update Pipeline</span>
-                            <?php elseif ($cap === 'reject_ban'): ?>
-                                <span class="font-10 text-light d-block mt-4">Reject / Ban</span>
-                            <?php endif; ?>
+                            <label class="perm-action-cell">
+                                <input type="checkbox" class="action-check" data-cap="<?= htmlspecialchars($cap) ?>" checked title="<?= htmlspecialchars($capLabel) ?>">
+                                <?php if (in_array($cap, ['mark_read', 'toggle_status', 'schedule_interview', 'update_pipeline', 'reject_ban'], true)): ?>
+                                    <span class="perm-action-cell__text"><?= htmlspecialchars($capLabel) ?></span>
+                                <?php endif; ?>
+                            </label>
                         </td>
 <?php
             endif;
