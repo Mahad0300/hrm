@@ -1,0 +1,43 @@
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteBase /hrm-6-8-26/
+
+    # Block direct web access to application source
+    RewriteRule ^(app|config|views|vendor|database)(/|$) - [F,L]
+    RewriteRule ^storage/(?!uploads/)(.*)$ - [F,L]
+
+    # ZKTeco ADMS Push Default Endpoint Rewrite
+    RewriteRule ^iclock/(cdata|getrequest|devicecmd|fdata) public/assets/api/biometricpush.php [QSA,L]
+
+    # User uploads (stored outside public/)
+    RewriteRule ^uploads/(.*)$ storage/uploads/$1 [L]
+
+    # Dynamic assets routing for role-split files
+    RewriteCond %{DOCUMENT_ROOT}/hrm-6-8-26/public/assets/$1/$2 !-f
+    RewriteRule ^assets/(js|css)/(.*)$ public/assets/assets-router.php?type=$1&file=$2 [QSA,L]
+
+    # Redirect missing default_avatar.png to default-avatar.svg
+    RewriteRule ^assets/images/profile-image/default_avatar\.png$ public/assets/images/profile-image/default-avatar.svg [L]
+
+    # Flat asset paths
+    RewriteRule ^assets/(.*)$ public/assets/$1 [L]
+    RewriteRule ^images/(.*)$ public/assets/images/$1 [L]
+
+    # Legacy role-prefixed assets (remove in Phase 3)
+    RewriteRule ^(admin|hr)/assets/js/(activity-logs|announcements|attendance-log|attendance|charts|department|employees|hierarchy-settings|hierarchy|interviews-calendar|kpi|leave-management|modals|payroll|script|shift)\.js$ public/assets/js/shared/$2.js [L]
+    RewriteRule ^(admin|hr|user)/assets/js/(.*)$ public/assets/js/$1/$2 [L]
+    RewriteRule ^(admin|hr|user)/assets/css/(.*)$ public/assets/css/$1/$2 [L]
+    RewriteRule ^(admin|hr|user)/assets/img/(.*)$ public/assets/images/$1/$2 [L]
+    RewriteRule ^(admin|hr|user)/assets/api/(.*\.php)$ public/assets/api/$2 [L]
+
+    # Legacy portal 301s handled by Router; send everything else to public/
+    RewriteCond %{REQUEST_URI} !^/hrm-6-8-26/storage/ [NC]
+    RewriteRule ^(.*)$ public/$1 [L]
+</IfModule>
+
+<IfModule mod_headers.c>
+    Header set X-Content-Type-Options "nosniff"
+    Header set X-Frame-Options "SAMEORIGIN"
+    Header set X-XSS-Protection "1; mode=block"
+    Header set Referrer-Policy "strict-origin-when-cross-origin"
+</IfModule>
